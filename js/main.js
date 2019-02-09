@@ -11,10 +11,13 @@ $(() => {
     const readHash = () => {
         if (location.hash && location.hash !== "#") 
         {
-            const raw_data = location.hash.substring(1);
-            console.log(raw_data);   
-            
-            debugger;
+            const raw_data = location.hash.substring(1); 
+            debugger;            
+            var split = raw_data.split("&");
+            var token = split[0].substring(13);
+            var tokenType = split[1].substring(11);
+            var expiresSeconds = split[2].substring(10);
+
             const data = raw_data.split(",");
             const decoded = decodeURI(data[0]);
         }
