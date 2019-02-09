@@ -9,3 +9,19 @@ spotify.redirectUser = function () {
  
     window.location.href = apiUrl;
 }
+
+spotify.getCurrentPlayback = function (authToken, callback) {
+    var endpointUrl = "https://api.spotify.com/v1/me/player/" ;
+    var proxyUrl = "https://cors-anywhere.herokuapp.com";
+    var url = proxyUrl + "/" + endpointUrl;
+
+    $.ajax({
+        url: url,
+        headers: {
+            'Authorization': 'Bearer ' + authToken
+        },
+        success: function(response) {
+            callback(response);
+        },
+    });
+}
