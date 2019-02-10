@@ -36,6 +36,7 @@ class spotify {
         $("#playBtn").hide();
     }
 
+    // Redirects the user to give auth to us
     static getUserAuth() {
         var clientId = "f4dc97c399124fc99254c5d7ac2bf4bd";
         var respType = "token";
@@ -45,7 +46,7 @@ class spotify {
         window.location.href = apiUrl;
     }
 
-    // parses the auth data from the url
+    // Parses the auth data from the url
     static parseAuth(data) {
         var split = data.split("&");
         if (split.length == 2 && split[0].substring(0, 4) == "error") {
@@ -76,7 +77,7 @@ class spotify {
     }
 
     // Pauses the current Spotify song
-    static pause (callback) {
+    static pause () {
         var apiUrl = "https://api.spotify.com/v1/me/player/pause";
         callApi(apiUrl, this.currentAuthToken, "PUT", null);
 
@@ -85,7 +86,7 @@ class spotify {
     }
 
     // Plays the current Spotify song
-    static play (callback) {
+    static play () {
         var apiUrl = "https://api.spotify.com/v1/me/player/play";
         callApi(apiUrl, this.currentAuthToken, "PUT", null);
 
@@ -93,14 +94,16 @@ class spotify {
         $("#pauseBtn").show();
     }
 
-    static nextSong (callback) {
+    // Skips playback to the next song
+    static nextSong () {
         var apiUrl = "https://api.spotify.com/v1/me/player/next";
         callApi(apiUrl, this.currentAuthToken, "POST", null);
     }
 
-    static previousSong (callback) {
+    // Skips playback to the previous song
+    static previousSong () {
         var apiUrl = "https://api.spotify.com/v1/me/player/previous";
-        callApi(apiUrl, this.currentAuthToken, "POST", null);
+        callApi(apiUrl, this.currentAuthToken, "POST", nul);
     }
 }
 

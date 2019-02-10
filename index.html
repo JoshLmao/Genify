@@ -49,14 +49,8 @@
     <div class="page-header">
         <h1>Genify</h1>
         <h3>Get lyrics to your current Spotify song</h3>
-
-        <!--Github Buttons, View, Star & Follow-->
-        <a class="github-button" href="https://github.com/JoshLmao/Genify" data-size="large" aria-label="View JoshLmao/ArtifactAPI.MatchHistory on GitHub">View on Github</a>    
     </div>
-
     <hr/>
-
-    
     <div class="row justify-content-center hide-on-lyrics">
         <button id="btnSignIn" type="button" class="btn btn-primary">Sign in to Spotify</button>
     </div>
@@ -95,7 +89,9 @@
             </div>
         </div>
         <div class="col-md flex-grow" id="geniusContent">
-            
+            <div class="text-center align-middle" id="geniusLoading">
+                <i class="fa fa-spinner fa-pulse fa-3x fa-fw" ></i>
+            </div>
         </div>
     </div>
 
@@ -111,6 +107,10 @@
                     <a class="btn btn-outline-light btn-social rounded-circle" href="https://twitter.com/JoshLmao" target="_blank">
                         <i class="fab fa-fw fa-twitter" style="margin-left: -6px; margin-top: 1px;"></i>
                     </a>
+                </li>
+                <li class="list-inline-item">
+                    <!--Github Buttons, View, Star & Follow-->
+                    <a class="github-button" href="https://github.com/JoshLmao/Genify" data-size="large" aria-label="View JoshLmao/ArtifactAPI.MatchHistory on GitHub">View on Github</a>    
                 </li>
             </ul>
         </div>

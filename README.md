@@ -5,7 +5,7 @@
     <img src="https://img.shields.io/badge/twitter-JoshLmao-blue.svg?style=flat-square.svg"/>
   </a>
   <a href="https://artifacthistory.joshlmao.com">
-    <img src="https://img.shields.io/badge/website-n/a-red.svg?style=flat-square.svg"/>
+    <img src="https://img.shields.io/badge/website-online-green.svg?style=flat-square.svg"/>
   </a>
 </p>
 

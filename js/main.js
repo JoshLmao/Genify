@@ -19,32 +19,16 @@ $(() => {
     }
 
     // Parse the lyrics from the Genius URL
-    const parseLyricsFromUrl = function (geniusUrl) {
-        var proxyUrl = "https://cors-anywhere.herokuapp.com";
-        var url = proxyUrl + "/" + geniusUrl;
-        $.get(url, function( html ) {
-            var lyrics = $(html).find("div").filter(".lyrics").text();
-            $("#geniusContent").append("<pre>" + lyrics + "</pre>");
-        });
+    const setLyrics = function (lyricsText) {
+        $("#geniusLoading").hide();
+        $("#geniusContent").append(lyricsText);
     }
 
-    // Access the Genius API for the search function and URL retrieval
-    const showLyrics = function (obj) {
-        var trackName = obj.item.name;
-        var artistName = obj.item.artists[0].name;
-        var albumUrl = obj.item.album.images[1].url;
-
-        // Set the Spotify current song
-        var currentTrackDisplay = "Current Song: " + artistName + " - " + trackName;
-        $("#artistTitle").text(artistName);
+    // Set the Spotify current track info UI
+    const setSpotifyUI = function (artist, trackName, albumUrl) {
+        $("#artistTitle").text(artist);
         $("#trackTitle").text(trackName);
         $("#albumArtwork").attr("src", albumUrl);
-
-        genius.getSearchFirstResult(trackName, artistName, function (url) {
-            parseLyricsFromUrl(url);
-        });
-
-        setStyle(true);
     }
 
     // Checks for a hash in the URL and begins Spotify auth if so
@@ -54,8 +38,19 @@ $(() => {
             const data = location.hash.substring(1);
             var auth = spotify.parseAuth(data);
             if( auth !== null ) {
-                spotify.getCurrentPlayback(function (response){
-                    showLyrics(response);
+                spotify.getCurrentPlayback(function (response) {
+                    var trackName = response.item.name;
+                    var artistName = response.item.artists[0].name;
+                    var albumUrl = response.item.album.images[1].url;
+                    setSpotifyUI(artistName, trackName, albumUrl);
+                    
+                    genius.getSearchFirstResult(trackName, artistName, function (url) {
+                        genius.getLyricsFromUrl(url, function (lyrics) {
+                            setLyrics(lyrics);
+                        });
+                    });
+
+                    setStyle(true);
                 });
             }
         }
