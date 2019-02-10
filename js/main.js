@@ -33,27 +33,12 @@ $(() => {
         var trackName = obj.item.name;
         var artistName = obj.item.artists[0].name;
 
+        // Set the Spotify current song
         var currentTrackDisplay = "Current Song: " + artistName + " - " + trackName;
         $("#spotifyContent").append(currentTrackDisplay);
 
-        var proxyUrl = "https://cors-anywhere.herokuapp.com/";
-        var url = proxyUrl + "https://api.genius.com/search?q=" + encodeURIComponent(artistName) + "%20" + encodeURI(trackName);
-        var accessToken = 'oIRErfK8KcmhxvvKzaDnt9GYLkfghdCz7pXxVi7Ce8c3V4INQC3qd_Djlc4ndnNq';
-        $.ajax({
-            url: url,
-            headers: {
-                'Authorization': 'Bearer ' + accessToken
-            },
-            success: function(response) {
-                if ( response != null ) {
-                    var firstHit = response.response.hits[0];
-                    var url = firstHit.result.url;
-                    parseLyricsFromUrl(url);
-                }
-            },
-            error: function(response) {
-                console.error("Unable to get lyrics from Genius - " + response);
-            },
+        genius.getSearchFirstResult(trackName, artistName, function (url) {
+            parseLyricsFromUrl(url);
         });
 
         setStyle(true);
@@ -63,15 +48,13 @@ $(() => {
     const readHash = () => {
         if (location.hash && location.hash !== "#") 
         {
-            const raw_data = location.hash.substring(1);          
-            var split = raw_data.split("&");
-            var authToken = split[0].substring(13);
-            var tokenType = split[1].substring(11);
-            var expiresSeconds = split[2].substring(11);
-
-            spotify.getCurrentPlayback(authToken, function (response){
-                showLyrics(response);
-            });
+            const data = location.hash.substring(1);
+            var auth = spotify.parseAuth(data);
+            if( auth !== null ) {
+                spotify.getCurrentPlayback(auth.authToken, function (response){
+                    showLyrics(response);
+                });
+            }
         }
     }
 

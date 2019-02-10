@@ -1,3 +1,10 @@
 .body {
     background: yellow;
 }
+
+.btn-social {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.25rem;
+    line-height: 2rem;
+}
