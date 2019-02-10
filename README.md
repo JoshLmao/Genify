@@ -4,7 +4,7 @@
   <a href="https://twitter.com/JoshLmao">
     <img src="https://img.shields.io/badge/twitter-JoshLmao-blue.svg?style=flat-square.svg"/>
   </a>
-  <a href="https://artifacthistory.joshlmao.com">
+  <a href="https://genify.joshlmao.com">
     <img src="https://img.shields.io/badge/website-online-green.svg?style=flat-square.svg"/>
   </a>
 </p>
