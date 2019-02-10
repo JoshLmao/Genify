@@ -16,7 +16,6 @@ genius.getSearchFirstResult = function (trackName, artistName, callback) {
                     return;
                 }
                 var firstHit = response.response.hits[0];
-                debugger;
                 var url = firstHit.result.url;
                 callback(url);
             }

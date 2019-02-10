@@ -1,6 +1,6 @@
 $(() => {
     const getSpotify = () => {
-        spotify.redirectUser();
+        spotify.getUserAuth();
     } 
 
     $("#btnSignIn").click(() => {
@@ -32,10 +32,13 @@ $(() => {
     const showLyrics = function (obj) {
         var trackName = obj.item.name;
         var artistName = obj.item.artists[0].name;
+        var albumUrl = obj.item.album.images[1].url;
 
         // Set the Spotify current song
         var currentTrackDisplay = "Current Song: " + artistName + " - " + trackName;
-        $("#spotifyContent").append(currentTrackDisplay);
+        $("#artistTitle").text(artistName);
+        $("#trackTitle").text(trackName);
+        $("#albumArtwork").attr("src", albumUrl);
 
         genius.getSearchFirstResult(trackName, artistName, function (url) {
             parseLyricsFromUrl(url);
@@ -51,7 +54,7 @@ $(() => {
             const data = location.hash.substring(1);
             var auth = spotify.parseAuth(data);
             if( auth !== null ) {
-                spotify.getCurrentPlayback(auth.authToken, function (response){
+                spotify.getCurrentPlayback(function (response){
                     showLyrics(response);
                 });
             }
@@ -59,5 +62,6 @@ $(() => {
     }
 
     setStyle(false);
+    spotify.spotify();
     readHash();
 });
