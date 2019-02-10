@@ -21,14 +21,26 @@ $(() => {
     // Parse the lyrics from the Genius URL
     const setLyrics = function (lyricsText) {
         $("#geniusLoading").hide();
-        $("#geniusContent").append(lyricsText);
+        $("#geniusLyricsContent").text(lyricsText.trim());
     }
 
     // Set the Spotify current track info UI
-    const setSpotifyUI = function (artist, trackName, albumUrl) {
-        $("#artistTitle").text(artist);
+    const setSpotifyUI = function (trackName, artistName, albumArtUrl) {
         $("#trackTitle").text(trackName);
-        $("#albumArtwork").attr("src", albumUrl);
+        $("#artistTitle").text(artistName);
+        $("#albumArtwork").attr("src", albumArtUrl);
+    }
+
+    const doGeniusSearch = function (trackName, artistName, getLyricsCallback) {
+        genius.getSearchFirstResult(trackName, artistName, function (url) {
+            getLyricsFromUrl(url);
+        });
+    }
+
+    const getLyricsFromUrl = function (url) {
+        genius.getLyricsFromUrl(url, function (lyrics) {
+            setLyrics(lyrics);
+        });
     }
 
     // Checks for a hash in the URL and begins Spotify auth if so
@@ -38,17 +50,9 @@ $(() => {
             const data = location.hash.substring(1);
             var auth = spotify.parseAuth(data);
             if( auth !== null ) {
-                spotify.getCurrentPlayback(function (response) {
-                    var trackName = response.item.name;
-                    var artistName = response.item.artists[0].name;
-                    var albumUrl = response.item.album.images[1].url;
-                    setSpotifyUI(artistName, trackName, albumUrl);
-                    
-                    genius.getSearchFirstResult(trackName, artistName, function (url) {
-                        genius.getLyricsFromUrl(url, function (lyrics) {
-                            setLyrics(lyrics);
-                        });
-                    });
+                spotify.getCurrentPlayback(function (data) {
+                    setSpotifyUI(data.trackName, data.artistName, data.albumArtUrl);
+                    doGeniusSearch(data.trackName, data.artistName)
 
                     setStyle(true);
                 });
@@ -58,5 +62,7 @@ $(() => {
 
     setStyle(false);
     spotify.spotify();
+    spotify.updateSpotifyUIFunc = setSpotifyUI;
+    spotify.geniusUpdateFunc = doGeniusSearch;
     readHash();
 });

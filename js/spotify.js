@@ -1,4 +1,4 @@
-callApi = function (endpointUrl, authToken, method, successCallback) {
+callApi = function (endpointUrl, authToken, method, callback) {
     var proxyUrl = "https://cors-anywhere.herokuapp.com";
     var url = proxyUrl + "/" + endpointUrl;
 
@@ -9,10 +9,11 @@ callApi = function (endpointUrl, authToken, method, successCallback) {
             'Authorization': 'Bearer ' + authToken
         },
         success: function(response) {
-            successCallback(response);
+            if( callback != null ) {
+                callback(response);
+            }
         },
         fail: function () {
-            debugger;
             console.log("failed");
         }
     });
@@ -34,6 +35,14 @@ class spotify {
         });
 
         $("#playBtn").hide();
+
+        this.currentTrack = {
+            trackName: null,
+            artistName: null,
+            albumArtUrl: null,
+        };
+        this.currentAuthToken = {};
+        this.updateSpotifyUIFunc = function(){};
     }
 
     // Redirects the user to give auth to us
@@ -59,6 +68,13 @@ class spotify {
             var tokenType = split[1].substring(11);
             var expiresSeconds = split[2].substring(11);
             this.currentAuthToken = authToken;
+            
+            // Check song status every X milliseconds
+            setInterval(() => {
+                spotify.updateLoop();
+            }, 2000);
+
+            
             var obj = {
                 authToken: authToken,
                 tokenType: tokenType,
@@ -68,11 +84,36 @@ class spotify {
         }
     }
 
+    static updateLoop() {
+        this.getCurrentPlayback(function (data) {
+            if( spotify.currentTrack == undefined || data == null) {
+                return;
+            }
+            if ( data.trackName != spotify.currentTrack.trackName &&
+                data.artistName != spotify.currentTrack.artistName ) {
+                    spotify.currentTrack = data;
+                    console.log(`New Song - ${data.trackName}`);
+
+                    spotify.updateSpotifyUIFunc(data.trackName, data.artistName, data.albumArtUrl);
+                    spotify.geniusUpdateFunc(data.trackName, data.artistName, data.albumArtUrl);
+            }
+        });
+    }
+
     // Gets the current playback song of Spotify
     static getCurrentPlayback(callback) {
         var endpointUrl = "https://api.spotify.com/v1/me/player/";
         callApi(endpointUrl, this.currentAuthToken, "GET", function (response) {
-            callback(response);
+            var trackData = {
+                trackName: response.item.name,
+                artistName: response.item.artists[0].name,
+                albumArtUrl: response.item.album.images[1].url,
+            };
+            if( spotify.currentTrack.trackName == null &&
+                spotify.currentTrack.artistName == null) {
+                spotify.currentTrack = trackData;
+            }
+            callback(trackData);
         });
     }
 
@@ -103,7 +144,7 @@ class spotify {
     // Skips playback to the previous song
     static previousSong () {
         var apiUrl = "https://api.spotify.com/v1/me/player/previous";
-        callApi(apiUrl, this.currentAuthToken, "POST", nul);
+        callApi(apiUrl, this.currentAuthToken, "POST", null);
     }
 }
 

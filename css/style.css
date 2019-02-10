@@ -8,3 +8,8 @@
     font-size: 1.25rem;
     line-height: 2rem;
 }
+
+pre {
+    color: white;
+    font-family: Open Sans;
+}

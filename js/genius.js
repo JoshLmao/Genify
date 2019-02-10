@@ -33,7 +33,7 @@ class genius {
         var url = proxyUrl + "/" + url;
         $.get(url, function( html ) {
             var lyrics = $(html).find("div").filter(".lyrics").text();
-            callback("<pre>" + lyrics + "</pre>");
+            callback(lyrics);
         });
     }
 }

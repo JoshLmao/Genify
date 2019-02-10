@@ -26,9 +26,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     
     <!--CSS-->
-    <link rel="stylesheet" type="text/css" href="css/style.css"></link>
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.2.1/solar/bootstrap.min.css" rel="stylesheet" integrity="sha384-eEgFc00/DZ7ZxynbWKmCPG4M//a5puGMS+QpGal8QYF56ApHqwXSuDOZ4PbVF1L6" crossorigin="anonymous">
-
+    <link rel="stylesheet" type="text/css" href="css/style.css"></link>
+    
     <!--Github Buttons-->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 
@@ -88,10 +88,15 @@
                 </button>
             </div>
         </div>
+        <!-- Genius Content -->
         <div class="col-md flex-grow" id="geniusContent">
+            <!-- Loading Spinner -->
             <div class="text-center align-middle" id="geniusLoading">
                 <i class="fa fa-spinner fa-pulse fa-3x fa-fw" ></i>
             </div>
+
+            <!-- Lyrics Container -->
+            <pre id="geniusLyricsContent"></pre>
         </div>
     </div>
 
@@ -105,10 +110,10 @@
                 </li>
                 <li class="list-inline-item" style="position: relative; margin-left:-20px">
                     <a class="btn btn-outline-light btn-social rounded-circle" href="https://twitter.com/JoshLmao" target="_blank">
-                        <i class="fab fa-fw fa-twitter" style="margin-left: -6px; margin-top: 1px;"></i>
+                        <i class="fab fa-fw fa-twitter" style="margin-left: -8.5px; margin-top: 0px;"></i>
                     </a>
                 </li>
-                <li class="list-inline-item">
+                <li class="list-inline-item" style="position: relative;">
                     <!--Github Buttons, View, Star & Follow-->
                     <a class="github-button" href="https://github.com/JoshLmao/Genify" data-size="large" aria-label="View JoshLmao/ArtifactAPI.MatchHistory on GitHub">View on Github</a>    
                 </li>
