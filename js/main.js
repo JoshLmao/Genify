@@ -4,7 +4,7 @@ $(() => {
     } 
 
     $("#btnSignIn").click(() => {
-        console.log("Sign into Spotify");
+        console.log("Signing into Spotify");
         getSpotify();
     });
 
@@ -52,7 +52,11 @@ $(() => {
     const readHash = () => {
         if (location.hash && location.hash !== "#") 
         {
+            // Store Spotify parameter data and remove from URL
             const data = location.hash.substring(1);
+            var baseUrl = window.location.href.split("#")[0];
+            window.history.pushState('name', '', baseUrl);
+
             var auth = spotify.parseAuth(data);
             if( auth !== null ) {
                 spotify.getCurrentPlayback(function (data) {
