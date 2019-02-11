@@ -72,9 +72,8 @@ class spotify {
             // Check song status every X milliseconds
             setInterval(() => {
                 spotify.updateLoop();
-            }, 2000);
+            }, 1000);
 
-            
             var obj = {
                 authToken: authToken,
                 tokenType: tokenType,
@@ -84,6 +83,7 @@ class spotify {
         }
     }
 
+    // Update loop run every X seconds, validates data and updates UI
     static updateLoop() {
         this.getCurrentPlayback(function (data) {
             if( spotify.currentTrack == undefined || data == null) {
@@ -97,6 +97,22 @@ class spotify {
                     spotify.updateSpotifyUIFunc(data.trackName, data.artistName, data.albumArtUrl);
                     spotify.geniusUpdateFunc(data.trackName, data.artistName, data.albumArtUrl);
             }
+            
+            if ( data.isPlaying ) {
+                if ( !$("#pauseBtn").is(":visible")) { 
+                    $("#pauseBtn").show();
+                }
+                if ( $("#playBtn").is(":visible") ) {
+                    $("#playBtn").hide();
+                }
+            } else {
+                if ( $("#pauseBtn").is(":visible")) { 
+                    $("#pauseBtn").hide();
+                }
+                if ( !$("#playBtn").is(":visible") ) {
+                    $("#playBtn").show();
+                }   
+            }
         });
     }
 
@@ -104,10 +120,13 @@ class spotify {
     static getCurrentPlayback(callback) {
         var endpointUrl = "https://api.spotify.com/v1/me/player/";
         callApi(endpointUrl, this.currentAuthToken, "GET", function (response) {
+            debugger;
             var trackData = {
                 trackName: response.item.name,
                 artistName: response.item.artists[0].name,
                 albumArtUrl: response.item.album.images[1].url,
+
+                isPlaying: response.is_playing,
             };
             if( spotify.currentTrack.trackName == null &&
                 spotify.currentTrack.artistName == null) {
