@@ -10,6 +10,8 @@ $(() => {
 
     $("#btnSignOut").click(() => {
         console.log("Signing out of Spotify");
+        debugger;
+        cookies.deleteAllCookies();
         window.location.href = "https://genify.joshlmao.com";
     });
 
@@ -50,7 +52,6 @@ $(() => {
 
     // Checks for a hash in the URL and begins Spotify auth if so
     const readHash = () => {
-        debugger;
         var auth = null;
         if (location.hash && location.hash !== "#") 
         {

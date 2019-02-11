@@ -5,7 +5,6 @@ class cookies {
         var d = new Date();
         d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
         var expires = "expires="+d.toUTCString();
-        debugger;
         document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;";
     }
 
@@ -24,7 +23,31 @@ class cookies {
         return "";
     }
 
-      static checkCookie(cname) {
+    // deletes all cookies stored
+    static deleteAllCookies() {
+      document.cookie = "";
+    }
+
+    // deletes a specific cookie by it's name
+    static deleteCookie(name) {
+      var cookies = document.cookie;
+      var ca = cookies.split(';');
+      var index = -1;
+      for( var i = 0; i < ca.length; i++ ) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          index = i;
+        }
+      }
+
+      ca.splice(index, 1);
+      document.cookie = ca.join(';');
+    }
+
+    static checkCookie(cname) {
         var hasCookie = cookies.getCookie(cname);
         return hasCookie != "";
     }
