@@ -23,6 +23,8 @@ class genius {
             },
             error: function(response) {
                 console.error("Unable to get lyrics from Genius - " + response);
+                $("#geniusLoading").hide();
+                $("#geniusLyricsContent").text("Unable to find lyrics");
             },
         });
     }
