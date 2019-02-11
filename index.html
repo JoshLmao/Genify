@@ -25,8 +25,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     
-    <!--CSS-->
-    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.2.1/solar/bootstrap.min.css" rel="stylesheet" integrity="sha384-eEgFc00/DZ7ZxynbWKmCPG4M//a5puGMS+QpGal8QYF56ApHqwXSuDOZ4PbVF1L6" crossorigin="anonymous">
+    <!-- CSS's -->
+    <!-- Bootstrap Theme, from http://bootstrap.themes.guide/darkster-->
+    <link href="http://bootstrap.themes.guide/darkster/theme.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/style.css"></link>
     
     <!--Github Buttons-->
@@ -45,81 +46,113 @@
 </head>
 
 <body>
-<div class="container">
-    <div class="page-header">
-        <h1>Genify</h1>
-        <h3>Get lyrics to your current Spotify song</h3>
-    </div>
-    <hr/>
-    <div class="row justify-content-center hide-on-lyrics">
-        <button id="btnSignIn" type="button" class="btn btn-primary">Sign in to Spotify</button>
-    </div>
 
-    <!--Spotify Lyrics Container-->
-    <div class="row show-on-lyrics flex-grow-1">
-        <div class="col-md" id="spotifyContent">
-            <div class="row justify-content-center">
-                <!-- Album Art-->
-                <img id="albumArtwork" src="https://via.placeholder.com/250"></img>
-            </div>
-            <!-- Current track Artist & Title -->
-            <div class="row justify-content-center">
-                <h4 id="artistTitle" class="mt-2">Test</h4>
-            </div>
-            <div class="row justify-content-center">
-                <h4 id="trackTitle">Name</h4>
-            </div>
-
-            <!-- Spotify Control buttons -->
-            <div class="row justify-content-center">
-                <button class="btn btn-primary" id="previousBtn">
-                    <i class="fas fa-step-backward"></i>
-                </button>
-
-                <button class="btn btn-primary ml-3" id="pauseBtn">
-                    <i class="fas fa-pause"></i>
-                </button>
-                <button class="btn btn-primary ml-3" id="playBtn">
-                    <i class="fas fa-play"></i>
-                </button>
-
-                <button class="btn btn-primary ml-3" id="nextBtn">
-                    <i class="fas fa-step-forward"></i>
-                </button>
-            </div>
-        </div>
-        <!-- Genius Content -->
-        <div class="col-md flex-grow" id="geniusContent">
-            <!-- Loading Spinner -->
-            <div class="text-center align-middle" id="geniusLoading">
-                <i class="fa fa-spinner fa-pulse fa-3x fa-fw" ></i>
-            </div>
-
-            <!-- Lyrics Container -->
-            <pre id="geniusLyricsContent"></pre>
-        </div>
-    </div>
-
-    <div class="copyright py-4 text-center text-white">
-        <div class="ml-3">
-            <ul class="list-inline">
-                <li class="list-inline-item">
-                    <div class="container mx-auto">
-                        <div>Created by <a href="https://github.com/joshlmao">@joshlmao</a></div>
-                    </div>
-                </li>
-                <li class="list-inline-item" style="position: relative; margin-left:-20px">
-                    <a class="btn btn-outline-light btn-social rounded-circle" href="https://twitter.com/JoshLmao" target="_blank">
-                        <i class="fab fa-fw fa-twitter" style="margin-left: -8.5px; margin-top: 0px;"></i>
+    <!-- Top Bar-->
+    <header class="navbar navbar-expand flex-column flex-md-row bg-secondary">
+        <div class="container" >
+            <a class="navbar-brand mr-2" href="index.html" aria-label="Bootstrap" style="border-right:0px;">
+                <h1>Genify</h1>
+            </a>
+            <p class="mt-3">Spotify + Genius</p>
+    
+            <ul class="navbar-nav list-inline flex-row ml-md-auto d-none d-md-flex align-text-bottom">
+                <li class="nav-item mr-3">
+                    <a href="https://joshlmao.com">
+                        <h4 class="mt-2">
+                            <small>JoshLmao</small>
+                        </h4>
                     </a>
                 </li>
-                <li class="list-inline-item" style="position: relative;">
-                    <!--Github Buttons, View, Star & Follow-->
-                    <a class="github-button" href="https://github.com/JoshLmao/Genify" data-size="large" aria-label="View JoshLmao/ArtifactAPI.MatchHistory on GitHub">View on Github</a>    
+                <li class="nav-item mr-2">
+                    <a class="btn btn-outline-light btn-social rounded-circle" href="https://github.com/JoshLmao/Genify">
+                        <i class="fab fa-github btn-social-icon mt-1"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-light btn-social rounded-circle" href="https://twitter.com/JoshLmao" target="_blank">
+                        <i class="fab fa-fw fa-twitter btn-social-icon mt-1"></i>
+                    </a>
                 </li>
             </ul>
         </div>
+    </header>
+
+    <div class="container mt-3 hide-on-lyrics">
+        <div class="jumbotron py-5 mx-auto copyable border-primary">
+            <h1>What is Genify?</h1>
+            <p class="lead">
+                Ever wanted to sing along to the current song but couldn't find the lyrics quick enough? 
+                This tool can fix that! I've integrated Spotify connectivity to Genius to show the lyrics
+                so you can spend more time singing and less time searching online 😉
+                <br/>
+                TL;DR: I got tired of Spotify not having this integrated, so I did it myself
+                <br/><br/>
+                <b>Github Repo: </b><a href="https://github.com/joshlmao/genify" target="_blank">JoshLmao/Genify</a>
+            </p>    
+        </div>
+
+
+        <section class="hide-on-lyrics">
+            <div class="card">
+                <div class="card-body d-flex flex-column align-items-start">
+                    <h4 class="card-title text-primary">How do I use it?</h4>
+                    <p class="card-text">
+                        Click the button below to sign in to Spotify. You'll be sent back here and 
+                        signed in showing your current Spotify song and it's lyrics
+                    </p>
+                    <div class="justify-content-center">
+                        <button id="btnSignIn" type="button" class="btn btn-lg btn-primary">Sign in to Spotify</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!--Spotify Lyrics Container-->
+        <div class="container flex-grow-1 show-on-lyrics mt-3">
+            <div class="row">
+                <div class="col-md" id="spotifyContent">
+                    <div class="row justify-content-center">
+                        <!-- Album Art-->
+                        <img id="albumArtwork" src="https://via.placeholder.com/250"></img>
+                    </div>
+                    <!-- Current track Artist & Title -->
+                    <div class="row justify-content-center">
+                        <h4 id="artistTitle" class="mt-2">Test</h4>
+                    </div>
+                    <div class="row justify-content-center">
+                        <h4 id="trackTitle">Name</h4>
+                    </div>
+        
+                    <!-- Spotify Control buttons -->
+                    <div class="row justify-content-center">
+                        <button class="btn btn-primary" id="previousBtn">
+                            <i class="fas fa-step-backward"></i>
+                        </button>
+        
+                        <button class="btn btn-primary ml-3" id="pauseBtn">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button class="btn btn-primary ml-3" id="playBtn">
+                            <i class="fas fa-play"></i>
+                        </button>
+        
+                        <button class="btn btn-primary ml-3" id="nextBtn">
+                            <i class="fas fa-step-forward"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Genius Content -->
+                <div class="col-md flex-grow" id="geniusContent">
+                    <!-- Loading Spinner -->
+                    <div class="text-center align-middle" id="geniusLoading">
+                        <i class="fa fa-spinner fa-pulse fa-3x fa-fw" ></i>
+                    </div>
+        
+                    <!-- Lyrics Container -->
+                    <pre id="geniusLyricsContent"></pre>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 </body>
 </html>

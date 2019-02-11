@@ -3,10 +3,14 @@
 }
 
 .btn-social {
-    width: 2rem;
-    height: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
     font-size: 1.25rem;
     line-height: 2rem;
+}
+
+.btn-social-icon {
+    margin-left: -3px;
 }
 
 pre {
