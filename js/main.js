@@ -10,7 +10,6 @@ $(() => {
 
     $("#btnSignOut").click(() => {
         console.log("Signing out of Spotify");
-        debugger;
         cookies.deleteAllCookies();
         window.location.href = "https://genify.joshlmao.com";
     });
@@ -61,8 +60,10 @@ $(() => {
             window.history.pushState('name', '', baseUrl);
 
             auth = spotify.parseAuth(data);
+            console.log("Loading auth from url parameters");
         } else if ( cookies.checkCookie("authToken") == true ) {
             auth = spotify.loadAuth();
+            console.log("Loaded auth from cookies");
         }
         if( auth !== null ) {
             spotify.getCurrentPlayback(function (data) {

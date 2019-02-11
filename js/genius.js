@@ -1,5 +1,10 @@
 class genius {
 
+    static setNoLyricsUI() {
+        $("#geniusLoading").hide();
+        $("#geniusLyricsContent").text("Unable to find lyrics");
+    }
+
     // Searches Genius for the artist and track name and returns the first result
     static getSearchFirstResult(trackName, artistName, callback) {
         var proxyUrl = "https://cors-anywhere.herokuapp.com/";
@@ -14,6 +19,7 @@ class genius {
                 if ( response != null) {
                     if ( response.response.hits.length === 0) { 
                         console.error("Unable to find any Genius lyrics results");
+                        genius.setNoLyricsUI();
                         return;
                     }
                     var firstHit = response.response.hits[0];
@@ -23,8 +29,7 @@ class genius {
             },
             error: function(response) {
                 console.error("Unable to get lyrics from Genius - " + response);
-                $("#geniusLoading").hide();
-                $("#geniusLyricsContent").text("Unable to find lyrics");
+                genius.setNoLyricsUI();
             },
         });
     }
