@@ -89,7 +89,7 @@ class spotify {
             if( spotify.currentTrack == undefined || data == null) {
                 return;
             }
-            if ( data.trackName != spotify.currentTrack.trackName &&
+            if ( data.trackName != spotify.currentTrack.trackName ||
                 data.artistName != spotify.currentTrack.artistName ) {
                     spotify.currentTrack = data;
                     console.log(`New Song - ${data.trackName}`);

@@ -8,6 +8,11 @@ $(() => {
         getSpotify();
     });
 
+    $("#btnSignOut").click(() => {
+        console.log("Signing out of Spotify");
+        window.location.href = "https://genify.joshlmao.com";
+    });
+
     const setStyle = function (hasLyrics) {
         if ( hasLyrics === false ) {
             $(".hide-on-lyrics").show();

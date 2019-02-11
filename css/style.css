@@ -21,3 +21,13 @@ pre {
 .spotify-background {
     background: #1DB954;
 }
+
+.btn-spotify {
+    background: #1DB954;
+    color: rgb(190, 190, 190);
+    transition: color .15s ease-in-out
+}
+
+.btn-spotify:hover {
+    color: rgb(255, 255, 255);
+}
