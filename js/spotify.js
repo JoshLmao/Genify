@@ -41,8 +41,15 @@ class spotify {
             artistName: null,
             albumArtUrl: null,
         };
+
         this.currentAuthToken = {};
+        this.authExpireTime = {};
         this.updateSpotifyUIFunc = function(){};
+    }
+
+    // Gets the date plus the amount of seconds added on
+    static getAuthExpireTime(seconds) {
+        return new Date(Date.now() + seconds * 1000)
     }
 
     // Redirects the user to give auth to us
@@ -62,21 +69,22 @@ class spotify {
             // Auth was denied
             console.log("User denied auth");
             return null;
-        }
-        else {
+        } else {
             var authToken = split[0].substring(13);
             var tokenType = split[1].substring(11);
             var expiresSeconds = split[2].substring(11);
+
             this.currentAuthToken = authToken;
-            
+            this.authExpireTime = this.getAuthExpireTime(expiresSeconds);
+
+            // Save token info in cookies
+            cookies.setCookie("authToken", this.currentAuthToken);
+            cookies.setCookie("expireDate", this.authExpireTime);
+
             // Check song status every X milliseconds
             setInterval(() => {
                 spotify.updateLoop();
             }, 1000);
-
-            // Save token info in cookies
-            cookies.setCookie("authToken", authToken);
-            cookies.setCookie("expireDate", new Date(Date.now() + expiresSeconds * 1000));
 
             var obj = {
                 authToken: authToken,
@@ -97,6 +105,7 @@ class spotify {
             return null;
         } else {
             this.currentAuthToken = cookies.getCookie("authToken");
+            console.log(`Spotify auth will expire at '${expireDate}'`)
             return this.currentAuthToken;
         }
     }
@@ -104,6 +113,7 @@ class spotify {
     // Update loop run every X seconds, validates data and updates UI
     static updateLoop() {
         this.getCurrentPlayback(function (data) {
+            // Validate current playing track to make sure correct one is playing
             if( spotify.currentTrack == undefined || data == null) {
                 return;
             }
@@ -116,6 +126,7 @@ class spotify {
                     spotify.geniusUpdateFunc(data.trackName, data.artistName, data.albumArtUrl);
             }
             
+            // Validate Play state, update btn visibility
             if ( data.isPlaying ) {
                 if ( !$("#pauseBtn").is(":visible")) { 
                     $("#pauseBtn").show();
@@ -130,6 +141,12 @@ class spotify {
                 if ( !$("#playBtn").is(":visible") ) {
                     $("#playBtn").show();
                 }   
+            }
+
+            // Validate that token info is still valid
+            if ( Date.now() > this.authExpireTime - (60 * 1000)) {
+                // If token is less than 1 minute out of date, get user to give us auth again
+                getUserAuth();
             }
         });
     }
