@@ -74,12 +74,29 @@ class spotify {
                 spotify.updateLoop();
             }, 1000);
 
+            // Save token info in cookies
+            cookies.setCookie("authToken", authToken);
+            cookies.setCookie("expireDate", new Date(Date.now() + expiresSeconds * 1000));
+
             var obj = {
                 authToken: authToken,
                 tokenType: tokenType,
                 expiresSeconds: expiresSeconds
             };
             return obj;
+        }
+    }
+
+    static loadAuth() {
+        var expireDate = cookies.getCookie("expireDate");
+        if (expireDate == "")
+            return; // No auth saved
+
+        if (Date.now() > expireDate ) {
+            console.error("Old auth");
+        } else {
+            this.currentAuthToken = cookies.getCookie("authToken");
+            console.log("loaded old auth");
         }
     }
 

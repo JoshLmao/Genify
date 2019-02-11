@@ -50,6 +50,8 @@ $(() => {
 
     // Checks for a hash in the URL and begins Spotify auth if so
     const readHash = () => {
+        debugger;
+        var auth = null;
         if (location.hash && location.hash !== "#") 
         {
             // Store Spotify parameter data and remove from URL
@@ -57,15 +59,17 @@ $(() => {
             var baseUrl = window.location.href.split("#")[0];
             window.history.pushState('name', '', baseUrl);
 
-            var auth = spotify.parseAuth(data);
-            if( auth !== null ) {
-                spotify.getCurrentPlayback(function (data) {
-                    setSpotifyUI(data.trackName, data.artistName, data.albumArtUrl);
-                    doGeniusSearch(data.trackName, data.artistName)
+            auth = spotify.parseAuth(data);
+        } else if ( cookies.checkCookie("authToken") == true ) {
+            spotify.loadAuth();
+        }
+        if( auth !== null ) {
+            spotify.getCurrentPlayback(function (data) {
+                setSpotifyUI(data.trackName, data.artistName, data.albumArtUrl);
+                doGeniusSearch(data.trackName, data.artistName)
 
-                    setStyle(true);
-                });
-            }
+                setStyle(true);
+            });
         }
     }
 
