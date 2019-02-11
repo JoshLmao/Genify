@@ -93,10 +93,11 @@ class spotify {
             return; // No auth saved
 
         if (Date.now() > expireDate ) {
-            console.error("Old auth");
+            console.error("Old auth, won't use");
+            return null;
         } else {
             this.currentAuthToken = cookies.getCookie("authToken");
-            console.log("loaded old auth");
+            return this.currentAuthToken;
         }
     }
 

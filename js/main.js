@@ -61,7 +61,7 @@ $(() => {
 
             auth = spotify.parseAuth(data);
         } else if ( cookies.checkCookie("authToken") == true ) {
-            spotify.loadAuth();
+            auth = spotify.loadAuth();
         }
         if( auth !== null ) {
             spotify.getCurrentPlayback(function (data) {
