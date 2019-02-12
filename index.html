@@ -9,6 +9,11 @@
     <title>Genify | JoshLmao</title>
     <link rel="shortcut icon" type="image/x-icon" href="img/favicon.png" />
 
+    <!--OpenGraph metas-->
+    <meta property='og:type' content='website'/>
+    <meta property='og:site_name' content='Genify - JoshLmao'/>
+    <meta property='og:image' content='https://i.imgur.com/nG1EYOu.png'/>
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-127734786-5"></script>
     <script>
@@ -81,6 +86,7 @@
     <div class="container mt-3 hide-on-lyrics">
         <!-- Jumbotron Heading -->
         <div class="jumbotron py-5 mx-auto copyable border-primary">
+            <img class="position-relative float-right ml-1 mb-1" src="img/favicon.png" style="max-width: 100px"></img>
             <h1>What is Genify?</h1>
             <p class="lead">
                 Ever wanted to sing along to the current song but couldn't find the lyrics quick enough? 
@@ -88,28 +94,48 @@
                 so you can spend more time singing and less time searching online 😉
                 <br/>
                 TL;DR: I got tired of Spotify not having this integrated, so I did it myself
-                <br/><br/>
-                <b>Github Repo: </b><a href="https://github.com/joshlmao/genify" target="_blank">JoshLmao/Genify</a>
             </p>    
         </div>
 
         <!-- How do I Use -->
-        <section class="hide-on-lyrics">
-            <div class="card">
-                <div class="card-body d-flex flex-column align-items-start">
-                    <h4 class="card-title text-primary">How do I use it?</h4>
-                    <p class="card-text">
-                        Click the button below to sign in to Spotify. You'll be sent back here and 
-                        signed in showing your current Spotify song and it's lyrics
-                    </p>
-                    <div class="container-fluid">
-                        <button class="btn btn-lg btn-block spotify-background text-white" id="btnSignIn" type="button">
-                            <i class="fab fa-spotify mr-1"></i> Sign In
-                        </button>
-                    </div>
+        <div class="card">
+            <div class="card-body d-flex flex-column align-items-start">
+                <h3 class="card-title text-primary">How do I use it?</h3>
+                <p class="card-text">
+                    Click the button below to sign in to Spotify. You'll be sent back here and 
+                    signed in showing your current Spotify song and it's lyrics
+                </p>
+                <div class="container-fluid">
+                    <button class="btn btn-lg btn-block spotify-background text-white" id="btnSignIn" type="button">
+                        <i class="fab fa-spotify mr-1"></i> Sign In
+                    </button>
                 </div>
             </div>
         </div>
+
+        <div class="card mt-4">
+            <div class="card-body d-flex flex-column align-items-start">
+                <h3>About</h3>
+                <p class="card-text">
+                    Genify was created by me (JoshLmao!) and is made and hosted on Github, with the code publicly available 
+                    <a href="https://github.com/joshlmao/genify" target="_blank">here</a>.
+                    <br/><br/>
+                    Thank you for using this! If you appreciate what I do, then please consider 
+                    <a href="https://twitter.com/JoshLmao" target="_blank">following me on Twitter</a>
+                    or supporting me by buying me a coffee (or two!) 😊
+                </p>
+
+                <div class="container d-flex justify-content-center">
+                    <a class="mr-5" href="https://ko-fi.com/joshlmao" title="Thank you! <3" target="_blank">
+                        <img src="https://i.imgur.com/zDeHMoK.png" alt="KoFiDonate.png" height="50">
+                    </a>
+                    <a href="https://paypal.me/ijoshlmao?locale.x=en_GB" title="Thank you! <3" target="_blank">
+                        <img src="https://i.imgur.com/UfSd0gP.png" height="50">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
         
         <!--Spotify Lyrics Container-->
         <div class="container flex-grow-1 show-on-lyrics mt-3">
@@ -123,10 +149,10 @@
                             </div>
                             <!-- Current track Artist & Title -->
                             <div class="row justify-content-center mt-3">
-                                <h4 id="artistTitle">Test</h4>
+                                <h4 id="artistTitle">Artist Title</h4>
                             </div>
                             <div class="row justify-content-center">
-                                <h4 id="trackTitle">Name</h4>
+                                <h4 id="trackTitle">Track Title</h4>
                             </div>
                             <!-- Spotify Control buttons -->
                             <div class="row justify-content-center">
@@ -148,6 +174,7 @@
                         </div>  
                     </div>
 
+                    <!-- Content below Spotify info -->
                     <div class="container d-flex justify-content-center">
                         <button class="btn spotify-background text-white my-3 px-5" id="btnSignOut" type="button">
                             <i class="fab fa-spotify mr-1"></i> Sign Out
