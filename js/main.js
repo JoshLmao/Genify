@@ -65,7 +65,7 @@ $(() => {
             window.history.pushState('name', '', baseUrl);
 
             auth = spotify.parseAuth(data);
-            console.log("Loading auth from url parameters");
+            console.log("Loaded auth from url parameters");
         } else if ( cookies.checkCookie("authToken") == true ) {
             auth = spotify.loadAuth();
             console.log("Loaded auth from cookies");
@@ -73,10 +73,12 @@ $(() => {
         if( auth !== null ) {
             spotify.getCurrentPlayback(function (data) {
                 setSpotifyUI(data.trackName, data.artistName, data.albumArtUrl);
-                doGeniusSearch(data.trackName, data.artistName)
+                doGeniusSearch(data.trackName, data.artistName);
 
                 setStyle(true);
             });
+        } else {
+            console.error("Unable to begin initialization");
         }
     }
 
