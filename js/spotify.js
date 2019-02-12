@@ -84,8 +84,8 @@ class spotify {
             // Check song status every X milliseconds
             setInterval(() => {
                 spotify.updateLoop();
-            }, 2000);
-
+            }, 30 * 1000);
+        
             var obj = {
                 authToken: authToken,
                 tokenType: tokenType,
