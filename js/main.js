@@ -61,8 +61,8 @@ $(() => {
         {
             // Store Spotify parameter data and remove from URL
             const data = location.hash.substring(1);
-            //var baseUrl = window.location.href.split("#")[0];
-            //window.history.pushState('name', '', baseUrl);
+            var baseUrl = window.location.href.split("#")[0];
+            window.history.pushState('name', '', baseUrl);
 
             auth = spotify.parseAuth(data);
             console.log("Loading auth from url parameters");
