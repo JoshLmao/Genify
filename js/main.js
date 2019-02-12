@@ -37,7 +37,12 @@ $(() => {
         $("#albumArtwork").attr("src", albumArtUrl);
     }
 
-    const doGeniusSearch = function (trackName, artistName, getLyricsCallback) {
+    // Starts search into Genius for lyrics, updates UI
+    const doGeniusSearch = function (trackName, artistName) {
+        // Reset loading spinner & lyrics text
+        $("#geniusLoading").show();
+        $("#geniusLyricsContent").text(null);
+
         genius.getSearchFirstResult(trackName, artistName, function (url) {
             getLyricsFromUrl(url);
         });
@@ -56,8 +61,8 @@ $(() => {
         {
             // Store Spotify parameter data and remove from URL
             const data = location.hash.substring(1);
-            var baseUrl = window.location.href.split("#")[0];
-            window.history.pushState('name', '', baseUrl);
+            //var baseUrl = window.location.href.split("#")[0];
+            //window.history.pushState('name', '', baseUrl);
 
             auth = spotify.parseAuth(data);
             console.log("Loading auth from url parameters");

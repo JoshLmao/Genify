@@ -159,12 +159,18 @@ class spotify {
                 trackName: response.item.name,
                 artistName: response.item.artists[0].name,
                 albumArtUrl: response.item.album.images[1].url,
-
+                
                 isPlaying: response.is_playing,
+
+                songUrl: response.item.external_urls.spotify,
+                artistUrl: response.item.artists[0].external_urls.spotify,
             };
             if( spotify.currentTrack.trackName == null &&
                 spotify.currentTrack.artistName == null) {
                 spotify.currentTrack = trackData;
+
+                $("#songLink").attr("href", trackData.songUrl); 
+                $("#artistLink").attr("href", trackData.artistUrl);
             }
             callback(trackData);
         });

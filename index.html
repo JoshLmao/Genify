@@ -31,7 +31,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     
     <!-- CSS's -->
-    <!-- Bootstrap Theme, from http://bootstrap.themes.guide/darkster-->
+    <!-- Bootstrap Theme, from http://bootstrap.themes.guide/darkster -->
     <link href="css/darkster.bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/style.css"></link>
     
@@ -102,22 +102,22 @@
             <div class="card-body d-flex flex-column align-items-start">
                 <h3 class="card-title text-primary">How do I use it?</h3>
                 <p class="card-text">
-                    Click the button below to sign in to Spotify. You'll be sent back here and 
+                    Click below to sign in to Spotify. You'll be sent back here and 
                     signed in showing your current Spotify song and it's lyrics
                 </p>
                 <div class="container-fluid">
                     <button class="btn btn-lg btn-block spotify-background text-white" id="btnSignIn" type="button">
-                        <i class="fab fa-spotify mr-1"></i> Sign In
+                        <i class="fab fa-spotify mr-1 py-3"></i> Sign In
                     </button>
                 </div>
             </div>
         </div>
 
-        <div class="card mt-4">
+        <div class="card my-4">
             <div class="card-body d-flex flex-column align-items-start">
-                <h3>About</h3>
+                <h3 class="text-primary">About</h3>
                 <p class="card-text">
-                    Genify was created by me (JoshLmao!) and is made and hosted on Github, with the code publicly available 
+                    Genify was created by JoshLmao (me!) and is made and hosted on Github, with the code publicly available 
                     <a href="https://github.com/joshlmao/genify" target="_blank">here</a>.
                     <br/><br/>
                     Thank you for using this! If you appreciate what I do, then please consider 
@@ -137,63 +137,71 @@
         </div>
     </div>
         
-        <!--Spotify Lyrics Container-->
-        <div class="container flex-grow-1 show-on-lyrics mt-3">
-            <div class="row">
-                <div class="col-md">
-                    <div class="card border-primary">
-                        <div class="card-body d-flex flex-column">
-                            <div class="row justify-content-center mx-4">
-                                <!-- Album Art-->
-                                <img id="albumArtwork" src="https://via.placeholder.com/250"></img>
-                            </div>
-                            <!-- Current track Artist & Title -->
-                            <div class="row justify-content-center mt-3">
+    <!--Spotify Lyrics Container-->
+    <div class="container flex-grow-1 show-on-lyrics mt-3">
+        <div class="row">
+            <div class="col-md">
+                <div class="card border-primary">
+                    <div class="card-body d-flex flex-column">
+                        <div class="row justify-content-center mx-4">
+                            <!-- Album Art-->
+                            <img id="albumArtwork" src="https://via.placeholder.com/250"></img>
+                        </div>
+                        <!-- Current track Artist & Title -->
+                        <div class="row justify-content-center mt-3">
+                            <a id="artistLink" target="_blank">
                                 <h4 id="artistTitle">Artist Title</h4>
-                            </div>
-                            <div class="row justify-content-center">
+                            </a>
+                        </div>
+                        <div class="row justify-content-center">
+                            <a id="songLink" target="_blank">
                                 <h4 id="trackTitle">Track Title</h4>
-                            </div>
-                            <!-- Spotify Control buttons -->
-                            <div class="row justify-content-center">
-                                <button class="btn btn-lg btn-spotify" id="previousBtn">
-                                    <i class="fas fa-step-backward"></i>
-                                </button>
-                
-                                <button class="btn btn-lg btn-spotify ml-3" id="pauseBtn">
-                                    <i class="fas fa-pause"></i>
-                                </button>
-                                <button class="btn btn-lg btn-spotify ml-3" id="playBtn">
-                                    <i class="fas fa-play"></i>
-                                </button>
-                
-                                <button class="btn btn-lg btn-spotify ml-3" id="nextBtn">
-                                    <i class="fas fa-step-forward"></i>
-                                </button>
-                            </div>
-                        </div>  
-                    </div>
-
-                    <!-- Content below Spotify info -->
-                    <div class="container d-flex justify-content-center">
-                        <button class="btn spotify-background text-white my-3 px-5" id="btnSignOut" type="button">
-                            <i class="fab fa-spotify mr-1"></i> Sign Out
-                        </button>
-                    </div>
+                            </a>
+                        </div>
+                        <!-- Spotify Control buttons -->
+                        <div class="row justify-content-center">
+                            <button class="btn btn-lg btn-spotify" id="previousBtn">
+                                <i class="fas fa-step-backward"></i>
+                            </button>
+            
+                            <button class="btn btn-lg btn-spotify ml-3" id="pauseBtn">
+                                <i class="fas fa-pause"></i>
+                            </button>
+                            <button class="btn btn-lg btn-spotify ml-3" id="playBtn">
+                                <i class="fas fa-play"></i>
+                            </button>
+            
+                            <button class="btn btn-lg btn-spotify ml-3" id="nextBtn">
+                                <i class="fas fa-step-forward"></i>
+                            </button>
+                        </div>
+                    </div>  
                 </div>
-                
-                <!-- Genius Content -->
-                <div class="col-md flex-grow mb-3" id="geniusContent">
-                    <div class="card border-primary">
-                        <div class="card-body d-flex flex-column">
-                            <!-- Loading Spinner -->
-                            <div class="text-center align-middle" id="geniusLoading">
-                                <i class="fa fa-spinner fa-pulse fa-3x fa-fw" ></i>
-                            </div>
-                            <!-- Lyrics Container -->
-                            <pre id="geniusLyricsContent"></pre>    
-                        </div> 
-                    </div>
+
+                <!-- Content below Spotify info -->
+                <div class="container d-flex justify-content-center">
+                    <button class="btn spotify-background text-white my-3 px-5" id="btnSignOut" type="button">
+                        <i class="fab fa-spotify mr-1"></i> Sign Out
+                    </button>
+                    <a class="ml-3 my-3 text-center" href="https://github.com/joshlmao/genify/issues" target="_blank" >
+                        <button class="btn btn-outline-info">
+                            Problem?
+                        </button>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Genius Content -->
+            <div class="col-md flex-grow mb-3" id="geniusContent">
+                <div class="card border-primary">
+                    <div class="card-body d-flex flex-column">
+                        <!-- Loading Spinner -->
+                        <div class="text-center align-middle" id="geniusLoading">
+                            <i class="fa fa-spinner fa-pulse fa-3x fa-fw" ></i>
+                        </div>
+                        <!-- Lyrics Container -->
+                        <pre id="geniusLyricsContent"></pre>    
+                    </div> 
                 </div>
             </div>
         </div>
