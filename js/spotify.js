@@ -125,7 +125,7 @@ class spotify {
             if ( data.trackName != spotify.currentTrack.trackName ||
                 data.artistName != spotify.currentTrack.artistName ) {
                     spotify.currentTrack = data;
-                    console.log(`New Song - ${data.trackName}`);
+                    console.log(`Song updated | '${data.artistName} - ${data.trackName}`);
 
                     setUIFunc(data.trackName, data.artistName, data.albumArtUrl);
                     geniusSearchFunc(data.trackName, data.artistName, data.albumArtUrl);
@@ -151,7 +151,7 @@ class spotify {
             // Validate that token info is still valid
             if ( Date.now() > spotify.authExpireTime - (60 * 1000)) {
                 // If token is less than 1 minute out of date, get user to give us auth again
-                getUserAuth();
+                spotify.getUserAuth();
             }
         });
     }
