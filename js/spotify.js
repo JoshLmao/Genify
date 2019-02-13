@@ -149,8 +149,9 @@ class spotify {
             }
 
             // Validate that token info is still valid
-            if ( Date.now() > spotify.authExpireTime - (60 * 1000)) {
+            if ( Date.now() > (spotify.authExpireTime - (60 * 1000))) {
                 // If token is less than 1 minute out of date, get user to give us auth again
+                console.log("Reaquiring user authorization...");
                 spotify.getUserAuth();
             }
         });
