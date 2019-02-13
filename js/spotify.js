@@ -157,6 +157,10 @@ class spotify {
     static getCurrentPlayback(callback) {
         var endpointUrl = "https://api.spotify.com/v1/me/player/";
         callApi(endpointUrl, this.currentAuthToken, "GET", function (response) {
+            if( response == undefined || response == null) {
+                console.error("Unknown response from Playback call")
+                return;
+            }
             var trackData = {
                 trackName: response.item.name,
                 artistName: response.item.artists[0].name,
