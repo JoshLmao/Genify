@@ -14,6 +14,9 @@ $(() => {
         window.location.href = "https://genify.joshlmao.com";
     });
 
+    // Set the site version number for help
+    $("#versionNumber").text("v0.1");
+
     const setStyle = function (hasLyrics) {
         if ( hasLyrics === false ) {
             $(".hide-on-lyrics").show();
@@ -74,6 +77,8 @@ $(() => {
             spotify.getCurrentPlayback(function (data) {
                 setSpotifyUI(data.trackName, data.artistName, data.albumArtUrl);
                 doGeniusSearch(data.trackName, data.artistName);
+                
+                spotify.startUpdateLoop(setSpotifyUI, doGeniusSearch);
 
                 setStyle(true);
             });
@@ -83,8 +88,6 @@ $(() => {
     }
 
     setStyle(false);
-    spotify.spotify();
-    spotify.updateSpotifyUIFunc = setSpotifyUI;
-    spotify.geniusUpdateFunc = doGeniusSearch;
+    spotify.spotify(setSpotifyUI, doGeniusSearch);
     readHash();
 });

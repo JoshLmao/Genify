@@ -81,11 +81,6 @@ class spotify {
             cookies.setCookie("authToken", this.currentAuthToken);
             cookies.setCookie("expireDate", this.authExpireTime);
 
-            // Check song status every X milliseconds
-            setInterval(() => {
-                spotify.updateLoop();
-            }, 30 * 1000);
-        
             var obj = {
                 authToken: authToken,
                 tokenType: tokenType,
@@ -93,6 +88,13 @@ class spotify {
             };
             return obj;
         }
+    }
+
+    static startUpdateLoop(setUIFunc, geniusSearchFunc) {
+        // Check song status every X milliseconds
+        setInterval(() => {
+            spotify.updateLoop(setUIFunc, geniusSearchFunc);
+        }, 2 * 1000);
     }
 
     static loadAuth() {
@@ -111,7 +113,7 @@ class spotify {
     }
 
     // Update loop run every X seconds, validates data and updates UI
-    static updateLoop() {
+    static updateLoop(setUIFunc, geniusSearchFunc) {
         this.getCurrentPlayback(function (data) {
             // Validate current playing track to make sure correct one is playing
             if( spotify.currentTrack == undefined || data == null) {
@@ -122,8 +124,8 @@ class spotify {
                     spotify.currentTrack = data;
                     console.log(`New Song - ${data.trackName}`);
 
-                    spotify.updateSpotifyUIFunc(data.trackName, data.artistName, data.albumArtUrl);
-                    spotify.geniusUpdateFunc(data.trackName, data.artistName, data.albumArtUrl);
+                    setUIFunc(data.trackName, data.artistName, data.albumArtUrl);
+                    geniusSearchFunc(data.trackName, data.artistName, data.albumArtUrl);
             }
             
             // Validate Play state, update btn visibility
