@@ -6,11 +6,14 @@ callApi = function (endpointUrl, authToken, method, callback) {
         url: url,
         type: method ? method : "GET",
         headers: {
-            'Authorization': 'Bearer ' + authToken
+            'Authorization': 'Bearer ' + authToken,
         },
         success: function(response) {
-            if( callback != null ) {
-                callback(response);
+            if( callback != null) {
+                if ( response != undefined)
+                    callback(response);
+                else
+                    console.error("Response from Spotify is undefined!");
             }
         },
         fail: function () {
@@ -156,7 +159,7 @@ class spotify {
     // Gets the current playback song of Spotify
     static getCurrentPlayback(callback) {
         var endpointUrl = "https://api.spotify.com/v1/me/player/";
-        callApi(endpointUrl, this.currentAuthToken, "GET", function (response) {
+        callApi(endpointUrl, this.currentAuthToken, "get", function (response) {
             if( response == undefined || response == null) {
                 console.error("Unknown response from Playback call")
                 return;
