@@ -15,7 +15,7 @@ $(() => {
     });
 
     // Set the site version number for help
-    $("#versionNumber").text("v0.1");
+    $("#versionNumber").text("v0.1.01");
 
     const setStyle = function (hasLyrics) {
         if ( hasLyrics === false ) {
@@ -71,7 +71,16 @@ $(() => {
             console.log("Loaded auth from url parameters");
         } else if ( cookies.checkCookie("authToken") == true ) {
             auth = spotify.loadAuth();
-            console.log("Loaded auth from cookies");
+
+            if (Date.now() > auth.expireDate ) {
+                $("#howToUse").before(`<div class="alert alert-danger text-center" role="alert">Lost Spotify authentification! Please re-sign in in to continue</div>`);
+                console.log("Has old authentification. User needs to re-authenticate");
+                auth = null;
+            } else if ( auth != null ) {
+                console.log("Loaded auth from cookies");
+            } else {
+                console.error("No authentification loaded from cookies");
+            }
         }
         if( auth !== null ) {
             spotify.getCurrentPlayback(function (data) {

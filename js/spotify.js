@@ -102,16 +102,15 @@ class spotify {
 
     static loadAuth() {
         var expireDate = cookies.getCookie("expireDate");
-        if (expireDate == "")
-            return; // No auth saved
-
-        if (Date.now() > expireDate ) {
-            console.error("Old auth, won't use");
-            return null;
-        } else {
+        if (expireDate != "") {
             this.currentAuthToken = cookies.getCookie("authToken");
-            console.log(`Spotify auth will expire at '${expireDate}'`)
-            return this.currentAuthToken;
+            return {
+                expireDate: expireDate,
+                authToken: this.currentAuthToken,
+            };
+        } else {
+            console.error("No auth saved");
+            return null;
         }
     }
 
@@ -216,7 +215,3 @@ class spotify {
         callApi(apiUrl, this.currentAuthToken, "POST", null);
     }
 }
-
-
-
-
