@@ -84,7 +84,7 @@ $(() => {
         }
         if( auth !== null ) {
             // Load current playing
-            $("#signInBtnContent").hide();
+            $("#signInBtnSignInContent").hide();
             $("#signInBtnLoadingContent").show();
 
             spotify.getCurrentPlayback(function (data) {
@@ -96,8 +96,8 @@ $(() => {
                 setStyle(true);
             });
         } else {
-            $("#signInBtnContent").hide();
-            //$("#signInBtnLoadingContent").hide();
+            $("#signInBtnSignInContent").show();
+            $("#signInBtnLoadingContent").hide();
             console.error("Unable to begin initialization");
         }
     }
