@@ -15,7 +15,7 @@ $(() => {
     });
 
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.01");
+    $("#versionNumber").text("v0.1.02");
 
     const setStyle = function (hasLyrics) {
         if ( hasLyrics === false ) {
@@ -83,6 +83,10 @@ $(() => {
             }
         }
         if( auth !== null ) {
+            // Load current playing
+            $("#signInBtnContent").hide();
+            $("#signInBtnLoadingContent").show();
+
             spotify.getCurrentPlayback(function (data) {
                 setSpotifyUI(data.trackName, data.artistName, data.albumArtUrl);
                 doGeniusSearch(data.trackName, data.artistName);
@@ -92,6 +96,8 @@ $(() => {
                 setStyle(true);
             });
         } else {
+            $("#signInBtnContent").hide();
+            //$("#signInBtnLoadingContent").hide();
             console.error("Unable to begin initialization");
         }
     }

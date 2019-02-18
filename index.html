@@ -88,7 +88,7 @@
         <!-- Jumbotron Heading -->
         <div class="jumbotron py-5 mx-auto copyable border-primary">
             <img class="position-relative float-right ml-1 mb-1" src="img/favicon.png" style="max-width: 100px"></img>
-            <h1 style="align:center">What is Genify?</h1>
+            <h1>What is Genify?</h1>
             <p class="lead">
                 Ever wanted to sing along to the current song but couldn't find the lyrics quick enough? 
                 This tool can fix that! I've integrated Spotify connectivity to Genius to show the lyrics
@@ -107,7 +107,12 @@
                 </p>
                 <div class="container-fluid">
                     <button class="btn btn-lg btn-block spotify-background text-white" id="btnSignIn" type="button">
-                        <i class="fab fa-spotify mr-1 py-3"></i> Sign In
+                        <div class="container" id="signInBtnContent">
+                            <i class="fab fa-spotify mr-1 py-3"></i> Sign In
+                        </div>
+                        <div class="container align-top" id="signInBtnLoadingContent">
+                            <i class="fa fa-spinner fa-pulse fa-fw mr-2"></i>Loading
+                        </div>
                     </button>
                 </div>
             </div>
