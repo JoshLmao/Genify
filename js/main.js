@@ -22,7 +22,7 @@ $(() => {
     });
 
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.1");
+    $("#versionNumber").text("v0.1.2");
 
     const setStyle = function (hasLyrics) {
         if ( hasLyrics === false ) {
@@ -57,6 +57,7 @@ $(() => {
         // Reset loading spinner & lyrics text
         $("#geniusLoading").show();
         $("#geniusLyricsContent").text(null);
+        $("#geniusAddLyrics").hide();
 
         genius.getSearchFirstResult(trackName, artistName, function (url) {
             getLyricsFromUrl(url);
@@ -99,7 +100,6 @@ $(() => {
             $("#signInBtnSignInContent").hide();
             $("#signInBtnLoadingContent").show();
             $("#romanizeBtn").hide();
-
             spotify.getCurrentPlayback(function (data) {
                 setSpotifyUI(data.trackName, data.artistName, data.albumArtUrl);
                 doGeniusSearch(data.trackName, data.artistName);
