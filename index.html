@@ -41,11 +41,15 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
+    <!-- Translate scripts -->
+    <script src="vendor/aromanizer/aromanize.js"></script>
+
     <!--Local Scripts-->
     <script src="js/main.js"></script>
     <script src="js/spotify.js"></script>
     <script src="js/genius.js"></script>
     <script src="js/cookies.js"></script>
+    <script src="js/lyricsService.js"></script>
 </head>
 
 <body>
@@ -205,8 +209,11 @@
                         <div class="align-middle" id="geniusLoading">
                             <i class="fa fa-spinner fa-pulse fa-3x fa-fw" ></i>
                         </div>
+                        <!-- Romanize Btn -->
+                        <button type="button" class="btn btn-primary my-3" id="romanizeBtn">Romanize</button>
                         <!-- Lyrics Container -->
-                        <pre id="geniusLyricsContent" class="text-left"></pre>    
+                        <pre id="geniusLyricsContent" class="text-left">
+                        </pre>
                     </div> 
                 </div>
             </div>

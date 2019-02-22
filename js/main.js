@@ -14,8 +14,15 @@ $(() => {
         window.location.href = "https://genify.joshlmao.com";
     });
 
+    var isRomanized = false;
+    $("#romanizeBtn").click(() => {
+        isRomanized = !isRomanized;
+        var lyrics = lyricsService.getLyrics(isRomanized);
+        $("#geniusLyricsContent").text(lyrics);
+    });
+
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.02");
+    $("#versionNumber").text("v0.1.1");
 
     const setStyle = function (hasLyrics) {
         if ( hasLyrics === false ) {
@@ -30,7 +37,12 @@ $(() => {
     // Parse the lyrics from the Genius URL
     const setLyrics = function (lyricsText) {
         $("#geniusLoading").hide();
-        $("#geniusLyricsContent").text(lyricsText.trim());
+        
+        var rawLyrics = lyricsText.trim();
+        lyricsService.initLyrics(rawLyrics);
+        var lyrics = lyricsService.getLyrics(false);
+
+        $("#geniusLyricsContent").text(lyrics);
     }
 
     // Set the Spotify current track info UI
@@ -65,7 +77,7 @@ $(() => {
             // Store Spotify parameter data and remove from URL
             const data = location.hash.substring(1);
             var baseUrl = window.location.href.split("#")[0];
-            window.history.pushState('name', '', baseUrl);
+            //window.history.pushState('name', '', baseUrl);
 
             auth = spotify.parseAuth(data);
             console.log("Loaded auth from url parameters");
@@ -86,6 +98,7 @@ $(() => {
             // Load current playing
             $("#signInBtnSignInContent").hide();
             $("#signInBtnLoadingContent").show();
+            $("#romanizeBtn").hide();
 
             spotify.getCurrentPlayback(function (data) {
                 setSpotifyUI(data.trackName, data.artistName, data.albumArtUrl);
@@ -104,5 +117,6 @@ $(() => {
 
     setStyle(false);
     spotify.spotify(setSpotifyUI, doGeniusSearch);
+    lyricsService.init();
     readHash();
 });
