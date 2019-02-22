@@ -2,8 +2,9 @@ class genius {
 
     static setNoLyricsUI() { 
         $("#geniusLoading").hide();
-        $("#geniusLyricsContent").text("Unable to find lyrics");
+        $("#romanizeBtn").hide();
         $("#geniusAddLyrics").show();
+        $("#geniusLyricsContent").text("Unable to find lyrics");
     }
 
     // Searches Genius for the artist and track name and returns the first result

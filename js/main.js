@@ -14,7 +14,7 @@ $(() => {
         window.location.href = "https://genify.joshlmao.com";
     });
 
-    var isRomanized = false;
+    let isRomanized = false;
     $("#romanizeBtn").click(() => {
         isRomanized = !isRomanized;
         var lyrics = lyricsService.getLyrics(isRomanized);
@@ -22,7 +22,18 @@ $(() => {
     });
 
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.2");
+    $("#versionNumber").text("v0.1.3");
+
+    // Helper function for showing an error message on splash page
+    const showErrorUI = function (message) {
+        var html = `<div class="alert alert-primary alert-dismissable show fade text-center" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <strong>${message}</strong>
+                    </div>`;
+        $("#howToUse").before(html);
+    }
 
     const setStyle = function (hasLyrics) {
         if ( hasLyrics === false ) {
@@ -40,8 +51,10 @@ $(() => {
         
         var rawLyrics = lyricsText.trim();
         lyricsService.initLyrics(rawLyrics);
-        var lyrics = lyricsService.getLyrics(false);
-
+    
+        // Reset romanized
+        isRomanized = false;
+        var lyrics = lyricsService.getLyrics(isRomanized);
         $("#geniusLyricsContent").text(lyrics);
     }
 
@@ -78,7 +91,7 @@ $(() => {
             // Store Spotify parameter data and remove from URL
             const data = location.hash.substring(1);
             var baseUrl = window.location.href.split("#")[0];
-            //window.history.pushState('name', '', baseUrl);
+            window.history.pushState('name', '', baseUrl);
 
             auth = spotify.parseAuth(data);
             console.log("Loaded auth from url parameters");
@@ -86,7 +99,7 @@ $(() => {
             auth = spotify.loadAuth();
 
             if (Date.now() > auth.expireDate ) {
-                $("#howToUse").before(`<div class="alert alert-danger text-center" role="alert">Lost Spotify authentification! Please re-sign in in to continue</div>`);
+                showErrorUI("Lost Spotify authentification! Please re-sign in in to continue");
                 console.log("Has old authentification. User needs to re-authenticate");
                 auth = null;
             } else if ( auth != null ) {
@@ -114,6 +127,15 @@ $(() => {
             console.error("Unable to begin initialization");
         }
     }
+
+    $(document).ajaxError(function (e, xhr, settings) {
+        debugger;
+        if (settings.url.includes("spotify") && xhr.status == 401) {
+            showErrorUI("Error 401 - Unable to authorize with Spotify");
+            $("#signInBtnSignInContent").show();
+            $("#signInBtnLoadingContent").hide();
+        }
+    });
 
     setStyle(false);
     spotify.spotify(setSpotifyUI, doGeniusSearch);
