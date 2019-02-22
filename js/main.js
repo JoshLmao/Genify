@@ -22,7 +22,7 @@ $(() => {
     });
 
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.3");
+    $("#versionNumber").text("v0.1.4");
 
     // Helper function for showing an error message on splash page
     const showErrorUI = function (message) {
@@ -130,10 +130,16 @@ $(() => {
 
     $(document).ajaxError(function (e, xhr, settings) {
         debugger;
-        if (settings.url.includes("spotify") && xhr.status == 401) {
-            showErrorUI("Error 401 - Unable to authorize with Spotify");
-            $("#signInBtnSignInContent").show();
-            $("#signInBtnLoadingContent").hide();
+        if (settings.url.includes("spotify")) {
+            if (xhr.status == 401) {
+                showErrorUI("Error 401 - Unable to authorize with Spotify");
+                $("#signInBtnSignInContent").show();
+                $("#signInBtnLoadingContent").hide();
+            } else if (xhr.status == 429) {
+                showErrorUI("Error 429 - Too many requests to Spotify. Try again later");
+                $("#signInBtnSignInContent").show();
+                $("#signInBtnLoadingContent").hide();
+            }
         }
     });
 
