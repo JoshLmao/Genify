@@ -8,9 +8,9 @@ class genius {
     }
 
     // Searches Genius for the artist and track name and returns the first result
-    static getSearchFirstResult(trackName, artistName, callback) {
+    static getSearchFirstResult(trackData, callback) {
         var proxyUrl = "https://cors-anywhere.herokuapp.com/";
-        var url = proxyUrl + "https://api.genius.com/search?q=" + encodeURIComponent(artistName) + "%20" + encodeURI(trackName);
+        var url = proxyUrl + "https://api.genius.com/search?q=" + encodeURIComponent(trackData.artistName) + "%20" + encodeURI(trackData.trackName);
         var accessToken = 'oIRErfK8KcmhxvvKzaDnt9GYLkfghdCz7pXxVi7Ce8c3V4INQC3qd_Djlc4ndnNq';
         $.ajax({
             url: url,
@@ -24,9 +24,8 @@ class genius {
                         genius.setNoLyricsUI();
                         return;
                     }
-                    var firstHit = response.response.hits[0];
-                    var url = firstHit.result.url;
-                    callback(url);
+                    var hitResult = genius.getRelevantHit(response.response.hits, trackData);
+                    callback(hitResult.url);
                 }
             },
             error: function(response) {
@@ -44,5 +43,21 @@ class genius {
             var lyrics = $(html).find("div").filter(".lyrics").text();
             callback(lyrics);
         });
+    }
+
+    // Gets the most appropriate hit in the list
+    static getRelevantHit (hits, trackData) {
+        if(hits.length == 0 || trackData == undefined) {
+            return null;
+        }
+        // find the first hit that contains song name in full_name
+        var relevantHit = null;
+        for (var i = 0; i < hits.length; i++ ) {
+            if (hits[i].result.full_title.includes(trackData.trackName)) {
+                relevantHit = hits[i];
+                break;
+            }
+        }
+        return relevantHit != null ? relevantHit.result : hits[0].result;
     }
 }

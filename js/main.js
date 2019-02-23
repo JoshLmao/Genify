@@ -60,22 +60,24 @@ $(() => {
 
     // Set the Spotify current track info UI
     const setSpotifyUI = function (trackData) {
+        // Set track name, artist name and album image
         $("#trackTitle").text(trackData.trackName);
         $("#artistTitle").text(trackData.artistName);
         $("#albumArtwork").attr("src", trackData.albumArtUrl);
 
-        $("#songLink").attr("href", trackData.songUrl); 
+        // Links for viewing Spotify artist and track
+        $("#songLink").attr("href", trackData.songUrl);
         $("#artistLink").attr("href", trackData.artistUrl);
     }
 
     // Starts search into Genius for lyrics, updates UI
-    const doGeniusSearch = function (trackName, artistName) {
+    const doGeniusSearch = function (trackData) {
         // Reset loading spinner & lyrics text
         $("#geniusLoading").show();
         $("#geniusLyricsContent").text(null);
         $("#geniusAddLyrics").hide();
 
-        genius.getSearchFirstResult(trackName, artistName, function (url) {
+        genius.getSearchFirstResult(trackData, function (url) {
             getLyricsFromUrl(url);
         });
     }
@@ -118,7 +120,7 @@ $(() => {
             $("#romanizeBtn").hide();
             spotify.getCurrentPlayback(function (data) {
                 setSpotifyUI(data);
-                doGeniusSearch(data.trackName, data.artistName);
+                doGeniusSearch(data);
                 
                 spotify.startUpdateLoop(setSpotifyUI, doGeniusSearch);
 
@@ -147,7 +149,7 @@ $(() => {
     });
 
     setStyle(false);
-    spotify.spotify(setSpotifyUI, doGeniusSearch);
+    spotify.spotify();
     lyricsService.init();
     readHash();
 });

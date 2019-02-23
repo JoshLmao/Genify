@@ -126,8 +126,8 @@ class spotify {
                     spotify.currentTrack = data;
                     console.log(`Song updated | '${data.artistName} - ${data.trackName}`);
 
-                    setUIFunc(data.trackName, data.artistName, data.albumArtUrl);
-                    geniusSearchFunc(data.trackName, data.artistName, data.albumArtUrl);
+                    setUIFunc(data);
+                    geniusSearchFunc(data);
             }
             
             // Validate Play state, update btn visibility
