@@ -61,11 +61,11 @@ $(() => {
     // Set the Spotify current track info UI
     const setSpotifyUI = function (trackData) {
         $("#trackTitle").text(trackData.trackName);
-        $("#artistTitle").text(track.artistName);
-        $("#albumArtwork").attr("src", data.albumArtUrl);
+        $("#artistTitle").text(trackData.artistName);
+        $("#albumArtwork").attr("src", trackData.albumArtUrl);
 
-        $("#songLink").attr("href", data.songUrl); 
-        $("#artistLink").attr("href", data.artistUrl);
+        $("#songLink").attr("href", trackData.songUrl); 
+        $("#artistLink").attr("href", trackData.artistUrl);
     }
 
     // Starts search into Genius for lyrics, updates UI
