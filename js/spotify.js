@@ -177,9 +177,6 @@ class spotify {
             if( spotify.currentTrack.trackName == null &&
                 spotify.currentTrack.artistName == null) {
                 spotify.currentTrack = trackData;
-
-                $("#songLink").attr("href", trackData.songUrl); 
-                $("#artistLink").attr("href", trackData.artistUrl);
             }
             callback(trackData);
         });

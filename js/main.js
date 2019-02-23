@@ -22,7 +22,7 @@ $(() => {
     });
 
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.4");
+    $("#versionNumber").text("v0.1.5");
 
     // Helper function for showing an error message on splash page
     const showErrorUI = function (message) {
@@ -59,10 +59,13 @@ $(() => {
     }
 
     // Set the Spotify current track info UI
-    const setSpotifyUI = function (trackName, artistName, albumArtUrl) {
-        $("#trackTitle").text(trackName);
-        $("#artistTitle").text(artistName);
-        $("#albumArtwork").attr("src", albumArtUrl);
+    const setSpotifyUI = function (trackData) {
+        $("#trackTitle").text(trackData.trackName);
+        $("#artistTitle").text(track.artistName);
+        $("#albumArtwork").attr("src", data.albumArtUrl);
+
+        $("#songLink").attr("href", data.songUrl); 
+        $("#artistLink").attr("href", data.artistUrl);
     }
 
     // Starts search into Genius for lyrics, updates UI
@@ -114,7 +117,7 @@ $(() => {
             $("#signInBtnLoadingContent").show();
             $("#romanizeBtn").hide();
             spotify.getCurrentPlayback(function (data) {
-                setSpotifyUI(data.trackName, data.artistName, data.albumArtUrl);
+                setSpotifyUI(data);
                 doGeniusSearch(data.trackName, data.artistName);
                 
                 spotify.startUpdateLoop(setSpotifyUI, doGeniusSearch);
