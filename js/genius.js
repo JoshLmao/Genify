@@ -9,7 +9,7 @@ class genius {
 
     // Searches Genius for the artist and track name and returns the first result
     static getSearchFirstResult(trackData, callback) {
-        var proxyUrl = "https://cors-anywhere.herokuapp.com/";
+        var proxyUrl = "https://genify-proxy.herokuapp.com/";
         var url = proxyUrl + "https://api.genius.com/search?q=" + encodeURIComponent(trackData.artistName) + "%20" + encodeURI(trackData.trackName);
         var accessToken = 'oIRErfK8KcmhxvvKzaDnt9GYLkfghdCz7pXxVi7Ce8c3V4INQC3qd_Djlc4ndnNq';
         $.ajax({
@@ -37,7 +37,7 @@ class genius {
 
     // Gets the lyrics from the Genius URL page
     static getLyricsFromUrl(url, callback) {
-        var proxyUrl = "https://cors-anywhere.herokuapp.com";
+        var proxyUrl = "https://genify-proxy.herokuapp.com";
         var url = proxyUrl + "/" + url;
         $.get(url, function( html ) {
             var lyrics = $(html).find("div").filter(".lyrics").text();

@@ -144,6 +144,10 @@ $(() => {
                 showErrorUI("Error 429 - Too many requests to Spotify. Try again later");
                 $("#signInBtnSignInContent").show();
                 $("#signInBtnLoadingContent").hide();
+            } else {
+                showErrorUI(`Unknown Error '${xhr.status}' - ${xhr.responseText}`);
+                $("#signInBtnSignInContent").show();
+                $("#signInBtnLoadingContent").hide();
             }
         }
     });

@@ -1,5 +1,5 @@
 callApi = function (endpointUrl, authToken, method, callback) {
-    var proxyUrl = "https://cors-anywhere.herokuapp.com";
+    var proxyUrl = "https://genify-proxy.herokuapp.com";
     var url = proxyUrl + "/" + endpointUrl;
 
     $.ajax({

@@ -21,7 +21,6 @@ class lyricsService {
             // Chinese
             this.translatedLyrics = lyricsService.toPinyin(lyrics);
         }
-
         if (this.language != "english") {
             $("#romanizeBtn").show();
         }
@@ -66,7 +65,7 @@ class lyricsService {
 
     // Japanese characters to Roman
     static toRomanji (lyrics) {
-         // ToDo
+        // ToDo
         return lyrics;
     }
 
