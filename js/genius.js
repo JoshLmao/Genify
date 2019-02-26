@@ -53,7 +53,9 @@ class genius {
         // find the first hit that contains song name in full_name
         var relevantHit = null;
         for (var i = 0; i < hits.length; i++ ) {
-            if (hits[i].result.full_title.includes(trackData.trackName)) {
+            if (hits[i].result.full_title.includes(trackData.trackName) 
+            && hits[i].result.primary_artist.name.toLowerCase() != "spotify") // Remove Spotify's "playlists tracks" results
+            {
                 relevantHit = hits[i];
                 break;
             }

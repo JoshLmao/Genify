@@ -22,7 +22,7 @@ $(() => {
     });
 
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.8");
+    $("#versionNumber").text("v0.1.9");
 
     // Helper function for showing an error message on splash page
     const showErrorUI = function (message) {
