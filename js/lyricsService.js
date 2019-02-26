@@ -71,7 +71,8 @@ class lyricsService {
 
     // Chinese characters to roman letters
     static toPinyin (lyrics) {
-        // ToDo
-        return lyrics;
+        // Uses Pinyin4JS
+        // https://github.com/superbiger/pinyin4js
+        return PinyinHelper.convertToPinyinString(lyrics, '', PinyinFormat.WITH_TONE_MARK);
     }
 }
