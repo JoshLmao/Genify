@@ -1,6 +1,6 @@
 callApi = function (endpointUrl, authToken, method, callback) {
-    var proxyUrl = "https://genify-proxy.herokuapp.com";
-    var url = proxyUrl + "/" + endpointUrl;
+    var proxyUrl = helper.getProxyUrl();
+    var url = proxyUrl + endpointUrl;
 
     $.ajax({
         url: url,
