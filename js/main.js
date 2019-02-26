@@ -1,28 +1,34 @@
 $(() => {
+    // If the current lyrics are romanized or not
+    let isRomanized = false;
+
     const getSpotify = () => {
         spotify.getUserAuth();
     } 
 
+    // Handler for Signing into Spotify
     $("#btnSignIn").click(() => {
         console.log("Signing into Spotify");
         getSpotify();
     });
 
+    // Handler for signing out of Spotify
     $("#btnSignOut").click(() => {
         console.log("Signing out of Spotify");
         cookies.deleteAllCookies();
         window.location.href = "https://genify.joshlmao.com";
     });
 
-    let isRomanized = false;
+    // Handler for when clicking the Romanize btn
     $("#romanizeBtn").click(() => {
         isRomanized = !isRomanized;
+        $("#romanizeBtn").text( isRomanized ? "Unromanize" : "Romanize");
         var lyrics = lyricsService.getLyrics(isRomanized);
         $("#geniusLyricsContent").text(lyrics);
     });
 
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.11");
+    $("#versionNumber").text("v0.1.12");
 
     // Helper function for showing an error message on splash page
     const showErrorUI = function (message) {
@@ -35,6 +41,7 @@ $(() => {
         $("#howToUse").before(html);
     }
 
+    // Sets CSS style for page, if to show Lyrics or not
     const setStyle = function (hasLyrics) {
         if ( hasLyrics === false ) {
             $(".hide-on-lyrics").show();
@@ -133,6 +140,7 @@ $(() => {
         }
     }
 
+    // Handling of (un)expected Ajax errors
     $(document).ajaxError(function (e, xhr, settings) {
         debugger;
         if (settings.url.includes("spotify")) {
@@ -152,8 +160,15 @@ $(() => {
         }
     });
 
+    // Init function for setting start values and initialization
+    const initPage = () => {
+        isRomanized = false;
+        $("#romanizeBtn").text("Romanize");
+    }
+
     setStyle(false);
     spotify.spotify();
     lyricsService.init();
+    initPage();
     readHash();
 });
