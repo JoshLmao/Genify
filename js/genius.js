@@ -17,22 +17,26 @@ class genius {
             headers: {
                 'Authorization': 'Bearer ' + accessToken
             },
-            success: function(response) {
-                if ( response != null) {
-                    if ( response.response.hits.length === 0) { 
-                        console.error("Unable to find any Genius lyrics results");
-                        genius.setNoLyricsUI();
-                        return;
-                    }
-                    var hitResult = genius.getRelevantHit(response.response.hits, trackData);
-                    callback(hitResult.url);
-                }
+            success: function (response) {
+                genius.onGotResults(response, trackData, callback);
             },
             error: function(response) {
                 console.error("Unable to get lyrics from Genius - " + response);
                 genius.setNoLyricsUI();
             },
         });
+    }
+
+    static onGotResults (response, trackData, callback) {
+        if ( response != null) {
+            if ( response.response.hits.length === 0) { 
+                console.error("Unable to find any Genius lyrics results");
+                genius.setNoLyricsUI();
+                return;
+            }
+            var hitResult = genius.getRelevantHit(response.response.hits, trackData);
+            callback(hitResult.url);
+        }
     }
 
     // Gets the lyrics from the Genius URL page

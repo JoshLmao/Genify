@@ -73,6 +73,6 @@ class lyricsService {
     static toPinyin (lyrics) {
         // Uses Pinyin4JS
         // https://github.com/superbiger/pinyin4js
-        return PinyinHelper.convertToPinyinString(lyrics, '', PinyinFormat.WITH_TONE_MARK);
+        return PinyinHelper.convertToPinyinString(lyrics, ' ', PinyinFormat.WITH_TONE_MARK);
     }
 }
