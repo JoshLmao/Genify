@@ -1,17 +1,23 @@
-<h1 align="center">
-  <br>
-  Genify
-  </br>
-</h1>
+<!-- Workaround for align right with hyperlink-->
+<p align="right">
+  <a href="https://genify.joshlmao.com">
+    <img src="img/favicon.png" width="65px" align="right"></img>
+  </a>
+</p>
+
+<p align="center">
+  <h1>Genify</h1>
+</p>
 
 <p align="center">
   <a href="https://twitter.com/JoshLmao">
     <img src="https://img.shields.io/badge/twitter-JoshLmao-blue.svg?style=flat-square.svg"/>
   </a>
   <a href="https://genify.joshlmao.com">
-    <img src="https://img.shields.io/badge/website-online-green.svg?style=flat-square.svg"/>
+    <img src="https://img.shields.io/badge/website-online-brightgreen.svg?style=flat-square.svg"/>
   </a>
 </p>
+
 
 # What is Genify?
 
@@ -40,6 +46,12 @@ Japanese <-> Romanji: Coming soon...
 ## Donations
 
 If you want to support my open source work, please consider buying me a coffee (or two! ;D)
+<p align="center">
+  <a href="https://brave.com/jos677" align="center">
+      <img src="img/BraveBat.png" height="65px"></img>
+      <h4 align="center">Supporter of Brave & BAT - Tips welcome!</h4>
+  </a>
+</p>
 
 <p align="center">
   <a href="https://ko-fi.com/joshlmao"><img src="https://i.imgur.com/zDeHMoK.png" height="65px"/>
