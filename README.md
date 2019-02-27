@@ -27,6 +27,16 @@ To make REST Api calls, we need to use a proxy that adds the CORS headers to the
 
 **Proxy Site:** [Genify-Proxy.heroku.com](https://genify-proxy.herokuapp.com)
 
+## Lyric Romanization
+
+If the lyrics of the current song are in Korean, Chinese or Japanese, you can translate the lyrics to their roman equivalent. The following libraries are used to do that
+
+Korean <-> Romaja: [Aromanjize-JS by Fujaru](https://github.com/fujaru/aromanize-js)
+
+Chinese <-> Pinyin: [Pinyin4JS by SuperBiger](https://github.com/superbiger/pinyin4js)
+
+Japanese <-> Romanji: Coming soon...
+
 ## Donations
 
 If you want to support my open source work, please consider buying me a coffee (or two! ;D)

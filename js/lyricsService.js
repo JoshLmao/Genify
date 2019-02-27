@@ -23,6 +23,8 @@ class lyricsService {
         }
         if (this.language != "english") {
             $("#romanizeBtn").show();
+        } else {
+            $("#romanizeBtn").hide();
         }
     }
 
