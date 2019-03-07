@@ -57,8 +57,11 @@ class genius {
         // find the first hit that contains song name in full_name
         var relevantHit = null;
         for (var i = 0; i < hits.length; i++ ) {
-            if (hits[i].result.full_title.includes(trackData.trackName) 
-            && hits[i].result.primary_artist.name.toLowerCase() != "spotify") // Remove Spotify's "playlists tracks" results
+            var hit = hits[i];
+            // Remove any brackets, usually used to show featured artists
+            var trackNameNoBracs = trackData.trackName.replace(/ *\([^)]*\) */g, "");
+            if (hit.result.full_title.includes(trackNameNoBracs) 
+            && hit.result.primary_artist.name.toLowerCase() != "spotify") // Remove Spotify's "playlists tracks" results
             {
                 relevantHit = hits[i];
                 break;
