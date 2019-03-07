@@ -49,15 +49,16 @@
     window.cookieconsent.initialise({
     "palette": {
         "popup": {
-        "background": "#000"
+            "background": "#000"
         },
         "button": {
-        "background": "#f1d600"
+            "background": "#f1d600"
         }
     },
     "theme": "edgeless",
     "position": "bottom-left",
     "content": {
+        "dismiss": "Got it",
         "message": "This website uses cookies only uses  cookies to restore any previous sign in session"
     }
     })});
@@ -91,19 +92,19 @@
             <!-- Social info -->
             <ul class="navbar-nav list-inline flex-row ml-md-auto d-none d-md-flex align-text-bottom">
                 <li class="nav-item mr-3">
-                    <a href="https://joshlmao.com" target="_blank">
+                    <a href="https://joshlmao.com">
                         <h4 class="mt-2">
                             <small>JoshLmao</small>
                         </h4>
                     </a>
                 </li>
                 <li class="nav-item mr-2">
-                    <a class="btn btn-outline-light btn-social rounded-circle" href="https://github.com/JoshLmao/Genify"  target="_blank">
+                    <a class="btn btn-outline-light btn-social rounded-circle" href="https://github.com/JoshLmao/Genify">
                         <i class="fab fa-github btn-social-icon mt-1"></i>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn btn-outline-light btn-social rounded-circle" href="https://twitter.com/JoshLmao" target="_blank">
+                    <a class="btn btn-outline-light btn-social rounded-circle" href="https://twitter.com/JoshLmao">
                         <i class="fab fa-fw fa-twitter btn-social-icon mt-1"></i>
                     </a>
                 </li>
@@ -151,25 +152,25 @@
                 <h3 class="text-primary">About</h3>
                 <p class="card-text">
                     Genify was created by JoshLmao (me!) and is made and hosted on Github, with the code 
-                    <a href="https://github.com/joshlmao/genify" target="_blank">publicly available here</a>.
+                    <a href="https://github.com/joshlmao/genify">publicly available here</a>.
                     <br/>
-                    For information on new features and progress, check out the <a href="https://github.com/users/JoshLmao/projects/1" target="_blank">project board here</a>
+                    For information on new features and progress, check out the <a href="https://github.com/users/JoshLmao/projects/1">project board here</a>
                     <br/><br/>
                     Thank you for using this! If you appreciate what I do, then please consider 
-                    <a href="https://twitter.com/JoshLmao" target="_blank">following me on Twitter</a>
+                    <a href="https://twitter.com/JoshLmao">following me on Twitter</a>
                     or supporting me by buying me a coffee (or two!) 😊
                 </p>
                 <div class="my-2 container">
-                    <a href="https://brave.com/jos677" target="_blank" class="d-flex justify-content-center align-items-center">
+                    <a href="https://brave.com/jos677" class="d-flex justify-content-center align-items-center">
                         <img src="img/BraveBat.png" height="50">
                         <h6 class="flex-container">Supporter of Brave & BAT - Tips welcome!</h6>
                     </a>
                 </div>
                 <div class="container d-flex justify-content-center my-2">
-                    <a class="mr-5" href="https://ko-fi.com/joshlmao" title="Thank you! <3" target="_blank">
+                    <a class="mr-5" href="https://ko-fi.com/joshlmao" title="Thank you! <3">
                         <img src="https://i.imgur.com/zDeHMoK.png" alt="KoFiDonate.png" height="50">
                     </a>
-                    <a href="https://paypal.me/ijoshlmao?locale.x=en_GB" title="Thank you! <3" target="_blank">
+                    <a href="https://paypal.me/ijoshlmao?locale.x=en_GB" title="Thank you! <3">
                         <img src="https://i.imgur.com/UfSd0gP.png" height="50">
                     </a>
                 </div>
@@ -186,16 +187,18 @@
                     <div class="card-body d-flex flex-column">
                         <div class="row justify-content-center mx-4">
                             <!-- Album Art-->
-                            <img id="albumArtwork" src="https://via.placeholder.com/250"></img>
+                            <a id="albumLink">
+                                <img id="albumArtwork" src="https://via.placeholder.com/250"></img>
+                            </a>
                         </div>
                         <!-- Current track Artist & Title -->
                         <div class="row justify-content-center mt-3">
-                            <a id="artistLink" target="_blank">
+                            <a id="artistLink">
                                 <h4 id="artistTitle">Artist Title</h4>
                             </a>
                         </div>
                         <div class="row justify-content-center">
-                            <a id="songLink" target="_blank">
+                            <a id="songLink">
                                 <h4 id="trackTitle">Track Title</h4>
                             </a>
                         </div>
@@ -224,7 +227,7 @@
                     <button class="btn spotify-background text-white my-3 px-5" id="btnSignOut" type="button">
                         <i class="fab fa-spotify mr-1"></i> Sign Out
                     </button>
-                    <a class="ml-3 my-3 text-center" href="https://github.com/joshlmao/genify/issues" target="_blank" >
+                    <a class="ml-3 my-3 text-center" href="https://github.com/joshlmao/genify/issues">
                         <button class="btn btn-outline-info">
                             Problem?
                         </button>
@@ -245,7 +248,7 @@
                         <!-- Lyrics Container -->
                         <pre id="geniusLyricsContent" class="text-left"></pre>
                         <!-- Add Lyrics to Genius Btn -->
-                        <a href="https://genius.com/new" target="_blank" id="geniusAddLyrics">
+                        <a href="https://genius.com/new"  id="geniusAddLyrics">
                             <button type="button" class="btn btn-outline-primary my-2" >Add lyrics to Genius</button>
                         </a>
                     </div> 

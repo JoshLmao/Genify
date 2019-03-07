@@ -58,10 +58,12 @@ class genius {
         var relevantHit = null;
         for (var i = 0; i < hits.length; i++ ) {
             var hit = hits[i];
+
             // Remove any brackets, usually used to show featured artists
             var trackNameNoBracs = trackData.trackName.replace(/ *\([^)]*\) */g, "");
-            if (hit.result.full_title.includes(trackNameNoBracs) 
-            && hit.result.primary_artist.name.toLowerCase() != "spotify") // Remove Spotify's "playlists tracks" results
+            if (hit.result.primary_artist.name.toLowerCase() != "spotify" && // Remove Spotify's "playlists tracks" results
+                hit.result.title.includes(trackNameNoBracs) && // Title match
+                hit.result.primary_artist.name.includes(trackData.artistName)) // Artist match
             {
                 relevantHit = hits[i];
                 break;

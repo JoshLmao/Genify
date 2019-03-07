@@ -28,7 +28,7 @@ $(() => {
     });
 
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.16");
+    $("#versionNumber").text("v0.1.17");
 
     // Helper function for showing an error message on splash page
     const showErrorUI = function (message) {
@@ -75,6 +75,7 @@ $(() => {
         // Links for viewing Spotify artist and track
         $("#songLink").attr("href", trackData.songUrl);
         $("#artistLink").attr("href", trackData.artistUrl);
+        $("#albumLink").attr("href", trackData.albumUrl);
     }
 
     // Starts search into Genius for lyrics, updates UI

@@ -173,6 +173,7 @@ class spotify {
 
                 songUrl: response.item.external_urls.spotify,
                 artistUrl: response.item.artists[0].external_urls.spotify,
+                albumUrl: response.item.album.external_urls.spotify,
             };
             if( spotify.currentTrack.trackName == null &&
                 spotify.currentTrack.artistName == null) {
