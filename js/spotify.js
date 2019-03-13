@@ -13,11 +13,11 @@ callApi = function (endpointUrl, authToken, method, callback) {
                 if ( response != undefined)
                     callback(response);
                 else
-                    console.error("Response from Spotify is undefined!");
+                    logger.error("Response from Spotify is undefined!");
             }
         },
         fail: function () {
-            console.log("failed");
+            logger.log("failed");
         }
     });
 }
@@ -70,7 +70,7 @@ class spotify {
         var split = data.split("&");
         if (split.length == 2 && split[0].substring(0, 4) == "error") {
             // Auth was denied
-            console.log("User denied auth");
+            logger.log("User has denied Spotify authentification");
             return null;
         } else {
             var authToken = split[0].substring(13);
@@ -109,7 +109,7 @@ class spotify {
                 authToken: this.currentAuthToken,
             };
         } else {
-            console.error("No auth saved");
+            logger.error("No authentification in cookies");
             return null;
         }
     }
@@ -124,7 +124,7 @@ class spotify {
             if ( data.trackName != spotify.currentTrack.trackName ||
                 data.artistName != spotify.currentTrack.artistName ) {
                     spotify.currentTrack = data;
-                    console.log(`Song updated | '${data.artistName} - ${data.trackName}`);
+                    logger.log(`Updated song - '${data.artistName} - ${data.albumName} - ${data.trackName}`);
 
                     setUIFunc(data);
                     geniusSearchFunc(data);
@@ -150,7 +150,7 @@ class spotify {
             // Validate that token info is still valid
             if ( Date.now() > (spotify.authExpireTime - (60 * 1000))) {
                 // If token is less than 1 minute out of date, get user to give us auth again
-                console.log("Reaquiring user authorization...");
+                logger.log("Reaquiring user authorization...");
                 spotify.getUserAuth();
             }
         });
@@ -161,12 +161,13 @@ class spotify {
         var endpointUrl = "https://api.spotify.com/v1/me/player/";
         callApi(endpointUrl, this.currentAuthToken, "get", function (response) {
             if( response == undefined || response == null) {
-                console.error("Unknown response from Playback call")
+                logger.error("Unknown or unexpected response from Playback call")
                 return;
             }
             var trackData = {
                 trackName: response.item.name,
                 artistName: response.item.artists[0].name,
+                albumName: response.item.album.name,
                 albumArtUrl: response.item.album.images[1].url,
                 
                 isPlaying: response.is_playing,
@@ -187,6 +188,7 @@ class spotify {
     static pause () {
         var apiUrl = "https://api.spotify.com/v1/me/player/pause";
         callApi(apiUrl, this.currentAuthToken, "PUT", null);
+        logger.log("Pausing current song");
 
         $("#pauseBtn").hide();
         $("#playBtn").show();
@@ -196,6 +198,7 @@ class spotify {
     static play () {
         var apiUrl = "https://api.spotify.com/v1/me/player/play";
         callApi(apiUrl, this.currentAuthToken, "PUT", null);
+        logger.log("Playing current song");
 
         $("#playBtn").hide();
         $("#pauseBtn").show();
@@ -205,11 +208,13 @@ class spotify {
     static nextSong () {
         var apiUrl = "https://api.spotify.com/v1/me/player/next";
         callApi(apiUrl, this.currentAuthToken, "POST", null);
+        logger.log("Skipping to next song");
     }
 
     // Skips playback to the previous song
     static previousSong () {
         var apiUrl = "https://api.spotify.com/v1/me/player/previous";
         callApi(apiUrl, this.currentAuthToken, "POST", null);
+        logger.log("Previous song");
     }
 }

@@ -24,10 +24,10 @@ pre {
 
 .btn-spotify {
     background: #1DB954;
-    color: rgb(190, 190, 190);
+    color: rgb(255, 255, 255);
     transition: color .15s ease-in-out
 }
 
 .btn-spotify:hover {
-    color: rgb(255, 255, 255);
+    color: rgb(214, 205, 205);
 }

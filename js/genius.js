@@ -21,7 +21,7 @@ class genius {
                 genius.onGotResults(response, trackData, callback);
             },
             error: function(response) {
-                console.error("Unable to get lyrics from Genius - " + response);
+                logger.error("Unable to get lyrics from Genius - " + response);
                 genius.setNoLyricsUI();
             },
         });
@@ -30,11 +30,12 @@ class genius {
     static onGotResults (response, trackData, callback) {
         if ( response != null) {
             if ( response.response.hits.length === 0) { 
-                console.error("Unable to find any Genius lyrics results");
+                logger.error("Unable to find any Genius lyrics results");
                 genius.setNoLyricsUI();
                 return;
             }
             var hitResult = genius.getRelevantHit(response.response.hits, trackData);
+            logger.log(`Loading lyrics '${hitResult.full_title}'`)
             callback(hitResult.url);
         }
     }

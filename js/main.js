@@ -8,13 +8,13 @@ $(() => {
 
     // Handler for Signing into Spotify
     $("#btnSignIn").click(() => {
-        console.log("Signing into Spotify");
+        logger.log("Signing into Spotify");
         getSpotify();
     });
 
     // Handler for signing out of Spotify
     $("#btnSignOut").click(() => {
-        console.log("Signing out of Spotify");
+        logger.log("Signing out of Spotify");
         cookies.deleteAllCookies();
         window.location.href = "https://genify.joshlmao.com";
     });
@@ -101,28 +101,32 @@ $(() => {
         var auth = null;
         if (location.hash && location.hash !== "#") 
         {
-            // Store Spotify parameter data and remove from URL
+            // Get data after '#'
             const data = location.hash.substring(1);
-            var baseUrl = window.location.href.split("#")[0];
-            window.history.pushState('name', '', baseUrl);
+
+            // Only remove Spotify auth from URL if not developing
+            if (!helper.isDevMode()) {
+                var baseUrl = window.location.href.split("#")[0];
+                window.history.pushState('name', '', baseUrl);
+            }
 
             auth = spotify.parseAuth(data);
-            console.log("Loaded auth from url parameters");
+            logger.log("Loaded Spotify authentification from url parameters");
         } else if ( cookies.checkCookie("authToken") == true ) {
             auth = spotify.loadAuth();
 
             if (Date.now() > auth.expireDate ) {
                 showErrorUI("Lost Spotify authentification! Please re-sign in in to continue");
-                console.log("Has old authentification. User needs to re-authenticate");
+                logger.log("Cookies contain old authentification");
                 auth = null;
             } else if ( auth != null ) {
-                console.log("Loaded auth from cookies");
+                logger.log("Loaded auth from cookies");
             } else {
-                console.error("No authentification loaded from cookies");
+                logger.error("No authentification loaded from cookies");
             }
         }
         if( auth !== null ) {
-            // Load current playing
+            // Has valid auth, init Spotify and UI
             $("#signInBtnSignInContent").hide();
             $("#signInBtnLoadingContent").show();
             $("#romanizeBtn").hide();
@@ -137,7 +141,7 @@ $(() => {
         } else {
             $("#signInBtnSignInContent").show();
             $("#signInBtnLoadingContent").hide();
-            console.error("Unable to begin initialization");
+            logger.error("Unable to begin Spotify initialization");
         }
     }
 
