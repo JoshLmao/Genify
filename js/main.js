@@ -27,8 +27,27 @@ $(() => {
         $("#geniusLyricsContent").text(lyrics);
     });
 
+    // Handler for showing changelog
+    $("#versionNumber").click(() =>{
+        var textHolder = $('.modal-body').find(".text-holder");
+        if( helper.isDevMode()) {
+            textHolder.html(`<h4>v0.2</h4><ul><li>Example</li></ul><hr/><h4>v0.1</h4><ul><li>Example 1</li></ul>`)
+        } else {
+            var proxyUrl = helper.getProxyUrl();
+            // Location is loaded from repo asset. Add host url to the relative url
+            var logLocation = `https://genify.joshlmao.com/` + `extra/changelog.txt`;
+            $.get(proxyUrl + logLocation, function( html ) {
+                textHolder.html(html);
+            });
+        }
+        
+        // Set title and display modal
+        $('.modal-title').text("Changelog");
+        $("#changelogModal").modal();
+    })
+
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.20");
+    $("#versionNumber").text("v0.1.21");
 
     // Helper function for showing an error message on splash page
     const showErrorUI = function (message) {
@@ -142,13 +161,11 @@ $(() => {
         } else {
             $("#signInBtnSignInContent").show();
             $("#signInBtnLoadingContent").hide();
-            logger.error("Unable to begin Spotify initialization");
         }
     }
 
     // Handling of (un)expected Ajax errors
     $(document).ajaxError(function (e, xhr, settings) {
-        debugger;
         if (settings.url.includes("spotify")) {
             if (xhr.status == 401) {
                 showErrorUI("Error 401 - Unable to authorize with Spotify");

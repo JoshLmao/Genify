@@ -24,10 +24,12 @@
     gtag('config', 'UA-127734786-5');
     </script>
 
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
     <!--Bootstrap-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     
     <!-- CSS's -->
@@ -35,8 +37,6 @@
     <link href="css/darkster.bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/style.css"></link>
 
-    <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -80,45 +80,48 @@
 </head>
 
 <body>
-    <!-- Top Bar-->
-    <header class="navbar navbar-expand flex-column flex-md-row bg-secondary">
-        <div class="container" >
-            <a class="navbar-brand" href="index.html" aria-label="Bootstrap" style="border-right:0px;">
-                <h1>Genify</h1>
-            </a>
-            <div class="row ml-1">
-                Genius + Spotify
-                <!-- Version Number -->
-                <small class="text-muted mt-1 ml-2" id="versionNumber"></small>
+    <!-- Top Navigation Bar-->
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+        <div class="container">
+            <div class="mx-auto order-0">
+                <a class="navbar-brand" href="index.html">
+                    <h1>Genify</h1>
+                </a>
             </div>
-            <!-- Social info -->
-            <ul class="navbar-nav list-inline flex-row ml-md-auto d-none d-md-flex align-text-bottom">
-                <li class="nav-item mr-3">
-                    <a href="https://joshlmao.com">
-                        <h4 class="mt-2">
-                            <small>JoshLmao</small>
-                        </h4>
-                    </a>
-                </li>
-                <li class="nav-item mr-2">
-                    <a class="btn btn-outline-light btn-social rounded-circle" href="https://github.com/JoshLmao/Genify">
-                        <i class="fab fa-github btn-social-icon mt-1"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-outline-light btn-social rounded-circle" href="https://twitter.com/JoshLmao">
-                        <i class="fab fa-fw fa-twitter btn-social-icon mt-1"></i>
-                    </a>
-                </li>
-            </ul>
+            <div class="navbar-collapse mx-auto w-100 text-center text-md-left">
+                <small class="text-muted" id="versionNumber" style="cursor: pointer"></small>
+            </div>
+            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item mr-3">
+                        <a href="https://joshlmao.com">
+                            <h4 class="mt-2">
+                                <small>JoshLmao</small>
+                            </h4>
+                        </a>
+                    </li>
+                    <li class="nav-item mr-2">
+                        <a class="btn btn-outline-light btn-social rounded-circle" href="https://github.com/JoshLmao/Genify">
+                            <i class="fab fa-github btn-social-icon mt-1"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light btn-social rounded-circle" href="https://twitter.com/JoshLmao">
+                            <i class="fab fa-fw fa-twitter btn-social-icon mt-1"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </header>
+    </nav>
 
     <!-- Content -->
     <div class="container mt-3 hide-on-lyrics">
         <!-- Jumbotron Heading -->
         <div class="jumbotron py-4 mx-auto copyable border-primary mb-3">
-            <img class="position-relative float-right ml-1 mb-1" src="img/favicon.png" style="max-width: 100px"></img>
+            <a href="index.html" title="Genify Logo - Don't hover on me"> 
+                <img class="position-relative float-right ml-1 mb-1" src="img/favicon.png" style="max-width: 100px"></img>
+            </a>
             <h1>What is Genify?</h1>
             <p class="lead">
                 Ever wanted to sing along to the current song but couldn't find the lyrics quick enough? 
@@ -254,6 +257,26 @@
                             <button type="button" class="btn btn-outline-primary my-2" >Add lyrics to Genius</button>
                         </a>
                     </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Changelog -->
+    <div class="modal fade" id="changelogModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="border-top: 1px solid rgba(0, 0, 0, 0.2)">
+                    <h3 class="modal-title text-primary"></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times text-white"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-holder text-white"></div>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid rgba(0, 0, 0, 0.2)">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

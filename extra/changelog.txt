@@ -1,0 +1,8 @@
+<h3><= v0.1.21</h3>
+<ul>
+  <li>Able to authorize with Spotify</li>
+  <li>Updates to latest Spotify song automatically</li>
+  <li>Get's most relevant lyrics from Genius</li>
+  <li>Added Japanese, Chinese and Korean romanization</li>
+  <li>Changelog to display the latest changes and updates for user</li>
+</ul>
