@@ -1,6 +1,7 @@
 $(() => {
     // If the current lyrics are romanized or not
     let isRomanized = false;
+    let isSimplified = null;
 
     const getSpotify = () => {
         spotify.getUserAuth();
@@ -25,6 +26,22 @@ $(() => {
         $("#romanizeBtn").text( isRomanized ? "Unromanize" : "Romanize");
         var lyrics = lyricsService.getLyrics(isRomanized);
         $("#geniusLyricsContent").text(lyrics);
+
+        // Hide Tradition to Simplified btn is romanized
+        $("#tradSimpBtn").toggle(!isRomanized);
+    });
+
+    $("#tradSimpBtn").click(() => {
+        // Get simplified state from service first, then invert
+        if (isSimplified == null) {
+            isSimplified = !lyricsService.isSimplified;
+        } else {
+            isSimplified = !isSimplified;
+        }
+        
+        $("#tradSimpBtn").text( isSimplified ? "To Traditional" : "To Simplified");
+        var lyrics = lyricsService.convertChinese(isSimplified);
+        $("#geniusLyricsContent").text(lyrics);
     });
 
     // Handler for showing changelog
@@ -47,7 +64,7 @@ $(() => {
     })
 
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.21");
+    $("#versionNumber").text("v0.1.22");
 
     // Helper function for showing an error message on splash page
     const showErrorUI = function (message) {
@@ -63,13 +80,8 @@ $(() => {
 
     // Sets CSS style for page, if to show Lyrics or not
     const setStyle = function (hasLyrics) {
-        if ( hasLyrics === false ) {
-            $(".hide-on-lyrics").show();
-            $(".show-on-lyrics").hide();
-        } else {
-            $(".hide-on-lyrics").hide();
-            $(".show-on-lyrics").show();
-        }
+        $(".hide-on-lyrics").toggle(!hasLyrics);
+        $(".show-on-lyrics").toggle(hasLyrics);
     }
 
     // Parse the lyrics from the Genius URL
@@ -100,8 +112,11 @@ $(() => {
 
     // Starts search into Genius for lyrics, updates UI
     const doGeniusSearch = function (trackData) {
-        // Reset loading spinner & lyrics text
+        // Reset loading spinner, lyrics text & other controls
         $("#geniusLoading").show();
+        $("#romanizeBtn").hide();
+        $("#tradSimpBtn").hide();
+
         $("#geniusLyricsContent").text(null);
         $("#geniusAddLyrics").hide();
 
@@ -150,6 +165,8 @@ $(() => {
             $("#signInBtnSignInContent").hide();
             $("#signInBtnLoadingContent").show();
             $("#romanizeBtn").hide();
+            $("#tradSimpBtn").hide();
+
             spotify.getCurrentPlayback(function (data) {
                 setSpotifyUI(data);
                 doGeniusSearch(data);
@@ -169,18 +186,14 @@ $(() => {
         if (settings.url.includes("spotify")) {
             if (xhr.status == 401) {
                 showErrorUI("Error 401 - Unable to authorize with Spotify");
-                $("#signInBtnSignInContent").show();
-                $("#signInBtnLoadingContent").hide();
             } else if (xhr.status == 429) {
                 showErrorUI("Error 429 - Too many requests to Spotify. Try again later");
-                $("#signInBtnSignInContent").show();
-                $("#signInBtnLoadingContent").hide();
             } else {
                 showErrorUI(`Unknown Error '${xhr.status}' - ${xhr.responseText}`);
-                $("#signInBtnSignInContent").show();
-                $("#signInBtnLoadingContent").hide();
             }
         }
+        $("#signInBtnSignInContent").show();
+        $("#signInBtnLoadingContent").hide();
     });
 
     // Init function for setting start values and initialization

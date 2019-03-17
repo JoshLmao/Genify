@@ -37,7 +37,6 @@
     <link href="css/darkster.bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/style.css"></link>
 
-
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         
@@ -68,6 +67,9 @@
     <script src="vendor/aromanizer/aromanize.js"></script>
     <script src="vendor/pinyin4js/pinyin4js-min.js"></script>
     <script src="vendor/romaji/romaji.min.js"></script>
+    <!-- Simplified/Traditional scripts-->
+    <script src="vendor/hustlzp/jquery.s2t.js"></script>
+    <script src="vendor/nickdrewe/TradOrSimp.js"></script>
 
     <!--Local Scripts-->
     <script src="js/main.js"></script>
@@ -145,7 +147,7 @@
                             <i class="fab fa-spotify"></i> Sign In
                         </div>
                         <div class="container align-top" id="signInBtnLoadingContent">
-                            <i class="fa fa-spinner fa-pulse fa-fw"></i>Loading
+                            <i class="fa fa-spinner fa-pulse fa-fw mr-2"></i>Loading
                         </div>
                     </button>
                 </div>
@@ -250,6 +252,8 @@
                         </div>
                         <!-- Romanize Btn -->
                         <button type="button" class="btn btn-outline-primary mb-3 py-1" id="romanizeBtn"></button>
+                        <!-- Trad to Simp Chinese Btn -->
+                        <button type="button" class="btn btn-outline-primary mb-3 py-1" id="tradSimpBtn"></button>
                         <!-- Lyrics Container -->
                         <pre id="geniusLyricsContent" class="text-left"></pre>
                         <!-- Add Lyrics to Genius Btn -->

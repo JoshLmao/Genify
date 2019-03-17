@@ -1,3 +1,8 @@
+<h3>v0.1.22</h3>
+<ul>
+  <li>Can convert Chinese lyrics between Traditional and Simplified</li>
+</ul>
+<hr/>
 <h3><= v0.1.21</h3>
 <ul>
   <li>Able to authorize with Spotify</li>

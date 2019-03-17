@@ -2,7 +2,8 @@ class lyricsService {
     static init() {
         this.currentLyrics = "english";
         this.language = "english";
-        this.translatedLyrics = "";
+        this.romanizedLyrics = "";
+        this.isSimplified = false;
     }
 
     // Initializes the latest lyrics and romanizes it
@@ -10,30 +11,40 @@ class lyricsService {
         this.currentLyrics = lyrics;
 
         lyricsService.detectLanguage(lyrics);
+        $("#tradSimpBtn").text(this.isSimplified ? "To Traditional" : "To Simplified");
 
         if(this.language == "korean") {
             // Korean
-            this.translatedLyrics = lyricsService.toRomaja(lyrics);
+            this.romanizedLyrics = lyricsService.toRomaja(lyrics);
         } else if (this.language == "japanese") {
             // Japanese
-            this.translatedLyrics = lyricsService.toRomanji(lyrics);
+            this.romanizedLyrics = lyricsService.toRomanji(lyrics);
         } else if (this.language == "chinese") {
             // Chinese
-            this.translatedLyrics = lyricsService.toPinyin(lyrics);
+            this.romanizedLyrics = lyricsService.toPinyin(lyrics);
         }
-        if (this.language != "english") {
-            $("#romanizeBtn").show();
-        } else {
-            $("#romanizeBtn").hide();
-        }
+
+        $("#romanizeBtn").toggle(this.language != "english");
+        $("#tradSimpBtn").toggle(this.language == "chinese");
     }
 
     // Gets the current lyrics for the current song
     static getLyrics (isRomanized) {
         if ( isRomanized ) {
-            return this.translatedLyrics;
+            return this.romanizedLyrics;
         } else {
             return this.currentLyrics;
+        }
+    }
+
+    // Converts the current lyrics between Traditional or Simplified
+    static convertChinese (toSimplified) {
+        // Using Hustlzp S2T
+        // https://github.com/hustlzp/jquery-s2t
+        if ( toSimplified ) {
+            return $.t2s(this.currentLyrics);
+        } else {
+            return $.s2t(this.currentLyrics);
         }
     }
 
@@ -59,6 +70,13 @@ class lyricsService {
             this.language = "japanese";
         } else if( chineseChars != null ) {
             this.language = "chinese";
+        }
+        // Detect if majority of chars are Simplified or Traditional
+        if( this.language == "chinese" ) {
+            // Using to detect
+            // https://github.com/nickdrewe/traditional-or-simplified
+            var result = detect(lyrics);
+            this.isSimplified = result.detectedCharacters == 'simplified';
         }
 
         // No other languages, set to English
