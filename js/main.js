@@ -28,7 +28,8 @@ $(() => {
         $("#geniusLyricsContent").text(lyrics);
 
         // Hide Tradition to Simplified btn is romanized
-        $("#tradSimpBtn").toggle(!isRomanized);
+        if( isSimplified != null )
+            $("#tradSimpBtn").toggle(!isRomanized);
     });
 
     $("#tradSimpBtn").click(() => {
@@ -64,7 +65,7 @@ $(() => {
     })
 
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.22");
+    $("#versionNumber").text("v0.1.23");
 
     // Helper function for showing an error message on splash page
     const showErrorUI = function (message) {
@@ -108,6 +109,9 @@ $(() => {
         $("#songLink").attr("href", trackData.songUrl);
         $("#artistLink").attr("href", trackData.artistUrl);
         $("#albumLink").attr("href", trackData.albumUrl);
+
+        // Reset simplified bool since song changed
+        isSimplified = null;
     }
 
     // Starts search into Genius for lyrics, updates UI
@@ -149,7 +153,6 @@ $(() => {
             logger.log("Loaded Spotify authentification from url parameters");
         } else if ( cookies.checkCookie("authToken") == true ) {
             auth = spotify.loadAuth();
-
             if (Date.now() > auth.expireDate ) {
                 showErrorUI("Lost Spotify authentification! Please re-sign in in to continue");
                 logger.log("Cookies contain old authentification");

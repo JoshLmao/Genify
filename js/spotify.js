@@ -105,7 +105,7 @@ class spotify {
         if (expireDate != "") {
             this.currentAuthToken = cookies.getCookie("authToken");
             return {
-                expireDate: expireDate,
+                expireDate: Date.parse(expireDate),
                 authToken: this.currentAuthToken,
             };
         } else {
