@@ -65,19 +65,7 @@ $(() => {
     })
 
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.23");
-
-    // Helper function for showing an error message on splash page
-    const showErrorUI = function (message) {
-        logger.error(message);
-        var html = `<div class="alert alert-primary alert-dismissable show fade text-center" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                        <strong>${message}</strong>
-                    </div>`;
-        $("#howToUse").before(html);
-    }
+    $("#versionNumber").text("v0.1.24");
 
     // Sets CSS style for page, if to show Lyrics or not
     const setStyle = function (hasLyrics) {
@@ -150,12 +138,18 @@ $(() => {
             }
 
             auth = spotify.parseAuth(data);
-            logger.log("Loaded Spotify authentification from url parameters");
+
+            if( auth == false ) {
+                // Auth was denied by user
+                helper.showWarningUI("Denied authorization from Spotify. Unable to continue");
+                auth = null;
+            } else {
+                logger.log("Loaded Spotify authentification from url parameters");
+            }
         } else if ( cookies.checkCookie("authToken") == true ) {
             auth = spotify.loadAuth();
             if (Date.now() > auth.expireDate ) {
-                showErrorUI("Lost Spotify authentification! Please re-sign in in to continue");
-                logger.log("Cookies contain old authentification");
+                helper.showErrorUI("Spotify authentification has expired! Please re-sign in in to continue");
                 auth = null;
             } else if ( auth != null ) {
                 logger.log("Loaded auth from cookies");
@@ -188,11 +182,11 @@ $(() => {
     $(document).ajaxError(function (e, xhr, settings) {
         if (settings.url.includes("spotify")) {
             if (xhr.status == 401) {
-                showErrorUI("Error 401 - Unable to authorize with Spotify");
+                helper.showErrorUI("Error 401 - Unable to authorize with Spotify");
             } else if (xhr.status == 429) {
-                showErrorUI("Error 429 - Too many requests to Spotify. Try again later");
+                helper.showErrorUI("Error 429 - Too many requests to Spotify. Try again later");
             } else {
-                showErrorUI(`Unknown Error '${xhr.status}' - ${xhr.responseText}`);
+                helper.showErrorUI(`Unknown Error '${xhr.status}' - ${xhr.responseText}`);
             }
         }
         $("#signInBtnSignInContent").show();

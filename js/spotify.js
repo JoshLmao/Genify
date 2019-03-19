@@ -69,9 +69,8 @@ class spotify {
     static parseAuth(data) {
         var split = data.split("&");
         if (split.length == 2 && split[0].substring(0, 4) == "error") {
-            // Auth was denied
-            logger.log("User has denied Spotify authentification");
-            return null;
+            // Authorization was denied by user
+            return false;
         } else {
             var authToken = split[0].substring(13);
             var tokenType = split[1].substring(11);

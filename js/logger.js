@@ -1,10 +1,18 @@
+// Logging class for displaying debug information to the console
 class logger {
+    // Display a simple message
     static log( message ) {
         console.log(logger.getDateString() + " | " + message);
     }
 
+    // Show an error message
     static error( message ) {
         console.error(logger.getDateString() + " | " + message);
+    }
+    
+    // Shows a warning message
+    static warning (message) {
+        console.warn(logger.getDateString() + " | " + message);
     }
 
     static getDateString() {
