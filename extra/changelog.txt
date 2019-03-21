@@ -1,3 +1,10 @@
+<h3>v0.1.25</h3>
+<ul>
+  <li>Displays a warning when close to reauthorizing with Spotify</li>
+  <li>Automatically reasks for reauthorization with Spotify when expired</li>
+  <li>Fixed inconsistencies with authorization object when loaded from params and cookies</li>
+</ul>
+<hr/>
 <h3>v0.1.22</h3>
 <ul>
   <li>Can convert Chinese lyrics between Traditional and Simplified</li>

@@ -48,6 +48,7 @@ class spotify {
         this.currentAuthToken = {};
         this.authExpireTime = {};
         this.updateSpotifyUIFunc = function(){};
+        this.reauthThread = null;
     }
 
     // Gets the date plus the amount of seconds added on
@@ -83,20 +84,43 @@ class spotify {
             cookies.setCookie("authToken", this.currentAuthToken);
             cookies.setCookie("expireDate", this.authExpireTime);
 
+            // Find ms difference between the expire time and now
+            var msDifference = spotify.authExpireTime - Date.now();
+            // Require auth once it has expired
+            this.reauthThread = setTimeout(function() {
+                spotify.reaquireAuth();
+            }, msDifference);
+
+
             var obj = {
                 authToken: authToken,
                 tokenType: tokenType,
-                expiresSeconds: expiresSeconds
+                expireDate: this.authExpireTime,
             };
             return obj;
         }
     }
 
+    // Reaquires the authorization of Spotify if it is about to expire
+    static reaquireAuth() {
+        if ( Date.now() > (spotify.authExpireTime - (10 * 1000))) {
+            // Stop redoing timeout
+            window.clearTimeout( this.reauthThread );
+            this.reauthThread = null;
+
+            // If token is less than 1 minute out of date, get user to give us auth again
+            logger.log("Reaquiring user authorization...");
+            spotify.getUserAuth();
+        }
+    }
+
     static startUpdateLoop(setUIFunc, geniusSearchFunc) {
-        // Check song status every X milliseconds
-        setInterval(() => {
-            spotify.updateLoop(setUIFunc, geniusSearchFunc);
-        }, 2 * 1000);
+        // If no update loop started, start and check song status every X milliseconds 
+        if( this.updateIntevalThread == null ) {
+            this.updateIntevalThread = setInterval(() => {
+                spotify.updateLoop(setUIFunc, geniusSearchFunc);
+            }, 2 * 1000);
+        }        
     }
 
     static loadAuth() {
@@ -144,13 +168,6 @@ class spotify {
                 if ( !$("#playBtn").is(":visible") ) {
                     $("#playBtn").show();
                 }   
-            }
-
-            // Validate that token info is still valid
-            if ( Date.now() > (spotify.authExpireTime - (60 * 1000))) {
-                // If token is less than 1 minute out of date, get user to give us auth again
-                logger.log("Reaquiring user authorization...");
-                spotify.getUserAuth();
             }
         });
     }

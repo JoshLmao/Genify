@@ -54,6 +54,8 @@ $(() => {
             var proxyUrl = helper.getProxyUrl();
             // Location is loaded from repo asset. Add host url to the relative url
             var logLocation = `https://genify.joshlmao.com/` + `extra/changelog.txt`;
+            // Placeholder text while awaiting changelog text
+            textHolder.html(`<h1 class="text-center font-weight-bold">Loading...</h1>`)
             $.get(proxyUrl + logLocation, function( html ) {
                 textHolder.html(html);
             });
@@ -65,7 +67,7 @@ $(() => {
     })
 
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.24");
+    $("#versionNumber").text("v0.1.25");
 
     // Sets CSS style for page, if to show Lyrics or not
     const setStyle = function (hasLyrics) {
@@ -144,12 +146,14 @@ $(() => {
                 helper.showWarningUI("Denied authorization from Spotify. Unable to continue");
                 auth = null;
             } else {
-                logger.log("Loaded Spotify authentification from url parameters");
+                logger.log(`Loaded Spotify authentification from url params`);
             }
         } else if ( cookies.checkCookie("authToken") == true ) {
             auth = spotify.loadAuth();
             if (Date.now() > auth.expireDate ) {
+                // Show expired cookies message and remove old auth cookies
                 helper.showErrorUI("Spotify authentification has expired! Please re-sign in in to continue");
+                cookies.deleteAllCookies();
                 auth = null;
             } else if ( auth != null ) {
                 logger.log("Loaded auth from cookies");
@@ -163,6 +167,14 @@ $(() => {
             $("#signInBtnLoadingContent").show();
             $("#romanizeBtn").hide();
             $("#tradSimpBtn").hide();
+
+            logger.log(`Expires at '${auth.expireDate}'`);
+
+            var differenceMs = auth.expireDate - Date.now() - 1 * 60 * 1000;
+            this.displayExpireThread = setTimeout(function() {
+                helper.showWarningUI("Spotify authorization is about to expire (One minute)");
+                window.clearTimeout( this.displayExpireThread );
+            }, differenceMs);
 
             spotify.getCurrentPlayback(function (data) {
                 setSpotifyUI(data);
