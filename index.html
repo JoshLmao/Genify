@@ -3,25 +3,32 @@
     <!-- Page Details -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name='subject' content="Genify | JoshLmao">
     <meta name="description" content="Genify - View the lyrics to your current listening song on Spotify!">
     <meta name="author" content="JoshLmao">      
 
     <title>Genify | JoshLmao</title>
     <link rel="shortcut icon" type="image/x-icon" href="img/favicon.png" />
 
-    <!--OpenGraph metas-->
+    <!--OpenGraph metadata-->
+    <meta property="og:title" content="Genify | JoshLmao" />
     <meta property='og:type' content='website'/>
-    <meta property='og:site_name' content='Genify - JoshLmao'/>
-    <meta property='og:image' content='https://i.imgur.com/nG1EYOu.png'/>
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://genify.joshlmao.com" />
+    <meta property='og:site_name' content='JoshLmao'/>
+    <meta property='og:image' content='https://i.imgur.com/L3oRfI0.png'/>
+    <meta property="og:description" content="Genify automatically gets your current Spotify song and the lyrics so you can spend more time singing" />
+    
+    <!-- Twitter metadata-->
+    <meta property="twitter:site" content="@joshlmao"/>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-127734786-5"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-127734786-5');
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-127734786-5');
     </script>
 
     <!-- JQuery -->
@@ -44,23 +51,23 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script>
     <script>
-    window.addEventListener("load", function(){
-    window.cookieconsent.initialise({
-    "palette": {
-        "popup": {
-            "background": "#000"
+        window.addEventListener("load", function(){
+        window.cookieconsent.initialise({
+        "palette": {
+            "popup": {
+                "background": "#000"
+            },
+            "button": {
+                "background": "#f1d600"
+            }
         },
-        "button": {
-            "background": "#f1d600"
+        "theme": "edgeless",
+        "position": "bottom-left",
+        "content": {
+            "dismiss": "Got it",
+            "message": "This website uses cookies only uses  cookies to restore any previous sign in session"
         }
-    },
-    "theme": "edgeless",
-    "position": "bottom-left",
-    "content": {
-        "dismiss": "Got it",
-        "message": "This website uses cookies only uses  cookies to restore any previous sign in session"
-    }
-    })});
+        })});
     </script>
 
     <!-- Translate scripts -->

@@ -1,4 +1,7 @@
 $(() => {
+    // Set the site version number for help
+    $("#versionNumber").text("v0.1.26");
+
     // If the current lyrics are romanized or not
     let isRomanized = false;
     let isSimplified = null;
@@ -55,7 +58,7 @@ $(() => {
             // Location is loaded from repo asset. Add host url to the relative url
             var logLocation = `https://genify.joshlmao.com/` + `extra/changelog.txt`;
             // Placeholder text while awaiting changelog text
-            textHolder.html(`<h1 class="text-center font-weight-bold">Loading...</h1>`)
+            textHolder.html(`<h4 class="text-center font-weight-bold">Loading Changelog...</h4>`)
             $.get(proxyUrl + logLocation, function( html ) {
                 textHolder.html(html);
             });
@@ -65,9 +68,6 @@ $(() => {
         $('.modal-title').text("Changelog");
         $("#changelogModal").modal();
     })
-
-    // Set the site version number for help
-    $("#versionNumber").text("v0.1.25");
 
     // Sets CSS style for page, if to show Lyrics or not
     const setStyle = function (hasLyrics) {
