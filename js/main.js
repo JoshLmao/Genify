@@ -1,6 +1,6 @@
 $(() => {
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.26");
+    $("#versionNumber").text("v0.1.27");
 
     // If the current lyrics are romanized or not
     let isRomanized = false;
