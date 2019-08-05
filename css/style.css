@@ -31,3 +31,7 @@ pre {
 .btn-spotify:hover {
     color: rgb(214, 205, 205);
 }
+
+.spotify-bar {
+    height: 90px;
+}
