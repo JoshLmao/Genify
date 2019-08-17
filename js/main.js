@@ -10,6 +10,25 @@ $(() => {
         spotify.getUserAuth();
     } 
 
+    $("#pauseBtn").click(() => {
+        spotify.pause();
+    });
+    $("#playBtn").click(() => {
+        spotify.play();
+    });
+    $("#previousBtn").click(() => {
+        spotify.previousSong();
+    });
+    $("#nextBtn").click(() => {
+        spotify.nextSong();
+    });
+    $("#muteBtn").click(() => {
+        spotify.mute();
+    });
+    $("#unmuteBtn").click(() => {
+        spotify.unmute();
+    });
+
     // Handler for Signing into Spotify
     $("#btnSignIn").click(() => {
         logger.log("Signing into Spotify");
@@ -99,6 +118,13 @@ $(() => {
         $("#trackTotalDuration").text(helper.msToTime(trackData.duration_ms));
         var percentDuration = trackData.progress_ms / trackData.duration_ms * 100; 
         $("#trackProgress").css("width", percentDuration + "%")
+
+        $("#volumeProgress").css("width", trackData.volume_percent + "%");
+        $(".muted").toggle(trackData.volume_percent <= 0);
+        $(".unmuted").toggle(trackData.volume_percent > 0);
+
+        $(".is-playing").toggle(trackData.isPlaying);
+        $(".is-paused").toggle(!trackData.isPlaying);
 
         // Links for viewing Spotify artist and track
         $("#songLink").attr("href", trackData.songUrl);

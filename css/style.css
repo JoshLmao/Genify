@@ -1,7 +1,3 @@
-.body {
-    background: yellow;
-}
-
 .btn-social {
     width: 2.5rem;
     height: 2.5rem;
@@ -32,10 +28,30 @@ pre {
     color: rgb(214, 205, 205);
 }
 
-.spotify-bar {
+.spotify-media-bar {
     height: 90px;
+    background: rgb(40, 40, 40);
 }
 
 .album-art {
     max-width: 70px;
+}
+
+.spotify-progress-bar {
+    height: 7px;
+    background: rgb(64, 64, 64);
+}
+
+.spotify-progress-bar-inner {
+    background: rgb(179, 179, 179);
+}
+
+.spotify-button {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
 }

@@ -24,19 +24,6 @@ callApi = function (endpointUrl, authToken, method, callback) {
 
 class spotify {
     static spotify() {
-        $("#pauseBtn").click(() => {
-            spotify.pause();
-        });
-        $("#playBtn").click(() => {
-            spotify.play();
-        });
-        $("#previousBtn").click(() => {
-            spotify.previousSong();
-        });
-        $("#nextBtn").click(() => {
-            spotify.nextSong();
-        });
-
         $("#playBtn").hide();
 
         this.currentTrack = {
@@ -198,6 +185,8 @@ class spotify {
 
                 progress_ms: response.progress_ms,
                 duration_ms: response.item.duration_ms,
+                
+                volume_percent: response.device.volume_percent,
 
                 isPlaying: response.is_playing,
 
@@ -218,9 +207,6 @@ class spotify {
         var apiUrl = "https://api.spotify.com/v1/me/player/pause";
         callApi(apiUrl, this.currentAuthToken, "PUT", null);
         logger.log("Pausing current song");
-
-        $("#pauseBtn").hide();
-        $("#playBtn").show();
     }
 
     // Plays the current Spotify song
@@ -228,9 +214,6 @@ class spotify {
         var apiUrl = "https://api.spotify.com/v1/me/player/play";
         callApi(apiUrl, this.currentAuthToken, "PUT", null);
         logger.log("Playing current song");
-
-        $("#playBtn").hide();
-        $("#pauseBtn").show();
     }
 
     // Skips playback to the next song
@@ -245,5 +228,18 @@ class spotify {
         var apiUrl = "https://api.spotify.com/v1/me/player/previous";
         callApi(apiUrl, this.currentAuthToken, "POST", null);
         logger.log("Previous song");
+    }
+
+    static mute () {
+        var apiUrl = "https://api.spotify.com/v1/me/player/volume?volume_percent=0";
+        callApi(apiUrl, this.currentAuthToken, "PUT", null);
+        logger.log("Muted");
+    }
+
+    static unmute () {
+        // ToDo: Store volume and restore to that on unmute
+        var apiUrl = "https://api.spotify.com/v1/me/player/volume?volume_percent=50";
+        callApi(apiUrl, this.currentAuthToken, "PUT", null);
+        logger.log("Unmuted");
     }
 }
