@@ -162,38 +162,38 @@
                         <div class="row">
                             <!-- Album Art -->
                             <a id="albumLink">
-                                <img id="albumArtwork" src="https://via.placeholder.com/75"></img>
+                                <img id="albumArtwork" class="album-art" src="https://via.placeholder.com/75"></img>
                             </a>
                             <!-- Track info -->
                             <div class="col d-flex flex-column">
-                                <a id="songLink" class="align-self-middle">
+                                <a id="songLink" class="my-auto">
                                     <h4 id="trackTitle">Track Title</h4>
                                 </a>
-                                <a id="artistLink" class="align-self-middle">
+                                <a id="artistLink" class="my-auto">
                                     <h5 id="artistTitle">Artist Title</h5>
                                 </a>
                             </div>
                         </div>
                     </div>
                     <!-- Media Controls Column -->
-                    <div class="col">
+                    <div class="col mx-5">
                         <div class="d-flex justify-content-center">
-                            <button type="button" class=" btn btn-primary">
+                            <button type="button" class="btn btn-primary">
                                 <
                             </button>
-                            <button type="button" class=" btn btn-primary">
+                            <button type="button" class="btn btn-primary">
                                 Play
                             </button>
-                            <button type="button" class=" btn btn-primary">
+                            <button type="button" class="btn btn-primary ">
                                 >
                             </button>
                         </div>
-                        <div class="d-flex justify-content-around">
-                            <p class="px-2">0:00</p>
-                            <div class="progress w-100f">
-                                <div class="progress-bar" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="d-flex justify-content-around align-items-center">
+                            <p id="trackCurrentPosition" class="px-2 my-auto">0:00</p>
+                            <div class="progress w-100">
+                                <div id="trackProgress" class="progress-bar" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
-                            <p class="px-2">9:99</p>
+                            <p id="trackTotalDuration" class="px-2 my-auto">9:99</p>
                         </div>
                         
                     </div>
@@ -203,17 +203,14 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- <td class="signed-out-ui px-5 py-5 container-fluid align-middle">
-                <button class="btn btn-lg btn-block spotify-background text-white py-3" id="btnSignIn" type="button">
+            <!-- Sign in -->
+            <div class="signed-out-ui my-auto container-fluid">
+                <button class="btn btn-lg btn-block spotify-background text-white mx-auto" id="btnSignIn" type="button" style="width: 250px">
                     <div class="container" id="signInBtnSignInContent">
                         <i class="fab fa-spotify"></i> Sign In
                     </div>
-                    <div class="container align-top" id="signInBtnLoadingContent">
-                        <i class="fa fa-spinner fa-pulse fa-fw mr-2"></i>Loading
-                    </div>
                 </button>
-            </td> -->
+            </div>
         </div>
         <!-- Lyrics bar -->
         <div class="row mx-0 bg-secondary">

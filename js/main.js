@@ -70,9 +70,9 @@ $(() => {
     })
 
     // Sets CSS style for page, if to show Lyrics or not
-    const setStyle = function (hasLyrics) {
-        $(".hide-on-lyrics").toggle(!hasLyrics);
-        $(".show-on-lyrics").toggle(hasLyrics);
+    const setStyle = function (isSignedIn) {
+        $(".signed-out-ui").toggle(!isSignedIn);
+        $(".signed-in-ui").toggle(isSignedIn);
     }
 
     // Parse the lyrics from the Genius URL
@@ -94,6 +94,11 @@ $(() => {
         $("#trackTitle").text(trackData.trackName);
         $("#artistTitle").text(trackData.artistName);
         $("#albumArtwork").attr("src", trackData.albumArtUrl);
+
+        $("#trackCurrentPosition").text(helper.msToTime(trackData.progress_ms));
+        $("#trackTotalDuration").text(helper.msToTime(trackData.duration_ms));
+        var percentDuration = trackData.progress_ms / trackData.duration_ms * 100; 
+        $("#trackProgress").css("width", percentDuration + "%")
 
         // Links for viewing Spotify artist and track
         $("#songLink").attr("href", trackData.songUrl);
@@ -163,8 +168,8 @@ $(() => {
         }
         if( auth !== null ) {
             // Has valid auth, init Spotify and UI
-            $("#signInBtnSignInContent").hide();
-            $("#signInBtnLoadingContent").show();
+            setStyle(true);
+
             $("#romanizeBtn").hide();
             $("#tradSimpBtn").hide();
 
@@ -185,8 +190,7 @@ $(() => {
                 setStyle(true);
             });
         } else {
-            $("#signInBtnSignInContent").show();
-            $("#signInBtnLoadingContent").hide();
+            setStyle(true);
         }
     }
 
@@ -201,8 +205,7 @@ $(() => {
                 helper.showErrorUI(`Unknown Error '${xhr.status}' - ${xhr.responseText}`);
             }
         }
-        $("#signInBtnSignInContent").show();
-        $("#signInBtnLoadingContent").hide();
+        setStyle(true);
     });
 
     // Init function for setting start values and initialization

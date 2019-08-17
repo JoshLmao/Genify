@@ -120,7 +120,11 @@ class spotify {
             this.updateIntevalThread = setInterval(() => {
                 spotify.updateLoop(setUIFunc, geniusSearchFunc);
             }, 2 * 1000);
-        }        
+
+            setInterval(() => {
+                spotify.progressLoop(setUIFunc);
+            }, 1000);
+        }
     }
 
     static loadAuth() {
@@ -172,6 +176,12 @@ class spotify {
         });
     }
 
+    static progressLoop(setUIFunc) {
+        this.getCurrentPlayback(function (data) {
+            setUIFunc(data);
+        })
+    }
+
     // Gets the current playback song of Spotify
     static getCurrentPlayback(callback) {
         var endpointUrl = "https://api.spotify.com/v1/me/player/";
@@ -185,7 +195,10 @@ class spotify {
                 artistName: response.item.artists[0].name,
                 albumName: response.item.album.name,
                 albumArtUrl: response.item.album.images[1].url,
-                
+
+                progress_ms: response.progress_ms,
+                duration_ms: response.item.duration_ms,
+
                 isPlaying: response.is_playing,
 
                 songUrl: response.item.external_urls.spotify,

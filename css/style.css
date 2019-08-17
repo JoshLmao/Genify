@@ -35,3 +35,7 @@ pre {
 .spotify-bar {
     height: 90px;
 }
+
+.album-art {
+    max-width: 70px;
+}
