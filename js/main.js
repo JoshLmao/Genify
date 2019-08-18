@@ -216,7 +216,8 @@ $(() => {
                 setStyle(true);
             });
         } else {
-            setStyle(true);
+            // No auth, show landing page
+            setStyle(false);
         }
     }
 

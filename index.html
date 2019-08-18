@@ -44,9 +44,9 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
     <!--Bootstrap-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     
     <!-- CSS's -->
     <!-- Bootstrap Theme, from http://bootstrap.themes.guide/darkster -->
@@ -103,7 +103,7 @@
         <div class="container">
             <div class="mx-auto order-0">
                 <a class="navbar-brand" href="index.html">
-                    <h1>Genify</h1>
+                    <h4 class="m-0">Genify</h4>
                 </a>
             </div>
             <div class="navbar-collapse mx-auto w-100 text-center text-md-left">
@@ -111,21 +111,23 @@
             </div>
             <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item mr-3">
-                        <a href="https://joshlmao.com">
-                            <h4 class="mt-2">
-                                <small>JoshLmao</small>
-                            </h4>
+                    <li class="nav-item mr-2 my-auto">
+                        <a class="" href="https://joshlmao.com">
+                            <h4 class="m-0 small">JoshLmao</h4>
                         </a>
                     </li>
-                    <li class="nav-item mr-2">
-                        <a class="btn btn-outline-light btn-social rounded-circle" href="https://github.com/JoshLmao/Genify">
-                            <i class="fab fa-github btn-social-icon mt-1"></i>
+                    <li class="nav-item mr-2 my-auto">
+                        <a href="https://github.com/JoshLmao/Genify">
+                            <div class="btn btn-sm btn-outline-light btn-social" style="height:auto;width:auto;">
+                                <i class="fab fa-github btn-social-icon my-auto"></i>
+                            </div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-outline-light btn-social rounded-circle" href="https://twitter.com/JoshLmao">
-                            <i class="fab fa-fw fa-twitter btn-social-icon mt-1"></i>
+                        <a href="https://twitter.com/JoshLmao">
+                            <div class="btn btn-sm btn-outline-light btn-social" style="height:auto;width:auto;">
+                                <i class="fab fa-fw fa-twitter btn-social-icon"></i>
+                            </div>
                         </a>
                     </li>
                 </ul>
@@ -225,8 +227,28 @@
             </div>
         </div>
         <!-- Lyrics bar -->
-        <div class="row mx-0">
-            Lyrics container
+        <div class="d-flex h-100 mt-2">
+            <!-- Genius Content -->
+            <div class="signed-in-ui mx-auto" id="geniusContent">
+                <div class="card overflow-auto mh-100">
+                    <div class="card-body text-center">
+                        <!-- Loading Spinner -->
+                        <div class="align-middle" id="geniusLoading">
+                            <i class="fa fa-spinner fa-pulse fa-3x fa-fw" ></i>
+                        </div>
+                        <!-- Romanize Btn -->
+                        <button type="button" class="btn btn-outline-primary mb-3 py-1" id="romanizeBtn"></button>
+                        <!-- Trad to Simp Chinese Btn -->
+                        <button type="button" class="btn btn-outline-primary mb-3 py-1" id="tradSimpBtn"></button>
+                        <!-- Lyrics Container -->
+                        <pre id="geniusLyricsContent" class="text-left"></pre>
+                        <!-- Add Lyrics to Genius Btn -->
+                        <a href="https://genius.com/new"  id="geniusAddLyrics">
+                            <button type="button" class="btn btn-outline-primary my-2" >Add lyrics to Genius</button>
+                        </a>
+                    </div> 
+                </div>
+            </div>
         </div>
     </div>
 </body>
