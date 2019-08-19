@@ -97,7 +97,7 @@
     <script src="js/logger.js"></Script>
 </head>
 
-<body>
+<body class="spotify-bg-secondary">
     <!-- Top Navigation Bar-->
     <nav class="navbar navbar-expand-md navbar-dark bg-primary">
         <div class="container">
@@ -155,9 +155,9 @@
     </div>
 
     <!-- Master container -->
-    <div class="w-100">
+    <div >
         <!-- Spotify media bar -->
-        <div class="row mx-0 spotify-media-bar">
+        <div class="row mx-0 spotify-media-bar spotify-bg-tertiary">
             <div class="signed-in-ui container-fluid">
                 <div class="row h-100 align-items-center mx-2">
                     <div class="col-auto">
@@ -226,11 +226,18 @@
                 </button>
             </div>
         </div>
+        <div id="mySidenav" class="sidenav spotify-bg-tertiary">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <h3 class="text-center">Settings</h3>
+        </div>
         <!-- Lyrics bar -->
-        <div class="d-flex h-100 mt-2">
+        <div class="d-flex lyricsFill">
+            <span class="my-auto px-2" onclick="openNav()">
+                <i class="fas fa-chevron-right fa-2x"></i>
+            </span>
             <!-- Genius Content -->
             <div class="signed-in-ui mx-auto" id="geniusContent">
-                <div class="card overflow-auto mh-100">
+                <div class="d-inline-block overflow-y h-100">
                     <div class="card-body text-center">
                         <!-- Loading Spinner -->
                         <div class="align-middle" id="geniusLoading">
@@ -241,7 +248,7 @@
                         <!-- Trad to Simp Chinese Btn -->
                         <button type="button" class="btn btn-outline-primary mb-3 py-1" id="tradSimpBtn"></button>
                         <!-- Lyrics Container -->
-                        <pre id="geniusLyricsContent" class="text-left"></pre>
+                        <div id="geniusLyricsContent" class="text-justify" style="white-space: pre-wrap;"></div>
                         <!-- Add Lyrics to Genius Btn -->
                         <a href="https://genius.com/new"  id="geniusAddLyrics">
                             <button type="button" class="btn btn-outline-primary my-2" >Add lyrics to Genius</button>
