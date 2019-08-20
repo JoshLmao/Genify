@@ -169,6 +169,18 @@ class spotify {
         })
     }
 
+    static getAccountInfo (callback) {
+        var endpointUrl = "https://api.spotify.com/v1/me";
+        callApi(endpointUrl, this.currentAuthToken, "get", function (response) {
+            if( response == undefined || response == null) {
+                logger.error("Unknown or unexpected response from User Info call")
+                return;
+            }
+
+            callback(response);
+        })
+    }
+
     // Gets the current playback song of Spotify
     static getCurrentPlayback(callback) {
         var endpointUrl = "https://api.spotify.com/v1/me/player/";

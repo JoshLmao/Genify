@@ -36,10 +36,13 @@ pre {
     height: 90px;
 }
 
+/* Album art inside Spotify bar */
 .album-art {
     max-width: 70px;
+    max-height: 70px;
 }
 
+/* Spotify bar - current track progress */
 .spotify-progress-bar {
     height: 7px;
     background: rgb(64, 64, 64);
@@ -58,6 +61,14 @@ pre {
   line-height: 1.428571429;
   border-radius: 15px;
 }
+
+.settings-key {
+}
+
+.settings-value {
+    font-weight: lighter;
+}
+
 /* Custom scrolbar*/
 ::-webkit-scrollbar {
   width: 10px;
@@ -83,6 +94,22 @@ pre {
 
 .overflow-y {
     overflow-y: auto;
+}
+
+.settings-btn {
+    position: fixed;
+    right: 10px;
+    margin-top: 5px;
+}
+
+.spotify-separator {
+    margin: 0px;
+    margin-bottom: .75rem;
+    background: rgb(40, 40, 40);
+}
+
+.close-settings-btn {
+    font-size: 36px;
 }
 
 /**/

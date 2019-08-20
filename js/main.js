@@ -37,9 +37,7 @@ $(() => {
 
     // Handler for signing out of Spotify
     $("#btnSignOut").click(() => {
-        logger.log("Signing out of Spotify");
-        cookies.deleteAllCookies();
-        window.location.href = "https://genify.joshlmao.com";
+        onSignOut();
     });
 
     // Handler for when clicking the Romanize btn
@@ -200,6 +198,9 @@ $(() => {
             $("#tradSimpBtn").hide();
 
             logger.log(`Expires at '${auth.expireDate}'`);
+            var date = auth.expireDate.toISOString().substring(0, 10);
+            var time = auth.expireDate.toISOString().substring(11, 19);
+            $("#authExpire").text(date + " " + time);
 
             var differenceMs = auth.expireDate - Date.now() - 1 * 60 * 1000;
             this.displayExpireThread = setTimeout(function() {
@@ -215,6 +216,13 @@ $(() => {
 
                 setStyle(true);
             });
+            spotify.getAccountInfo(function (data) {
+                console.log(data);
+                $("#accountId").text(data.id);
+                $("#accountIdLink").attr("href", data.external_urls.spotify);
+                $("#displayName").text(data.display_name);
+                $("#accountType").text(data.product.toLowerCase() == "premium" ? "Premium" : "Free");
+            })
         } else {
             // No auth, show landing page
             setStyle(false);
@@ -249,11 +257,18 @@ $(() => {
 });
 
 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
-function openNav() {
-    document.getElementById("mySidenav").style.width = "250px";
-  }
-  
-  /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
-  function closeNav() {
-    document.getElementById("mySidenav").style.width = "0";
-  }
+function onToggleSettings() {
+    $("#settingsPage").toggle();
+    $("#geniusContent").toggle();
+}
+
+function onHideSettings() {
+    $("#settingsPage").hide();
+    $("#geniusContent").show();
+}
+
+function onSignOut() {
+    logger.log("Signing out of Spotify");
+    cookies.deleteAllCookies();
+    window.location.href = "https://genify.joshlmao.com";
+}
