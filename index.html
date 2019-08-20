@@ -112,19 +112,19 @@
             <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item mr-2 my-auto">
-                        <a class="" href="https://joshlmao.com">
-                            <h4 class="m-0 small">JoshLmao</h4>
+                        <a href="https://joshlmao.com" title="JoshLmao">
+                            <img src="./img/logo_block.png" style="max-height: 30px; max-width:30px;"></img>
                         </a>
                     </li>
                     <li class="nav-item mr-2 my-auto">
-                        <a href="https://github.com/JoshLmao/Genify">
+                        <a href="https://github.com/JoshLmao/Genify" title="Genify Github Repository">
                             <div class="btn btn-sm btn-outline-light btn-social" style="height:auto;width:auto;">
                                 <i class="fab fa-github btn-social-icon my-auto"></i>
                             </div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="https://twitter.com/JoshLmao">
+                        <a href="https://twitter.com/JoshLmao" title="JoshLmao's Twitter">
                             <div class="btn btn-sm btn-outline-light btn-social" style="height:auto;width:auto;">
                                 <i class="fab fa-fw fa-twitter btn-social-icon"></i>
                             </div>
@@ -228,7 +228,7 @@
         </div>
         <!-- Lyrics bar -->
         <div class="d-flex lyricsFill">
-            <button type="button" class="btn btn-outline-light settings-btn" onclick="onToggleSettings()">
+            <button type="button" class="signed-in-ui btn btn-outline-light settings-btn" onclick="onToggleSettings()">
                 <i class="fas fa-cog"></i>
             </button>
             <div class="settings-ui container collapse" id="settingsPage">
@@ -264,7 +264,38 @@
                 <!-- Account & Sign out-->
                 <div class="d-flex">
                     <p class="my-0">KEY</p>
-                    <p class="ml-auto my-0" >RESULT</p>
+                    <p class="ml-auto my-0 settings-value" >RESULT</p>
+                </div>
+
+                <!-- Credits -->
+                <h6 class="mx-0 mb-1 mt-4 font-weight-bold">Credits</h6>
+                <hr class="spotify-separator"/>
+                <div class="d-flex">
+                    <p class="my-0">Created By</p>
+                    <a href="https://github.com/JoshLmao" class="ml-auto settings-value">
+                        <p class="my-0">JoshLmao</p>
+                    </a>
+                    <a href="https://twitter.com/JoshLmao" class="my-auto ml-2">
+                        <i class="fab fa-fw fa-twitter"></i>
+                    </a>
+                </div>
+                <div class="d-flex">
+                    <p class="my-0">Pinyin Converter</p>
+                    <a href="https://github.com/superbiger/pinyin4js" class="ml-auto settings-value">
+                        <p class="my-0">Pinyin4JS by SuperBiger</p>
+                    </a>
+                </div>
+                <div class="d-flex">
+                    <p class="my-0">Hangul Converter</p>
+                    <a href="https://github.com/fujaru/aromanize-js" class="ml-auto settings-value">
+                        <p class="ml-auto my-0">Aromanjize-JS by Fujaru</p>
+                    </a>
+                </div>
+                <div class="d-flex">
+                    <p class="my-0">Japanese Converter</p>
+                    <a href="https://github.com/fujaru/aromanize-js" class="ml-auto settings-value">
+                        <p class="ml-auto my-0">TODO by TODO</p>
+                    </a>
                 </div>
             </div>
             <!-- Genius Content -->

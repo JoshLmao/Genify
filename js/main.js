@@ -258,13 +258,22 @@ $(() => {
 
 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
 function onToggleSettings() {
-    $("#settingsPage").toggle();
-    $("#geniusContent").toggle();
+    var isSettingsVisible = $( "#settingsPage" ).is( ":visible" );
+    if ( isSettingsVisible ) {
+        $("#settingsPage").fadeOut(100, function() {
+            $("#geniusContent").fadeIn();
+        });
+    } else {
+        $("#geniusContent").fadeOut(100, function() {
+            $("#settingsPage").fadeIn();
+        });
+    }
 }
 
 function onHideSettings() {
-    $("#settingsPage").hide();
-    $("#geniusContent").show();
+    $("#settingsPage").fadeOut(100, function () {
+        $("#geniusContent").fadeIn();
+    });
 }
 
 function onSignOut() {
