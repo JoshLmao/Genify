@@ -228,9 +228,17 @@
         </div>
         <!-- Lyrics bar -->
         <div class="d-flex lyricsFill">
-            <button type="button" class="signed-in-ui btn btn-outline-light settings-btn" onclick="onToggleSettings()">
-                <i class="fas fa-cog"></i>
-            </button>
+            <div class="signed-in-ui buttons-dock">
+                <button type="button" class="btn btn-outline-light px-1 fa-sm" onclick="onPrevLyrics()">
+                    <i class="fas fa-arrow-left "></i>
+                </button>
+                <button type="button" class="btn btn-outline-light px-1 fa-sm" onclick="onNextLyricsBtn()">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button type="button" class="btn btn-outline-light" onclick="onToggleSettings()">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
             <div class="settings-ui container collapse" id="settingsPage">
                 <a href="javascript:void(0)" class="float-right close-settings-btn" onclick="onHideSettings()">&times;</a>
                 <h1 class="mt-5 mb-3 font-weight-bold">Settings</h1>

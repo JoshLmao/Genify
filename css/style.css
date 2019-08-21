@@ -96,7 +96,7 @@ pre {
     overflow-y: auto;
 }
 
-.settings-btn {
+.buttons-dock {
     position: fixed;
     right: 10px;
     margin-top: 5px;

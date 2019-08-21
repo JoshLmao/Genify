@@ -1,3 +1,16 @@
+// Parse the lyrics from the Genius URL
+const setLyrics = function (lyricsText) {
+    $("#geniusLoading").hide();
+    
+    var rawLyrics = lyricsText.trim();
+    lyricsService.initLyrics(rawLyrics);
+
+    // Reset romanized
+    isRomanized = false;
+    var lyrics = lyricsService.getLyrics(isRomanized);
+    $("#geniusLyricsContent").text(lyrics);
+}
+
 $(() => {
     // Set the site version number for help
     $("#versionNumber").text("v0.1.27");
@@ -90,19 +103,6 @@ $(() => {
     const setStyle = function (isSignedIn) {
         $(".signed-out-ui").toggle(!isSignedIn);
         $(".signed-in-ui").toggle(isSignedIn);
-    }
-
-    // Parse the lyrics from the Genius URL
-    const setLyrics = function (lyricsText) {
-        $("#geniusLoading").hide();
-        
-        var rawLyrics = lyricsText.trim();
-        lyricsService.initLyrics(rawLyrics);
-    
-        // Reset romanized
-        isRomanized = false;
-        var lyrics = lyricsService.getLyrics(isRomanized);
-        $("#geniusLyricsContent").text(lyrics);
     }
 
     // Set the Spotify current track info UI
@@ -217,7 +217,6 @@ $(() => {
                 setStyle(true);
             });
             spotify.getAccountInfo(function (data) {
-                console.log(data);
                 $("#accountId").text(data.id);
                 $("#accountIdLink").attr("href", data.external_urls.spotify);
                 $("#displayName").text(data.display_name);
@@ -248,6 +247,10 @@ $(() => {
         isRomanized = false;
         $("#romanizeBtn").text("Romanize");
     }
+
+    $('.popover-dismiss').popover({
+        trigger: 'focus'
+    });
 
     setStyle(false);
     spotify.spotify();
@@ -280,4 +283,23 @@ function onSignOut() {
     logger.log("Signing out of Spotify");
     cookies.deleteAllCookies();
     window.location.href = "https://genify.joshlmao.com";
+}
+
+function onNextLyricsBtn() {
+    $("#geniusLyricsContent").text(null);
+    
+    var index = genius.searchInfo.hitIndex;
+    index = index >= 10 ? 0 : index + 1;
+    genius.getSearchResult(index, function (lyrics) {
+        setLyrics(lyrics);
+    });
+}
+function onPrevLyrics() {
+    $("#geniusLyricsContent").text(null);
+    
+    var index = genius.searchInfo.hitIndex;
+    index = index <= 0 ? 10 : index - 1;
+    genius.getSearchResult(index, function (lyrics) {
+        setLyrics(lyrics);
+    });
 }

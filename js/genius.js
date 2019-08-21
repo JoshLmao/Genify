@@ -7,6 +7,22 @@ class genius {
         $("#geniusLyricsContent").text("Unable to find lyrics");
     }
 
+    static search (searchTerm, successCallback, failedCallback) {
+        var proxyUrl = helper.getProxyUrl();
+        var url = proxyUrl + "https://api.genius.com/search?q=" + encodeURIComponent(searchTerm);
+        var accessToken = 'oIRErfK8KcmhxvvKzaDnt9GYLkfghdCz7pXxVi7Ce8c3V4INQC3qd_Djlc4ndnNq';
+        $.ajax({
+            url: url,
+            headers: {
+                'Authorization': 'Bearer ' + accessToken
+            },
+            success: successCallback,
+            error: function(response) {
+                failedCallback(response);
+            },
+        });
+    }
+
     // Searches Genius for the artist and track name and returns the first result
     static getSearchFirstResult(trackData, callback) {
         var proxyUrl = helper.getProxyUrl();
@@ -35,7 +51,7 @@ class genius {
                 return;
             }
             var hitResult = genius.getRelevantHit(response.response.hits, trackData);
-            logger.log(`Loading lyrics '${hitResult.full_title}'`)
+            logger.log(`Loading lyrics '${hitResult.full_title}'`);
             callback(hitResult.url);
         }
     }
@@ -57,7 +73,9 @@ class genius {
         }
         // find the first hit that contains song name in full_name
         var relevantHit = null;
+        var hitIndex = 0;
         for (var i = 0; i < hits.length; i++ ) {
+            hitIndex = i;
             var hit = hits[i];
 
             // Remove any brackets, usually used to show featured artists
@@ -70,6 +88,55 @@ class genius {
                 break;
             }
         }
-        return relevantHit != null ? relevantHit.result : hits[0].result;
+        // Fallback, use first result
+        if (relevantHit == null ) {
+            hitIndex = 0;
+        }
+        relevantHit = hits[hitIndex].result;
+
+        if ( relevantHit != null ) {
+            this.searchInfo = {
+                lyricsUrl: relevantHit.url,
+                hitIndex: hitIndex,
+                track_name: trackData.trackName,
+                artist_name: trackData.artistName,
+            };
+        } else {
+            this.searchInfo = null;
+        }
+
+        return relevantHit;
     }
+
+    static getSearchResult (index, lyricsCallback, failedCallback) {
+        var artistName = this.searchInfo.artist_name;
+        var trackName = this.searchInfo.track_name;
+        genius.search(artistName + " - " + trackName, function (data) {
+            var hits = data.response.hits;
+            if (hits.length <= 0) {
+                genius.getLyricsFromUrl(genius.searchInfo.lyricsUrl, lyricsCallback);
+                return;
+            }
+            else if (hits.length <= index) {
+                index = hits.length - 1;
+            }
+
+            genius.searchInfo = {
+                lyricsUrl: hits[index].result.url,
+                hitIndex: index,
+                track_name: trackName,
+                artist_name: artistName,
+            }
+            genius.getLyricsFromUrl(hits[index].result.url, function(lyrics) {
+                logger.log(`Next lyrics '${hits[index].result.full_title}'`);
+                lyricsCallback(lyrics);
+            });
+        }, null);
+    }
+
+    static nextLyrics (callback) {
+        var lastIndex = this.searchInfo.hitIndex;
+        var result = genius.getRelevantHit(lastIndex);
+        callback(result);
+    } 
 }
