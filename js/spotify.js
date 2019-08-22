@@ -119,7 +119,7 @@ class spotify {
         if (expireDate != "") {
             this.currentAuthToken = cookies.getCookie("authToken");
             return {
-                expireDate: Date.parse(expireDate),
+                expireDate: new Date(Date.parse(expireDate)),
                 authToken: this.currentAuthToken,
             };
         } else {
@@ -139,6 +139,9 @@ class spotify {
                 data.artistName != spotify.currentTrack.artistName ) {
                     spotify.currentTrack = data;
                     logger.log(`Updated song - '${data.artistName} - ${data.albumName} - ${data.trackName}`);
+                   
+                    if( spotify.onSongChanged != null)
+                        spotify.onSongChanged(data);
 
                     setUIFunc(data);
                     geniusSearchFunc(data);
@@ -166,6 +169,7 @@ class spotify {
     static progressLoop(setUIFunc) {
         this.getCurrentPlayback(function (data) {
             setUIFunc(data);
+            youtube.setPlayback(data.progress_ms);
         })
     }
 

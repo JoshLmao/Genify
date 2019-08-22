@@ -6,7 +6,7 @@ const setLyrics = function (lyricsText) {
     lyricsService.initLyrics(rawLyrics);
 
     // Reset romanized
-    isRomanized = false;
+    isRomanized = cookies.getCookie("autoRomanize");
     var lyrics = lyricsService.getLyrics(isRomanized);
     $("#geniusLyricsContent").text(lyrics);
 }
@@ -115,7 +115,7 @@ $(() => {
         $("#trackCurrentPosition").text(helper.msToTime(trackData.progress_ms));
         $("#trackTotalDuration").text(helper.msToTime(trackData.duration_ms));
         var percentDuration = trackData.progress_ms / trackData.duration_ms * 100; 
-        $("#trackProgress").css("width", percentDuration + "%")
+        $("#trackProgress").css("width", percentDuration + "%");
 
         $("#volumeProgress").css("width", trackData.volume_percent + "%");
         $(".muted").toggle(trackData.volume_percent <= 0);
@@ -144,15 +144,23 @@ $(() => {
         $("#geniusAddLyrics").hide();
 
         genius.getSearchFirstResult(trackData, function (url) {
-            getLyricsFromUrl(url);
+            genius.getLyricsFromUrl(url, function (lyrics) {
+                setLyrics(lyrics);
+            });
         });
     }
 
-    const getLyricsFromUrl = function (url) {
-        genius.getLyricsFromUrl(url, function (lyrics) {
-            setLyrics(lyrics);
-        });
-    }
+    // Add listener for when spotify changes song
+    spotify.onSongChanged = function (trackData) {
+        doGeniusSearch(trackData);
+        
+        if ( cookies.getCookie("youtubeVideo") == "true" ) {
+            youtube.findVideo(trackData.trackName, trackData.artistName, function (url) {
+                youtube.loadVideoId(url);
+                logger.log(`Updated Youtube video to url ${url}`);
+            });
+        }
+    };
 
     // Checks for a hash in the URL and begins Spotify auth if so
     const readHash = () => {
@@ -212,6 +220,8 @@ $(() => {
                 setSpotifyUI(data);
                 doGeniusSearch(data);
                 
+                loadYoutubeVideo(data.trackName, data.artistName)
+
                 spotify.startUpdateLoop(setSpotifyUI, doGeniusSearch);
 
                 setStyle(true);
@@ -242,6 +252,45 @@ $(() => {
         setStyle(true);
     });
 
+    // Sets loading UI and searches and loads YT video
+    const loadYoutubeVideo = function (trackName, artistName) {
+        $("#youtubeLoading").show();
+        $(".youtubeContainer").hide();
+        youtube.findVideo(trackName, artistName, function (url) {
+            youtube.loadVideoId(url);
+            logger.log(`Loaded video at url ${url}`);
+
+            $("#youtubeLoading").hide();
+            $(".youtubeContainer").show();
+        });
+    }
+
+    const loadSettings = function () {
+        var isAutoRomanize = cookies.getCookie("autoRomanize");
+        $("#autoRomanizeSwitch").prop('checked', isAutoRomanize);
+        $("#autoRomanizeSwitch").change( function () {
+            var isChecked = $(this).is(':checked');
+            cookies.setCookie("autoRomanize", isChecked);
+        });
+
+        var displayYoutubeVideo = cookies.getCookie("youtubeVideo") == "true";
+        $("#displayYoutubeSwitch").prop('checked', displayYoutubeVideo);
+        $("#displayYoutubeSwitch").change( function () {
+            var isChecked = $(this).is(':checked');
+            cookies.setCookie("youtubeVideo", isChecked);
+            $(".youtube-player-ui").toggle(isChecked);
+
+            spotify.getCurrentPlayback(function (trackData) {
+                // Update Youtube Video if track has changed
+                if ( !player.getVideoData().title.includes(trackData.trackName) )
+                    loadYoutubeVideo(trackData.trackName, trackData.artistName);
+            })
+        });
+        // Hide UI if setting is off
+        if(!displayYoutubeVideo)
+            $(".youtube-player-ui").toggle(displayYoutubeVideo);
+    }
+
     // Init function for setting start values and initialization
     const initPage = () => {
         isRomanized = false;
@@ -256,6 +305,7 @@ $(() => {
     spotify.spotify();
     lyricsService.init();
     initPage();
+    loadSettings();
     readHash();
 });
 

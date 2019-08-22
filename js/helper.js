@@ -1,7 +1,7 @@
 class helper {
     // Decide if current environment is development or not
     static isDevMode() {
-        return location.protocol == "file:";
+        return location.protocol == "file:" || location.hostname == "localhost";
     }
 
     // Get the CORS proxy URL, use whitelisted site on live
@@ -57,5 +57,8 @@ class helper {
         return minutes + ":" + seconds;
     }
 
-    
+    // Compares two numbers to see if the first number is in range of the amount of the second number
+    static isInRange ( number, compareTo, amount ) {
+        return number - compareTo > -amount || compareTo - number < amount;
+    }
 }

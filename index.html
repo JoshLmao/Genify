@@ -94,7 +94,8 @@
     <script src="js/cookies.js"></script>
     <script src="js/lyricsService.js"></script>
     <script src="js/helper.js"></script>
-    <script src="js/logger.js"></Script>
+    <script src="js/logger.js"></script>
+    <script src="js/youtube.js"></script>
 </head>
 
 <body class="spotify-bg-secondary">
@@ -266,13 +267,27 @@
                 <button class="btn spotify-background text-white mt-2 d-flex px-5 ml-auto" id="btnSignOut" type="button" onclick="onSignOut()">
                     <i class="fab fa-spotify mr-2 my-auto"></i> Sign Out
                 </button>
-                <!-- -->
+                <!-- Lyrics settings -->
                 <h6 class="mx-0 mb-1 mt-4 font-weight-bold">Lyrics</h6>
                 <hr class="spotify-separator"/>
-                <!-- Account & Sign out-->
+                <!-- Auto Romanize lyrics -->
                 <div class="d-flex">
-                    <p class="my-0">KEY</p>
-                    <p class="ml-auto my-0 settings-value" >RESULT</p>
+                    <p class="my-0">Auto Romanize</p>
+                    <div class="ml-auto my-auto settings-value">
+                        <label class="switch my-auto">
+                            <input type="checkbox" id="autoRomanizeSwitch">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="d-flex my-1">
+                    <p class="my-0">Youtube Video</p>
+                    <div class="ml-auto my-auto settings-value">
+                        <label class="switch my-auto">
+                            <input type="checkbox" id="displayYoutubeSwitch">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                 </div>
 
                 <!-- Credits -->
@@ -304,6 +319,18 @@
                     <a href="https://github.com/fujaru/aromanize-js" class="ml-auto settings-value">
                         <p class="ml-auto my-0">TODO by TODO</p>
                     </a>
+                </div>
+            </div>
+            <!-- Youtube Video -->
+            <div class="youtube-player-ui container">
+                <!-- Loading Spinner -->
+                <div class="text-center align-middle mt-2" id="youtubeLoading">
+                    <i class="fa fa-spinner fa-pulse fa-3x fa-fw" ></i>
+                </div>
+                <script src="https://apis.google.com/js/api.js"></script>
+                <script src="http://www.youtube.com/player_api"></script>
+                <div class="youtubeContainer my-3">
+                    <iframe id="youtubePlayer" src="https://www.youtube.com/embed/KlSMjay7Xns?enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
             </div>
             <!-- Genius Content -->
