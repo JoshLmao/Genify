@@ -6,14 +6,14 @@ const setLyrics = function (lyricsText) {
     lyricsService.initLyrics(rawLyrics);
 
     // Reset romanized
-    isRomanized = cookies.getCookie("autoRomanize");
+    isRomanized = cookies.getCookie(COOKIE_CONST.auto_romanize);
     var lyrics = lyricsService.getLyrics(isRomanized);
     $("#geniusLyricsContent").text(lyrics);
 }
 
 $(() => {
     // Set the site version number for help
-    $("#versionNumber").text("v0.1.27");
+    $("#versionNumber").text();
 
     // If the current lyrics are romanized or not
     let isRomanized = false;
@@ -103,6 +103,9 @@ $(() => {
     const setStyle = function (isSignedIn) {
         $(".signed-out-ui").toggle(!isSignedIn);
         $(".signed-in-ui").toggle(isSignedIn);
+
+        if(!isSignedIn)
+            $(".youtube-player-ui").hide();
     }
 
     // Set the Spotify current track info UI
@@ -154,7 +157,7 @@ $(() => {
     spotify.onSongChanged = function (trackData) {
         doGeniusSearch(trackData);
         
-        if ( cookies.getCookie("youtubeVideo") == "true" ) {
+        if ( cookies.getCookie(COOKIE_CONST.youtube_video) == "true" ) {
             youtube.findVideo(trackData.trackName, trackData.artistName, function (url) {
                 youtube.loadVideoId(url);
                 logger.log(`Updated Youtube video to url ${url}`);
@@ -266,18 +269,18 @@ $(() => {
     }
 
     const loadSettings = function () {
-        var isAutoRomanize = cookies.getCookie("autoRomanize");
+        var isAutoRomanize = cookies.getCookie(COOKIE_CONST.auto_romanize);
         $("#autoRomanizeSwitch").prop('checked', isAutoRomanize);
         $("#autoRomanizeSwitch").change( function () {
             var isChecked = $(this).is(':checked');
-            cookies.setCookie("autoRomanize", isChecked);
+            cookies.setCookie(COOKIE_CONST.auto_romanize, isChecked);
         });
 
-        var displayYoutubeVideo = cookies.getCookie("youtubeVideo") == "true";
+        var displayYoutubeVideo = cookies.getCookie(COOKIE_CONST.youtube_video) == "true";
         $("#displayYoutubeSwitch").prop('checked', displayYoutubeVideo);
         $("#displayYoutubeSwitch").change( function () {
             var isChecked = $(this).is(':checked');
-            cookies.setCookie("youtubeVideo", isChecked);
+            cookies.setCookie(COOKIE_CONST.youtube_video, isChecked);
             $(".youtube-player-ui").toggle(isChecked);
 
             spotify.getCurrentPlayback(function (trackData) {
@@ -286,9 +289,15 @@ $(() => {
                     loadYoutubeVideo(trackData.trackName, trackData.artistName);
             })
         });
-        // Hide UI if setting is off
-        if(!displayYoutubeVideo)
-            $(".youtube-player-ui").toggle(displayYoutubeVideo);
+        $(".youtube-player-ui").toggle(displayYoutubeVideo);
+
+        var playerColor = cookies.getCookie(COOKIE_CONST.player_color) == "true";
+        $("#ytPlayerColorSwitch").prop('checked', playerColor);
+        $("#ytPlayerColorSwitch").change( function () {
+            var isChecked = $(this).is(':checked');
+            cookies.setCookie(COOKIE_CONST.player_color, isChecked);
+        });
+
     }
 
     // Init function for setting start values and initialization
@@ -309,23 +318,29 @@ $(() => {
     readHash();
 });
 
-/* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
 function onToggleSettings() {
     var isSettingsVisible = $( "#settingsPage" ).is( ":visible" );
+    var fadeDurationMs = 100;
     if ( isSettingsVisible ) {
-        $("#settingsPage").fadeOut(100, function() {
+        $("#settingsPage").fadeOut(fadeDurationMs, function() {
             $("#geniusContent").fadeIn();
+            if ( cookies.getCookie( COOKIE_CONST.youtube_video ) == "true") {
+                $(".youtube-player-ui").fadeIn();
+            }
         });
     } else {
-        $("#geniusContent").fadeOut(100, function() {
+        $(".youtube-player-ui").fadeOut(fadeDurationMs);
+        $("#geniusContent").fadeOut(fadeDurationMs, function() {
             $("#settingsPage").fadeIn();
         });
     }
 }
 
 function onHideSettings() {
-    $("#settingsPage").fadeOut(100, function () {
+    var fadeDurationMs = 100;
+    $("#settingsPage").fadeOut(fadeDurationMs, function () {
         $("#geniusContent").fadeIn();
+        $(".youtube-player-ui").fadeIn();
     });
 }
 

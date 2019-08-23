@@ -1,3 +1,9 @@
+const COOKIE_CONST = {
+    youtube_video: "youtubeVideo",
+    auto_romanize: "autoRomanize",
+    player_color: "playerColor",
+}
+
 class helper {
     // Decide if current environment is development or not
     static isDevMode() {

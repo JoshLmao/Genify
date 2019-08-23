@@ -1,11 +1,20 @@
 var player = 0;
 var isPlayerReady = false;
 function onYouTubeIframeAPIReady() {
+    var shouldBeWhite = cookies.getCookie(COOKIE_CONST.player_color) == "true";
     player = new YT.Player('youtubePlayer', {
         events: {
           'onReady': youtube.onPlayerReady,
           'onError': youtube.onError,
           'onStateChange': youtube.onPlayerStateChanged
+        },
+        videoId: '', // No default video
+        playerVars: {
+            enablejsapi: 1,
+            modestbranding: 1,
+            disablekb: 1,
+            color: shouldBeWhite ? "white" : "red",
+            widget_referrer: "genify.joshlmao.com",
         }
     });
 }
@@ -67,13 +76,39 @@ class youtube {
             url: url,
             success: function (data) {
                 if ( data ) {
-                    var videoId = data.items[0].id.videoId;
-                    successCallback(videoId);
+                    var video = youtube.getRelevantSearch( data.items, trackName, artistName );
+                    if (video) {
+                        successCallback(video.id.videoId);
+                    }
                 }
             },
             error: function(response) {
                 console.log("Failed - " + response);
             },
         });
+    }
+
+    // Finds a relevant video from the search results, gives first if none found
+    static getRelevantSearch (searchResults, trackName, artistName) {
+        var i = 0;
+        for (i = 0; i < searchResults.length; i++) {
+            var channelName =  searchResults[i].snippet.channelTitle.toLowerCase();
+            var cleanArtistName = artistName.replace(/ /g, '').toLowerCase();
+            if ( channelName.includes("vevo") || channelName.includes(cleanArtistName)) {
+                break;
+            } 
+
+            var videoTitle = searchResults[i].snippet.title;
+            if (videoTitle.toLowerCase().includes("official video")) {
+                break;
+            }
+        }
+
+        // If found no relevant video, return the first
+        if ( i == searchResults.length) {
+            i = 0;
+        }
+        
+        return searchResults[i];
     }
 }

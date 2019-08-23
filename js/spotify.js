@@ -170,6 +170,7 @@ class spotify {
         this.getCurrentPlayback(function (data) {
             setUIFunc(data);
             youtube.setPlayback(data.progress_ms);
+            //youtube.updatePlayback(data);
         })
     }
 

@@ -267,24 +267,49 @@
                 <button class="btn spotify-background text-white mt-2 d-flex px-5 ml-auto" id="btnSignOut" type="button" onclick="onSignOut()">
                     <i class="fab fa-spotify mr-2 my-auto"></i> Sign Out
                 </button>
-                <!-- Lyrics settings -->
-                <h6 class="mx-0 mb-1 mt-4 font-weight-bold">Lyrics</h6>
+                <!-- Youtube Player settings -->
+                <h6 class="mx-0 mb-1 mt-4 font-weight-bold">Youtube Player</h6>
+                <hr class="spotify-separator"/>
+                <!-- Display -->
+                <div class="d-flex my-1">
+                    <p class="my-0">Enable Youtube Music Video</p>
+                    <div class="ml-auto my-auto settings-value">
+                        <label class="switch my-auto">
+                            <input type="checkbox" id="displayYoutubeSwitch">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <!-- Display -->
+                <div class="d-flex my-1">
+                    <p class="my-0">
+                        White Player Style <small class="text-warning font-weight-light ml-1" style="font-size: 14px;">(Requires Refresh)</small>
+                    </p>
+                    <div class="ml-auto my-auto settings-value">
+                        <label class="switch my-auto">
+                            <input type="checkbox" id="ytPlayerColorSwitch">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <h6 class="mx-0 mb-1 mt-4 font-weight-bold">Language</h6>
                 <hr class="spotify-separator"/>
                 <!-- Auto Romanize lyrics -->
                 <div class="d-flex">
-                    <p class="my-0">Auto Romanize</p>
+                    <p class="my-0">Automatic Romanize</p>
                     <div class="ml-auto my-auto settings-value">
                         <label class="switch my-auto">
-                            <input type="checkbox" id="autoRomanizeSwitch">
+                            <input type="checkbox" id="">
                             <span class="slider"></span>
                         </label>
                     </div>
                 </div>
                 <div class="d-flex my-1">
-                    <p class="my-0">Youtube Video</p>
+                    <p class="my-0">Chinese: Prefer Simplified</p>
                     <div class="ml-auto my-auto settings-value">
                         <label class="switch my-auto">
-                            <input type="checkbox" id="displayYoutubeSwitch">
+                            <input type="checkbox" id="">
                             <span class="slider"></span>
                         </label>
                     </div>
@@ -320,6 +345,17 @@
                         <p class="ml-auto my-0">TODO by TODO</p>
                     </a>
                 </div>
+                <div class="d-flex justify-content-between mt-3">
+                    <a href="https://brave.com/jos677" class="d-flex justify-content-center align-items-center">
+                        <img src="img/BraveBat.png" height="45">
+                    </a>
+                    <a class="mr-5" href="https://ko-fi.com/joshlmao" title="Thank you! <3">
+                        <img src="https://i.imgur.com/zDeHMoK.png" alt="KoFiDonate.png" height="40">
+                    </a>
+                    <a href="https://paypal.me/xjoshlmao?locale.x=en_GB" title="Thank you! <3">
+                        <img src="https://i.imgur.com/UfSd0gP.png" height="40">
+                    </a>
+                </div>
             </div>
             <!-- Youtube Video -->
             <div class="youtube-player-ui container">
@@ -330,12 +366,12 @@
                 <script src="https://apis.google.com/js/api.js"></script>
                 <script src="http://www.youtube.com/player_api"></script>
                 <div class="youtubeContainer my-3">
-                    <iframe id="youtubePlayer" src="https://www.youtube.com/embed/KlSMjay7Xns?enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div id="youtubePlayer"></div>
                 </div>
             </div>
             <!-- Genius Content -->
-            <div class="signed-in-ui mx-auto" id="geniusContent">
-                <div class="d-inline-block overflow-y h-100">
+            <div class="signed-in-ui mx-auto" id="geniusContent" style="min-width:35%;">
+                <div class="d-inline-block overflow-y h-100 w-100">
                     <div class="card-body text-center">
                         <!-- Loading Spinner -->
                         <div class="align-middle" id="geniusLoading">
