@@ -36,6 +36,7 @@ class spotify {
         this.authExpireTime = {};
         this.updateSpotifyUIFunc = function(){};
         this.reauthThread = null;
+        this.isPlaying = false;
     }
 
     // Gets the date plus the amount of seconds added on
@@ -101,11 +102,11 @@ class spotify {
         }
     }
 
-    static startUpdateLoop(setUIFunc, geniusSearchFunc) {
+    static startUpdateLoop(setUIFunc) {
         // If no update loop started, start and check song status every X milliseconds 
         if( this.updateIntevalThread == null ) {
             this.updateIntevalThread = setInterval(() => {
-                spotify.updateLoop(setUIFunc, geniusSearchFunc);
+                spotify.updateLoop();
             }, 2 * 1000);
 
             setInterval(() => {
@@ -129,7 +130,7 @@ class spotify {
     }
 
     // Update loop run every X seconds, validates data and updates UI
-    static updateLoop(setUIFunc, geniusSearchFunc) {
+    static updateLoop() {
         this.getCurrentPlayback(function (data) {
             // Validate current playing track to make sure correct one is playing
             if( spotify.currentTrack == undefined || data == null) {
@@ -137,16 +138,19 @@ class spotify {
             }
             if ( data.trackName != spotify.currentTrack.trackName ||
                 data.artistName != spotify.currentTrack.artistName ) {
-                    spotify.currentTrack = data;
-                    logger.log(`Updated song - '${data.artistName} - ${data.albumName} - ${data.trackName}`);
-                   
-                    if( spotify.onSongChanged != null)
-                        spotify.onSongChanged(data);
-
-                    setUIFunc(data);
-                    geniusSearchFunc(data);
+                spotify.currentTrack = data;
+                logger.log(`Updated song - '${data.artistName} - ${data.albumName} - ${data.trackName}`);
+                
+                if( spotify.onSongChanged != null)
+                    spotify.onSongChanged(data);
             }
             
+            // On State Changed check
+            if (data.isPlaying != spotify.playing_state ) {
+                spotify.playing_state = data.isPlaying;
+                spotify.onStateChanged(data.isPlaying);
+            }
+
             // Validate Play state, update btn visibility
             if ( data.isPlaying ) {
                 if ( !$("#pauseBtn").is(":visible")) { 
@@ -170,7 +174,6 @@ class spotify {
         this.getCurrentPlayback(function (data) {
             setUIFunc(data);
             youtube.setPlayback(data.progress_ms);
-            //youtube.updatePlayback(data);
         })
     }
 

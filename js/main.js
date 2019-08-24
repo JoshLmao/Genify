@@ -153,17 +153,23 @@ $(() => {
         });
     }
 
-    // Add listener for when spotify changes song
+    // Listener for Spotify song change
     spotify.onSongChanged = function (trackData) {
+        setSpotifyUI(trackData);
         doGeniusSearch(trackData);
-        
-        if ( cookies.getCookie(COOKIE_CONST.youtube_video) == "true" ) {
+
+        if ( youtube.isPlayerEnabled() ) {
             youtube.findVideo(trackData.trackName, trackData.artistName, function (url) {
                 youtube.loadVideoId(url);
                 logger.log(`Updated Youtube video to url ${url}`);
             });
         }
     };
+
+    // Listener for Spotify State changes
+    spotify.onStateChanged = function (isPlayingState) {
+        youtube.setPlaying(isPlayingState);
+    }
 
     // Checks for a hash in the URL and begins Spotify auth if so
     const readHash = () => {
@@ -212,9 +218,9 @@ $(() => {
             var date = auth.expireDate.toISOString().substring(0, 10);
             var time = auth.expireDate.toISOString().substring(11, 19);
             $("#authExpire").text(date + " " + time);
-
+            
             var differenceMs = auth.expireDate - Date.now() - 1 * 60 * 1000;
-            this.displayExpireThread = setTimeout(function() {
+            setTimeout(function() {
                 helper.showWarningUI("Spotify authorization is about to expire (One minute)");
                 window.clearTimeout( this.displayExpireThread );
             }, differenceMs);
@@ -223,10 +229,10 @@ $(() => {
                 setSpotifyUI(data);
                 doGeniusSearch(data);
                 
-                loadYoutubeVideo(data.trackName, data.artistName)
-
-                spotify.startUpdateLoop(setSpotifyUI, doGeniusSearch);
-
+                if (youtube.isPlayerEnabled())
+                    loadYoutubeVideo(data.trackName, data.artistName)
+                    
+                spotify.startUpdateLoop(setSpotifyUI);
                 setStyle(true);
             });
             spotify.getAccountInfo(function (data) {
@@ -261,21 +267,20 @@ $(() => {
         $(".youtubeContainer").hide();
         youtube.findVideo(trackName, artistName, function (url) {
             youtube.loadVideoId(url);
-            logger.log(`Loaded video at url ${url}`);
-
             $("#youtubeLoading").hide();
             $(".youtubeContainer").show();
         });
     }
 
     const loadSettings = function () {
+        // Auto romanize JP/KR/ZH lyrics
         var isAutoRomanize = cookies.getCookie(COOKIE_CONST.auto_romanize);
         $("#autoRomanizeSwitch").prop('checked', isAutoRomanize);
         $("#autoRomanizeSwitch").change( function () {
             var isChecked = $(this).is(':checked');
             cookies.setCookie(COOKIE_CONST.auto_romanize, isChecked);
         });
-
+        // Enable/Display Youtube Embed player
         var displayYoutubeVideo = cookies.getCookie(COOKIE_CONST.youtube_video) == "true";
         $("#displayYoutubeSwitch").prop('checked', displayYoutubeVideo);
         $("#displayYoutubeSwitch").change( function () {
@@ -290,14 +295,13 @@ $(() => {
             })
         });
         $(".youtube-player-ui").toggle(displayYoutubeVideo);
-
+        // Set Youtube Embed player color
         var playerColor = cookies.getCookie(COOKIE_CONST.player_color) == "true";
         $("#ytPlayerColorSwitch").prop('checked', playerColor);
         $("#ytPlayerColorSwitch").change( function () {
             var isChecked = $(this).is(':checked');
             cookies.setCookie(COOKIE_CONST.player_color, isChecked);
         });
-
     }
 
     // Init function for setting start values and initialization
@@ -305,10 +309,6 @@ $(() => {
         isRomanized = false;
         $("#romanizeBtn").text("Romanize");
     }
-
-    $('.popover-dismiss').popover({
-        trigger: 'focus'
-    });
 
     setStyle(false);
     spotify.spotify();

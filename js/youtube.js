@@ -40,6 +40,7 @@ class youtube {
     static loadVideoId(id) {
         if (player && isPlayerReady) {
             player.loadVideoById(id);
+            logger.log(`Setting YT Player Id (${id})`);
         } else if(!isPlayerReady) {
             // Set video to be loaded once player is ready
             youtube.queued_video_id = id;
@@ -83,7 +84,7 @@ class youtube {
                 }
             },
             error: function(response) {
-                console.log("Failed - " + response);
+                logger.error("Youtube Find - " + response.responseJSON.error.message);
             },
         });
     }
@@ -110,5 +111,9 @@ class youtube {
         }
         
         return searchResults[i];
+    }
+
+    static isPlayerEnabled () {
+        return cookies.getCookie(COOKIE_CONST.youtube_video) == "true";
     }
 }
