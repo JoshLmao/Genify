@@ -56,7 +56,7 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         
-    <!-- Cookie Content by Insites -->
+    <!-- Cookie Consent by Insites -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script>
     <script>
@@ -78,6 +78,8 @@
         }
         })});
     </script>
+    <!-- Spotify Web Playback API -->
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
 
     <!-- Translate scripts -->
     <script src="vendor/aromanizer/aromanize.js"></script>
@@ -204,6 +206,9 @@
                     </div>
                     <!-- Devices/volume column -->
                     <div class="d-flex justify-content-center" style="width: 175px">
+                        <button id="devicesBtn" type="button" class="btn btn-secondary mr-2" data-toggle="modal" data-target="#devicesModal">
+                            <i class="fas fa-desktop"></i>
+                        </button>
                         <!-- Mute buttons -->
                         <button id="unmuteBtn" type="button" class="btn btn-secondary mr-2 muted">
                             <i class="fas fa-volume-mute"></i>
@@ -243,7 +248,7 @@
             <div class="settings-ui container collapse overflow-y pb-4" id="settingsPage">
                 <a href="javascript:void(0)" class="float-right close-settings-btn" onclick="onHideSettings()">&times;</a>
                 <h1 class="my-3 font-weight-bold">Settings</h1>
-                <h6 class="mx-0 mb-1 font-weight-bold">Spotify Account</h6>
+                <h6 class="mx-0 mb-1 font-weight-bold">Spotify</h6>
                 <hr class="spotify-separator"/>
                 <!-- Account & Sign out-->
                 <div class="d-flex">
@@ -267,6 +272,21 @@
                 <button class="btn spotify-background text-white mt-2 d-flex px-5 ml-auto" id="btnSignOut" type="button" onclick="onSignOut()">
                     <i class="fab fa-spotify mr-2 my-auto"></i> Sign Out
                 </button>
+                <div class="d-flex  mt-2">
+                    <p class="my-0 settings-key my-auto">
+                        Enable Web Playback
+                        <small class="font-weight-light ml-1" style="font-size: 14px;" id="webPlaybackDeviceName">()</small>
+                    </p>
+                    <div class="settings-value ml-auto my-auto">
+                        <div class="text-center align-middle my-auto collapse" id="webPlaybackLoading">
+                            <i class="fa fa-spinner fa-pulse fa-lg fa-fw" ></i>
+                        </div>
+                        <label class="switch my-auto" id="webPlaybackSwitchUI">
+                            <input type="checkbox" id="webPlaybackSwitch">
+                            <span class="slider" ></span>
+                        </label>
+                    </div>
+                </div>
                 <!-- Youtube Player settings -->
                 <h6 class="mx-0 mb-1 mt-4 font-weight-bold">Youtube Player</h6>
                 <hr class="spotify-separator"/>
@@ -300,7 +320,7 @@
                     <p class="my-0">Automatic Romanize</p>
                     <div class="ml-auto my-auto settings-value">
                         <label class="switch my-auto">
-                            <input type="checkbox" id="">
+                            <input type="checkbox" id="autoRomanizeSwitch">
                             <span class="slider"></span>
                         </label>
                     </div>
@@ -384,7 +404,7 @@
                         <!-- Lyrics Container -->
                         <div id="geniusLyricsContent" class="text-justify" style="white-space: pre-wrap;"></div>
                         <!-- Add Lyrics to Genius Btn -->
-                        <a href="https://genius.com/new"  id="geniusAddLyrics">
+                        <a href="https://genius.com/new"  id="geniusAddLyrics" class="collapse">
                             <button type="button" class="btn btn-outline-primary my-2" >Add lyrics to Genius</button>
                         </a>
                     </div> 
@@ -392,5 +412,30 @@
             </div>
         </div>
     </div>
+    <!-- Devices Modal -->
+    <div class="modal" id="devicesModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+      
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Modal Heading</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+      
+            <!-- Modal body -->
+            <div class="modal-body">
+              <ul id="devicesList">
+              </ul>
+            </div>
+      
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+      
+          </div>
+        </div>
+      </div>
 </body>
 </html>

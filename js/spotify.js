@@ -1,7 +1,6 @@
 callApi = function (endpointUrl, authToken, method, callback) {
     var proxyUrl = helper.getProxyUrl();
     var url = proxyUrl + endpointUrl;
-
     $.ajax({
         url: url,
         type: method ? method : "GET",
@@ -23,6 +22,8 @@ callApi = function (endpointUrl, authToken, method, callback) {
 }
 
 class spotify {
+    static DEVICE_NAME = "Genify Web Player";
+
     static spotify() {
         $("#playBtn").hide();
 
@@ -49,8 +50,16 @@ class spotify {
         var clientId = "f4dc97c399124fc99254c5d7ac2bf4bd";
         var respType = "token";
         var redirectUri = encodeURIComponent("https://genify.joshlmao.com");
-        var scopes = encodeURIComponent('streaming user-read-currently-playing user-read-playback-state user-modify-playback-state');
-        var apiUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=${respType}&redirect_uri=${redirectUri}&scope=${scopes}`;
+        var scopes = [
+            'streaming',
+            'user-read-currently-playing',
+            'user-read-playback-state',
+            'user-modify-playback-state',
+            'app-remote-control',
+            'web-playback',
+        ];
+        var scopesEncoded = encodeURIComponent(scopes.join(' '));
+        var apiUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=${respType}&redirect_uri=${redirectUri}&scope=${scopesEncoded}`;
         window.location.href = apiUrl;
     }
 
@@ -179,7 +188,7 @@ class spotify {
 
     static getAccountInfo (callback) {
         var endpointUrl = "https://api.spotify.com/v1/me";
-        callApi(endpointUrl, this.currentAuthToken, "get", function (response) {
+        callApi(endpointUrl, this.currentAuthToken, "GET", function (response) {
             if( response == undefined || response == null) {
                 logger.error("Unknown or unexpected response from User Info call")
                 return;
@@ -192,7 +201,7 @@ class spotify {
     // Gets the current playback song of Spotify
     static getCurrentPlayback(callback) {
         var endpointUrl = "https://api.spotify.com/v1/me/player/";
-        callApi(endpointUrl, this.currentAuthToken, "get", function (response) {
+        callApi(endpointUrl, this.currentAuthToken, "GET", function (response) {
             if( response == undefined || response == null) {
                 logger.error("Unknown or unexpected response from Playback call")
                 return;
@@ -262,4 +271,73 @@ class spotify {
         callApi(apiUrl, this.currentAuthToken, "PUT", null);
         logger.log("Unmuted");
     }
+
+    static getPlaybackDevices (callback) {
+        var apiUrl = "https://api.spotify.com/v1/me/player/devices";
+        callApi(apiUrl, this.currentAuthToken, "GET", callback);
+    }
+
+    // Set the currently playing device of Spotify
+    static setPlaybackDevice (deviceId, successCallback) {
+        var apiUrl = "https://api.spotify.com/v1/me/player";
+        var url = helper.getProxyUrl() + apiUrl;
+        $.ajax({
+            url: url,
+            type: "PUT",
+            headers: {
+                'Authorization': 'Bearer ' + this.currentAuthToken,
+            },
+            dataType: "json",
+            contentType: "application/json",
+            data: `{\"device_ids\":[\"${deviceId}\"]}`,
+            success: function ( data ) {
+                logger.log(`Tranferred Spotify playback to device '${deviceId}'`);
+                successCallback();
+            },
+            fail: function ( data ) {
+                logger.error(`Unable to tranfer playback to device '${deviceId}'`);
+            }
+        });
+    }
+
+    // Set if web playback through the browser is enabled/disabled
+    static setWebPlayback ( isEnabled, finishedCallback ) {
+        if (spotifyPlayerReady) {
+            // Enabled and not init
+            if ( isEnabled && !spotify_player ) {
+                const token = this.currentAuthToken;
+                spotify_player = new Spotify.Player({
+                    name: spotify.DEVICE_NAME,
+                    getOAuthToken: cb => { cb(token); }
+                });
+            }
+
+            if (isEnabled && spotify_player ) {
+                spotify_player.addListener('ready', ({ device_id }) => {
+                    finishedCallback();
+                    // spotify.setPlaybackDevice(device_id, finishedCallback);
+                    // spotify_player.setVolume(0.1);
+                });
+
+                spotify_player.connect();
+            } else if ( !isEnabled && spotify_player ) {
+                spotify_player.removeListener('ready');
+                spotify_player.disconnect().then(
+                    finishedCallback()
+                );
+            } 
+        }
+    }
+
+    static isWebPlaybackEnabled () {
+        return cookies.getCookie(COOKIE_CONST.web_playback) == "true";
+    }
+}
+
+var spotify_player, spotifyPlayerReady = 0;
+window.onSpotifyWebPlaybackSDKReady = () => {
+    spotifyPlayerReady = true;
+
+    if ( spotify.isWebPlaybackEnabled() )
+        spotify.setWebPlayback(true, function() {} );
 }

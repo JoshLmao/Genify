@@ -13,7 +13,7 @@ const setLyrics = function (lyricsText) {
 
 $(() => {
     // Set the site version number for help
-    $("#versionNumber").text();
+    $("#versionNumber").text("v1.2.27");
 
     // If the current lyrics are romanized or not
     let isRomanized = false;
@@ -231,7 +231,7 @@ $(() => {
                 
                 if (youtube.isPlayerEnabled())
                     loadYoutubeVideo(data.trackName, data.artistName)
-                    
+                
                 spotify.startUpdateLoop(setSpotifyUI);
                 setStyle(true);
             });
@@ -240,7 +240,23 @@ $(() => {
                 $("#accountIdLink").attr("href", data.external_urls.spotify);
                 $("#displayName").text(data.display_name);
                 $("#accountType").text(data.product.toLowerCase() == "premium" ? "Premium" : "Free");
-            })
+            });
+            spotify.getPlaybackDevices (function (data) {
+                if ( data.devices.length <= 0) {
+                    return;
+                }
+
+                $("#devicesBtn").show();
+                var html = "";
+                var i = 0;
+                for(i = 0; i < data.devices.length; i++) {
+                    var device = data.devices[i];
+                    var style = device.is_active ? `style="color:green;"` : "";
+                    var onclick = `onclick="onChangeDevice('${device.id}')"`;
+                    html += `<li ${style} class='mb-1'><button type="button" class="btn btn-primary" ${onclick}>${device.name}</button></li>`;
+                }
+                $("#devicesList").html(html);
+            });
         } else {
             // No auth, show landing page
             setStyle(false);
@@ -302,6 +318,26 @@ $(() => {
             var isChecked = $(this).is(':checked');
             cookies.setCookie(COOKIE_CONST.player_color, isChecked);
         });
+        // Spotify web playback sdk enabled
+        var spotifyWebPlayback = cookies.getCookie(COOKIE_CONST.web_playback) == "true";
+        $("#webPlaybackSwitch").prop('checked', spotifyWebPlayback);
+        //$(".spotify-web-playback").toggle(spotifyWebPlayback);
+        $("#webPlaybackSwitch").change( function () {
+            var isChecked = $(this).is(':checked');
+            cookies.setCookie(COOKIE_CONST.web_playback, isChecked);
+
+            $(".spotify-web-playback").toggle(isChecked);
+
+            $("#webPlaybackSwitchUI").hide();
+            $("#webPlaybackLoading").show();
+            spotify.setWebPlayback(isChecked, function () {
+                
+                $("#webPlaybackSwitchUI").show();
+                $("#webPlaybackLoading").hide();
+            });
+        });
+
+        $("#webPlaybackDeviceName").text(`(Device Name: '${spotify.DEVICE_NAME}')`);
     }
 
     // Init function for setting start values and initialization
@@ -309,6 +345,20 @@ $(() => {
         isRomanized = false;
         $("#romanizeBtn").text("Romanize");
     }
+
+    // Bootstrap - Enable popovers and tooltips
+    $(function () { $('[data-toggle="tooltip"]').tooltip() });
+    //$(function () { $('.has-popover').popover({container: 'body'}) });
+
+    $("[data-toggle=popover]").popover({
+        html : true,
+        trigger: 'focus',
+        content: function() {
+            var content = $(this).attr("data-popover-content");
+            var html = $(content).children(".popover-body").html();
+            return html;
+        }
+    });
 
     setStyle(false);
     spotify.spotify();
@@ -367,4 +417,7 @@ function onPrevLyrics() {
     genius.getSearchResult(index, function (lyrics) {
         setLyrics(lyrics);
     });
+}
+function onChangeDevice (deviceId) {
+    spotify.setPlaybackDevice(deviceId);
 }

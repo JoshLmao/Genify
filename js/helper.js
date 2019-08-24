@@ -2,6 +2,7 @@ const COOKIE_CONST = {
     youtube_video: "youtubeVideo",
     auto_romanize: "autoRomanize",
     player_color: "playerColor",
+    web_playback: "spotify_web_playback"
 }
 
 class helper {
