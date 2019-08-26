@@ -162,15 +162,15 @@
         <!-- Spotify media bar -->
         <div class="row mx-0 spotify-media-bar spotify-bg-tertiary">
             <div class="signed-in-ui container-fluid">
-                <div class="row h-100 align-items-center mx-2">
-                    <div class="col-auto">
-                        <div class="row">
+                <div class="row h-100 align-items-center">
+                    <div class="col-xl-2 col-lg-3 col-md-3">
+                        <div class="d-flex mx-2">
                             <!-- Album Art -->
                             <a id="albumLink">
                                 <img id="albumArtwork" class="album-art" src="https://via.placeholder.com/75"></img>
                             </a>
                             <!-- Track info -->
-                            <div class="col d-flex flex-column">
+                            <div class="d-flex flex-column ml-2">
                                 <a id="songLink" class="mt-auto mr-auto">
                                     <h5 id="trackTitle" class="text-truncate mb-0" style="max-width: 200px">Track Title</h5>
                                 </a>
@@ -181,16 +181,16 @@
                         </div>
                     </div>
                     <!-- Media Controls Column -->
-                    <div class="col mx-5">
+                    <div class="col-xl-6 col-lg-6 col-md-6 px-5 mx-auto">
                         <div class="d-flex justify-content-center">
                             <a class="mx-4 my-auto" href="#">
                                 <i class="fas fa-step-backward"></i>
                             </a>
-                            <button id="pauseBtn" type="button" class="btn btn-secondary is-playing mx-1">
-                                <i class="fas fa-pause"></i>
+                            <button id="pauseBtn" type="button" class="btn btn-outline-light rounded-circle is-playing mx-1" style="width:35px;height:35px;">
+                                <i class="fas fa-pause" style="position:relative;right:2.2;font-size:1rem;"></i>
                             </button>
-                            <button id="playBtn" type="button" class="btn btn-secondary is-paused mx-1">
-                                <i class="fas fa-play "></i>
+                            <button id="playBtn" type="button" class="btn btn-outline-light rounded-circle is-paused mx-1" style="width:35px;height:35px;">
+                                <i class="fas fa-play" style="position:relative;right:1.1;font-size:1rem;"></i>
                             </button>
                             <a class="mx-4 my-auto" href="#">
                                 <i class="fas fa-step-forward"></i>
@@ -205,7 +205,7 @@
                         </div>
                     </div>
                     <!-- Devices/volume column -->
-                    <div class="d-flex justify-content-center" style="min-width: 175px">
+                    <div class="col-xl-2 col-lg-3 col-md-3 d-flex justify-content-center">
                         <!-- Devices btn with Popover -->
                         <a id="devicesBtn" class="my-auto mr-2" href="#" role="button" data-toggle="popover" data-placement="bottom" data-trigger="click" style="text-decoration: none;">
                             <span class="spotify-devices-icon"></span>

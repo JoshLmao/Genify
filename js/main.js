@@ -493,7 +493,9 @@ const refreshDevicesPopout = function (activeDeviceId = undefined) {
             };
             activeDevice = data.devices.find ( findFirstActive );
         }
-        var index = data.devices.findIndex( function (element) { return element.id == activeDevice.id; } );
+        var index = data.devices.findIndex( function (element) { 
+            return activeDevice != null ? element.id == activeDevice.id : element; 
+        });
         data.devices.splice(index, 1);
         data.devices.splice(0, 0, activeDevice);
 

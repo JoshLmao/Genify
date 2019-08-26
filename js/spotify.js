@@ -185,6 +185,8 @@ class spotify {
                     $("#playBtn").show();
                 }   
             }
+
+            spotify.currentTrack = data;
         });
     }
 
@@ -234,8 +236,6 @@ class spotify {
 
                 activeDeviceId: response.device.id,
             };
-
-            spotify.currentTrack = trackData;
             callback(trackData);
         });
     }
