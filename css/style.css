@@ -176,6 +176,16 @@ pre {
     font-size: 36px;
 }
 
+/* Devices icon - from font Glue1 */
+@font-face {
+    font-family: "glue1-spoticon";
+    src: url('https://open.scdn.co/fonts/spoticon_regular_2.woff2') format("truetype");
+}
+.spotify-devices-icon:before { 
+    font-family: "glue1-spoticon", Verdana, Tahoma;
+    content: "\f213";
+}
+
 /**/
 /* The side navigation menu */
 .sidenav {

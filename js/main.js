@@ -11,6 +11,9 @@ const setLyrics = function (lyricsText) {
     $("#geniusLyricsContent").text(lyrics);
 }
 
+/* Variables */ 
+var auto_auth_thread = null;
+
 $(() => {
     // Set the site version number for help
     $("#versionNumber").text("v1.2.27");
@@ -18,10 +21,6 @@ $(() => {
     // If the current lyrics are romanized or not
     let isRomanized = false;
     let isSimplified = null;
-
-    const getSpotify = () => {
-        spotify.getUserAuth();
-    } 
 
     $("#pauseBtn").click(() => {
         spotify.pause();
@@ -45,7 +44,7 @@ $(() => {
     // Handler for Signing into Spotify
     $("#btnSignIn").click(() => {
         logger.log("Signing into Spotify");
-        getSpotify();
+        spotify.getUserAuth();
     });
 
     // Handler for signing out of Spotify
@@ -218,12 +217,20 @@ $(() => {
             var date = auth.expireDate.toISOString().substring(0, 10);
             var time = auth.expireDate.toISOString().substring(11, 19);
             $("#authExpire").text(date + " " + time);
-            
-            var differenceMs = auth.expireDate - Date.now() - 1 * 60 * 1000;
+
+            var differenceMs = auth.expireDate - Date.now();
             setTimeout(function() {
                 helper.showWarningUI("Spotify authorization is about to expire (One minute)");
                 window.clearTimeout( this.displayExpireThread );
-            }, differenceMs);
+            }, differenceMs - 1 * 60 * 1000);
+
+            if (cookies.getCookie( COOKIE_CONST.auto_authentificate) == "true" 
+                && auto_auth_thread == null ) {
+                auto_auth_thread = setTimeout( function () {
+                    spotify.getUserAuth();
+                }, differenceMs);
+                console.log("Expires in '" + differenceMs + "' ms");
+            }
 
             spotify.getCurrentPlayback(function (data) {
                 setSpotifyUI(data);
@@ -311,7 +318,6 @@ $(() => {
         // Spotify web playback sdk enabled
         var spotifyWebPlayback = cookies.getCookie(COOKIE_CONST.web_playback) == "true";
         $("#webPlaybackSwitch").prop('checked', spotifyWebPlayback);
-        //$(".spotify-web-playback").toggle(spotifyWebPlayback);
         $("#webPlaybackSwitch").change( function () {
             var isChecked = $(this).is(':checked');
             cookies.setCookie(COOKIE_CONST.web_playback, isChecked);
@@ -321,13 +327,29 @@ $(() => {
             $("#webPlaybackSwitchUI").hide();
             $("#webPlaybackLoading").show();
             spotify.setWebPlayback(isChecked, function () {
-                
                 $("#webPlaybackSwitchUI").show();
                 $("#webPlaybackLoading").hide();
             });
         });
-
         $("#webPlaybackDeviceName").text(`(Device Name: '${spotify.DEVICE_NAME}')`);
+
+        var autoAuth = cookies.getCookie( COOKIE_CONST.auto_authentificate) == "true";
+        $("#autoAuthSwitch").prop('checked', autoAuth);
+        $("#autoAuthSwitch").change( function () {
+            var isChecked = $(this).is(':checked');
+            cookies.setCookie(COOKIE_CONST.auto_authentificate, isChecked);
+
+            if ( auto_auth_thread == null ) {
+                var diffMs = spotify.currentAuthToken.expireDate - Date.now();
+                auto_auth_thread = setTimeout (function () {
+                    spotify.getUserAuth();
+                }, diffMs);
+                console.log("Expires in '" + diffMs + "' ms");
+            } else {
+                clearTimeout( auto_auth_thread );
+                auto_auth_thread = null;
+            }
+        });
     }
 
     // Init function for setting start values and initialization
@@ -395,7 +417,9 @@ function onHideSettings() {
     var fadeDurationMs = 100;
     $("#settingsPage").fadeOut(fadeDurationMs, function () {
         $("#geniusContent").fadeIn();
-        $(".youtube-player-ui").fadeIn();
+        if ( cookies.getCookie( COOKIE_CONST.youtube_video ) == "true") {
+            $(".youtube-player-ui").fadeIn();
+        }
     });
 }
 
@@ -474,6 +498,9 @@ const refreshDevicesPopout = function (activeDeviceId = undefined) {
         data.devices.splice(0, 0, activeDevice);
 
         var content = "";
+        if( data.devices.length == 0 ) {
+            content = "<div class='text-center text-white'>No devices available</div>"
+        }
         for(var i = 0; i < data.devices.length; i++) {
             var device = data.devices[i];
             var iconHtml = `<i class="${getIcon(device.type)} align-self-center" style="width:25px"></i>` ;
