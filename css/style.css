@@ -1,3 +1,5 @@
+/*$dark3-color:     #989ca8;*/
+
 .btn-social {
     font-size: 1.15rem;
 }
@@ -81,6 +83,54 @@ pre {
 	left: 0;
 	width: 100%;
     height: 100%;
+}
+
+.devices-menu {
+    /* Icon size */
+    font-size: 1rem;
+}
+
+.devices-menu .popover-header {
+    text-align: center;
+    background: rgb(40, 40, 40);
+    color: white;
+    border-bottom-width: 0px;
+    font-weight: bolder;
+}
+.devices-menu .popover-header:before {
+    border-bottom-color: rgb(40,40,40);
+}
+
+.devices-menu .popover-body {
+    padding: 0px;
+    background: rgb(40,40,40);
+}
+
+.devices-menu .list-group-item {
+    background: transparent;
+}
+
+/*Learn More btn*/
+.devices-menu .btn-warning {
+    background-color: rgb(70,135,214);
+}
+.devices-menu .btn-warning:hover {
+    background-color: rgb(59, 114, 180);
+}
+
+.devices-menu a {
+    border: 0px;
+}
+.devices-menu a:hover {
+    background: rgb(51, 51, 51);
+}
+
+.devices-menu .active-device {
+    color: rgb(31, 169, 79);
+}
+
+.devices-menu .arrow:after {
+    border-bottom-color: rgb(40,40,40);
 }
 
 /* Custom scrolbar*/

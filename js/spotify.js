@@ -21,6 +21,15 @@ callApi = function (endpointUrl, authToken, method, callback) {
     });
 }
 
+// Spotify Player init
+var spotify_player, spotifyPlayerReady = 0;
+window.onSpotifyWebPlaybackSDKReady = () => {
+    spotifyPlayerReady = true;
+
+    if ( spotify.isWebPlaybackEnabled() )
+        spotify.setWebPlayback(true, function() {} );
+}
+
 class spotify {
     static DEVICE_NAME = "Genify Web Player";
 
@@ -222,11 +231,11 @@ class spotify {
                 songUrl: response.item.external_urls.spotify,
                 artistUrl: response.item.artists[0].external_urls.spotify,
                 albumUrl: response.item.album.external_urls.spotify,
+
+                activeDeviceId: response.device.id,
             };
-            if( spotify.currentTrack.trackName == null &&
-                spotify.currentTrack.artistName == null) {
-                spotify.currentTrack = trackData;
-            }
+
+            spotify.currentTrack = trackData;
             callback(trackData);
         });
     }
@@ -279,6 +288,10 @@ class spotify {
 
     // Set the currently playing device of Spotify
     static setPlaybackDevice (deviceId, successCallback) {
+        if (deviceId == spotify.currentTrack.activeDeviceId ) {
+            logger.warning(`Can't set Spotify device - Active device '${spotify.currentTrack.activeDeviceId}' is the target device '${deviceId}'`);
+            return;
+        }
         var apiUrl = "https://api.spotify.com/v1/me/player";
         var url = helper.getProxyUrl() + apiUrl;
         $.ajax({
@@ -332,12 +345,4 @@ class spotify {
     static isWebPlaybackEnabled () {
         return cookies.getCookie(COOKIE_CONST.web_playback) == "true";
     }
-}
-
-var spotify_player, spotifyPlayerReady = 0;
-window.onSpotifyWebPlaybackSDKReady = () => {
-    spotifyPlayerReady = true;
-
-    if ( spotify.isWebPlaybackEnabled() )
-        spotify.setWebPlayback(true, function() {} );
 }

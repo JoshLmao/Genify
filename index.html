@@ -206,9 +206,15 @@
                     </div>
                     <!-- Devices/volume column -->
                     <div class="d-flex justify-content-center" style="width: 175px">
-                        <button id="devicesBtn" type="button" class="btn btn-secondary mr-2" data-toggle="modal" data-target="#devicesModal">
+                        <a id="devicesBtn" class="my-auto mr-2" href="#" role="button" data-toggle="popover" data-placement="bottom" data-trigger="click">
                             <i class="fas fa-desktop"></i>
-                        </button>
+                        </a>
+                        <!-- Popover Content -->
+                        <div id="devicesPopover" style="display: none;">
+                            <div id="devicesPopoverContent" class="list-group list-group-flush w-100">
+                            </div>
+                        </div>
+
                         <!-- Mute buttons -->
                         <button id="unmuteBtn" type="button" class="btn btn-secondary mr-2 muted">
                             <i class="fas fa-volume-mute"></i>
@@ -272,7 +278,7 @@
                 <button class="btn spotify-background text-white mt-2 d-flex px-5 ml-auto" id="btnSignOut" type="button" onclick="onSignOut()">
                     <i class="fab fa-spotify mr-2 my-auto"></i> Sign Out
                 </button>
-                <div class="d-flex  mt-2">
+                <div class="d-flex mt-3">
                     <p class="my-0 settings-key my-auto">
                         Enable Web Playback
                         <small class="font-weight-light ml-1" style="font-size: 14px;" id="webPlaybackDeviceName">()</small>

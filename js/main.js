@@ -245,17 +245,7 @@ $(() => {
                 if ( data.devices.length <= 0) {
                     return;
                 }
-
-                $("#devicesBtn").show();
-                var html = "";
-                var i = 0;
-                for(i = 0; i < data.devices.length; i++) {
-                    var device = data.devices[i];
-                    var style = device.is_active ? `style="color:green;"` : "";
-                    var onclick = `onclick="onChangeDevice('${device.id}')"`;
-                    html += `<li ${style} class='mb-1'><button type="button" class="btn btn-primary" ${onclick}>${device.name}</button></li>`;
-                }
-                $("#devicesList").html(html);
+                refreshDevicesPopout();
             });
         } else {
             // No auth, show landing page
@@ -344,20 +334,35 @@ $(() => {
     const initPage = () => {
         isRomanized = false;
         $("#romanizeBtn").text("Romanize");
+
+        // Add onclick to whitelist on 'a' elements
+        var myDefaultWhiteList = $.fn.tooltip.Constructor.Default.whiteList
+        myDefaultWhiteList.a.push('onclick');
+        myDefaultWhiteList.a.push('style');
+        myDefaultWhiteList.i.push('style');
     }
 
     // Bootstrap - Enable popovers and tooltips
     $(function () { $('[data-toggle="tooltip"]').tooltip() });
-    //$(function () { $('.has-popover').popover({container: 'body'}) });
-
+    
+    // Devices popover
     $("[data-toggle=popover]").popover({
-        html : true,
-        trigger: 'focus',
+        html: true,
+        template: `<div class="devices-menu popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>`,
         content: function() {
-            var content = $(this).attr("data-popover-content");
-            var html = $(content).children(".popover-body").html();
-            return html;
+            return $('#devicesPopover').html(); 
+        },
+        title: 'Devices',
+    }).click(function() {
+        $(this).popover('show');
+    });
+    // Click anywhere, defocus from Popover
+    $('body').on('click', function (e) {
+        $('[data-toggle="popover"]').each(function () {
+        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+            $(this).popover('hide');
         }
+        });
     });
 
     setStyle(false);
@@ -418,6 +423,68 @@ function onPrevLyrics() {
         setLyrics(lyrics);
     });
 }
-function onChangeDevice (deviceId) {
-    spotify.setPlaybackDevice(deviceId);
+
+var canChangeDevice = true;
+function onChangeDevice (deviceId, deviceUIRef) {
+    if (canChangeDevice) {
+        canChangeDevice = false;
+        $(deviceUIRef).append(`<div class="align-middle ml-2 loading-icon"><i class="fa fa-spinner fa-pulse fa-lg fa-fw"></i></div>`);
+        spotify.setPlaybackDevice(deviceId, function () {
+            refreshDevicesPopout(deviceId);
+
+            canChangeDevice = true;
+            $(deviceUIRef).children("div.loading-icon").remove();
+            $('[data-toggle=popover]').popover('hide');
+        });
+    }
+}
+
+const getIcon = function (iconName) {
+    switch (iconName.toLowerCase()) {
+        case "tv":
+            return `fas fa-tv`;
+        case "computer":
+            return `fas fa-desktop`;
+        case "smartphone":
+            return `fas fa-mobile-alt`;
+    }
+}
+
+const refreshDevicesPopout = function (activeDeviceId = undefined) {
+    //Set popover UI
+    spotify.getPlaybackDevices(function (data) {
+        if(!data.devices)
+            return;
+        
+        var activeDevice = null;
+        if ( activeDeviceId === undefined ) {
+            // Move active device to first element
+            findFirstActive = function (device) {
+                return device.is_active;
+            };
+            activeDevice = data.devices.find( findFirstActive );
+        } else {
+            findFirstActive = function (device) {
+                return device.id == activeDeviceId;
+            };
+            activeDevice = data.devices.find ( findFirstActive );
+        }
+        var index = data.devices.findIndex( function (element) { return element.id == activeDevice.id; } );
+        data.devices.splice(index, 1);
+        data.devices.splice(0, 0, activeDevice);
+
+        var content = "";
+        for(var i = 0; i < data.devices.length; i++) {
+            var device = data.devices[i];
+            var iconHtml = `<i class="${getIcon(device.type)} align-self-center" style="width:25px"></i>` ;
+            var isActive = activeDevice.id == device.id ? " active-device" : "";
+            content += `<a onclick="onChangeDevice('${device.id}', this);" href="#" 
+                            class="list-group-item d-flex${isActive}">
+                            ${iconHtml}<h6 class="ml-2 my-auto">${device.name}</h6>
+                        </a>`;
+        }
+        content += "<a href='https://www.spotify.com/us/connect/' target='_blank' class='my-2 mx-auto px-3 py-1 btn btn-warning btn-sm text-white' style='border-radius:16px; '>LEARN MORE</a>"
+        $('#devicesPopoverContent').html(content);
+        $("#devicesBtn").show();
+    });
 }
