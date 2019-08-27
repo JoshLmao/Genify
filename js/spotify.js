@@ -126,11 +126,21 @@ class spotify {
             this.updateIntevalThread = setInterval(() => {
                 spotify.updateLoop();
             }, 2 * 1000);
-
-            setInterval(() => {
-                spotify.progressLoop(setUIFunc);
-            }, 1000);
         }
+
+        setInterval(() => {
+            spotify.progressLoop(setUIFunc);
+        }, 1 * 1000);
+
+        // Devices update loop
+        setInterval(function () {
+            spotify.getPlaybackDevices(function (data) {
+                if (spotify.available_devices != null && data.devices.length != spotify.available_devices.length) {
+                    spotify.onDeviceAmountChanged(data.devices);
+                }
+                spotify.available_devices = data.devices;
+            })
+        }, 5 * 1000);
     }
 
     static loadAuth() {

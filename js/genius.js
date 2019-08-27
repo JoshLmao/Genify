@@ -26,7 +26,8 @@ class genius {
     // Searches Genius for the artist and track name and returns the first result
     static getSearchFirstResult(trackData, callback) {
         var proxyUrl = helper.getProxyUrl();
-        var searchParams = encodeURIComponent(`${trackData.artistName} ${trackData.trackName}`);
+        var trackNameClean = genius.cleanName(trackData.trackName);
+        var searchParams = encodeURIComponent(`${trackData.artistName} ${trackNameClean}`);
         var url = proxyUrl + "https://api.genius.com/search?q=" + searchParams;
         var accessToken = 'oIRErfK8KcmhxvvKzaDnt9GYLkfghdCz7pXxVi7Ce8c3V4INQC3qd_Djlc4ndnNq';
         $.ajax({
@@ -140,4 +141,9 @@ class genius {
         var result = genius.getRelevantHit(lastIndex);
         callback(result);
     } 
+
+    // Cleans the string to be search friendly
+    static cleanName (name) {
+        return name.replace(/ *\([^)]*\) */g, "");
+    }
 }

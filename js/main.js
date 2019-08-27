@@ -170,6 +170,15 @@ $(() => {
         youtube.setPlaying(isPlayingState);
     }
 
+    spotify.onDeviceAmountChanged = function (devices) {
+        var activeDevice = null;
+        findFirstActive = function (device) {
+            return device.is_active;
+        };
+        activeDevice = devices.find ( findFirstActive );
+        setDevices(devices, activeDevice.id)
+    }
+
     // Checks for a hash in the URL and begins Spotify auth if so
     const readHash = () => {
         var auth = null;
@@ -249,9 +258,8 @@ $(() => {
                 $("#accountType").text(data.product.toLowerCase() == "premium" ? "Premium" : "Free");
             });
             spotify.getPlaybackDevices (function (data) {
-                if ( data.devices.length <= 0) {
+                if ( data.devices.length <= 0) 
                     return;
-                }
                 refreshDevicesPopout();
             });
         } else {
@@ -479,41 +487,48 @@ const refreshDevicesPopout = function (activeDeviceId = undefined) {
     spotify.getPlaybackDevices(function (data) {
         if(!data.devices)
             return;
-        
-        var activeDevice = null;
-        if ( activeDeviceId === undefined ) {
-            // Move active device to first element
-            findFirstActive = function (device) {
-                return device.is_active;
-            };
-            activeDevice = data.devices.find( findFirstActive );
-        } else {
-            findFirstActive = function (device) {
-                return device.id == activeDeviceId;
-            };
-            activeDevice = data.devices.find ( findFirstActive );
-        }
-        var index = data.devices.findIndex( function (element) { 
-            return activeDevice != null ? element.id == activeDevice.id : element; 
-        });
-        data.devices.splice(index, 1);
-        data.devices.splice(0, 0, activeDevice);
 
-        var content = "";
-        if( data.devices.length == 0 ) {
-            content = "<div class='text-center text-white'>No devices available</div>"
-        }
-        for(var i = 0; i < data.devices.length; i++) {
-            var device = data.devices[i];
-            var iconHtml = `<i class="${getIcon(device.type)} align-self-center" style="width:25px"></i>` ;
-            var isActive = activeDevice.id == device.id ? " active-device" : "";
-            content += `<a onclick="onChangeDevice('${device.id}', this);" href="#" 
-                            class="list-group-item d-flex${isActive}">
-                            ${iconHtml}<h6 class="ml-2 my-auto">${device.name}</h6>
-                        </a>`;
-        }
-        content += "<a href='https://www.spotify.com/us/connect/' target='_blank' class='my-2 mx-auto px-3 py-1 btn btn-warning btn-sm text-white' style='border-radius:16px; '>LEARN MORE</a>"
-        $('#devicesPopoverContent').html(content);
-        $("#devicesBtn").show();
+        setDevices(data.devices, activeDeviceId);
     });
+}
+
+const setDevices = function (devices, activeDeviceId) {
+    var activeDevice = null;
+    if ( activeDeviceId === undefined ) {
+        // Move active device to first element
+        findFirstActive = function (device) {
+            return device.is_active;
+        };
+        activeDevice = devices.find( findFirstActive );
+    } else {
+        findFirstActive = function (device) {
+            return device.id == activeDeviceId;
+        };
+        activeDevice = devices.find ( findFirstActive );
+    }
+    var index = devices.findIndex( function (element) { 
+        return activeDevice != null ? element.id == activeDevice.id : element; 
+    });
+    devices.splice(index, 1);
+    devices.splice(0, 0, activeDevice);
+
+    var content = "";
+    if( devices.length == 0 ) {
+        content = "<div class='text-center text-white'>No devices available</div>"
+    }
+    for(var i = 0; i < devices.length; i++) {
+        var device = devices[i];
+        var iconHtml = `<i class="${getIcon(device.type)} align-self-center" style="width:25px"></i>` ;
+        var isActive = activeDevice.id == device.id ? " active-device" : "";
+        content += `<a onclick="onChangeDevice('${device.id}', this);" href="#" 
+                        class="list-group-item d-flex${isActive}">
+                        ${iconHtml}<h6 class="ml-2 my-auto">${device.name}</h6>
+                    </a>`;
+    }
+    content += "<a href='https://www.spotify.com/us/connect/' target='_blank' class='my-2 mx-auto px-3 py-1 btn btn-warning btn-sm text-white' style='border-radius:16px; '>LEARN MORE</a>"
+    
+    $('[data-toggle=popover]').popover('hide');    
+    $('#devicesPopoverContent').html(content);
+    if ( !$("#devicesBtn").is(":visible"))
+        $("#devicesBtn").show();
 }
