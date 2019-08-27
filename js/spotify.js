@@ -140,7 +140,7 @@ class spotify {
                 }
                 spotify.available_devices = data.devices;
             })
-        }, 5 * 1000);
+        }, 10 * 1000);
     }
 
     static loadAuth() {

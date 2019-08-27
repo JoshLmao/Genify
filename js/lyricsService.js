@@ -4,6 +4,9 @@ class lyricsService {
         this.language = "english";
         this.romanizedLyrics = "";
         this.isSimplified = false;
+
+        this.kuroshiro = new Kuroshiro();
+        this.kuroshiro.init(new KuromojiAnalyzer({ dictPath: "/./vendor/kuroshiro/dict/" }));
     }
 
     // Initializes the latest lyrics and romanizes it
@@ -18,7 +21,9 @@ class lyricsService {
             this.romanizedLyrics = lyricsService.toRomaja(lyrics);
         } else if (this.language == "japanese") {
             // Japanese
-            this.romanizedLyrics = lyricsService.toRomanji(lyrics);
+            lyricsService.toRomanji(lyrics, function (romanjiLyrics) {
+                lyricsService.romanizedLyrics = romanjiLyrics;
+            });
         } else if (this.language == "chinese") {
             // Chinese
             this.romanizedLyrics = lyricsService.toPinyin(lyrics);
@@ -93,10 +98,12 @@ class lyricsService {
     }
 
     // Japanese characters to Roman
-    static toRomanji (lyrics) {
-        // Using Romaji.js
-        // https://github.com/markni/romaji.js
-        return romaji.fromKana(lyrics);
+    static toRomanji (lyrics, convertCallback) {
+        // Using Kuroshiro
+        this.kuroshiro.convert(lyrics, { 
+            to: "romaji",
+            mode: "spaced",
+        }).then(convertCallback);
     }
 
     // Chinese characters to roman letters

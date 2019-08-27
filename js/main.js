@@ -518,6 +518,9 @@ const setDevices = function (devices, activeDeviceId) {
     }
     for(var i = 0; i < devices.length; i++) {
         var device = devices[i];
+        if (device == undefined ) 
+            continue;
+            
         var iconHtml = `<i class="${getIcon(device.type)} align-self-center" style="width:25px"></i>` ;
         var isActive = activeDevice.id == device.id ? " active-device" : "";
         content += `<a onclick="onChangeDevice('${device.id}', this);" href="#" 

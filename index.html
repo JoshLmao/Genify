@@ -88,6 +88,9 @@
     <!-- Simplified/Traditional scripts-->
     <script src="vendor/hustlzp/jquery.s2t.js"></script>
     <script src="vendor/nickdrewe/TradOrSimp.js"></script>
+    <!-- Kuroshiro scripts -->
+    <script src="./vendor/kuroshiro/kuroshiro.min.js"></script>
+    <script src="./vendor/kuroshiro/kuroshiro-analyzer-kuromoji.min.js"></script>
 
     <!--Local Scripts-->
     <script src="js/main.js"></script>
@@ -163,19 +166,19 @@
         <div class="row mx-0 spotify-media-bar spotify-bg-tertiary">
             <div class="signed-in-ui container-fluid">
                 <div class="row h-100 align-items-center">
-                    <div class="col-xl-2 col-lg-3 col-md-3">
+                    <div class="col-xl-3 col-lg-3 col-md-3">
                         <div class="d-flex mx-2">
                             <!-- Album Art -->
                             <a id="albumLink">
                                 <img id="albumArtwork" class="album-art" src="https://via.placeholder.com/75"></img>
                             </a>
                             <!-- Track info -->
-                            <div class="d-flex flex-column ml-2">
-                                <a id="songLink" class="mt-auto mr-auto">
-                                    <h5 id="trackTitle" class="text-truncate mb-0" style="max-width: 200px">Track Title</h5>
+                            <div class="d-flex flex-column ml-2 overflow-auto">
+                                <a id="songLink" class="mt-auto mr-auto w-100">
+                                    <h6 id="trackTitle" class="text-truncate mb-0">Track Title</h6>
                                 </a>
-                                <a id="artistLink" class="my-auto mr-auto">
-                                    <h6 id="artistTitle" class="text-truncate mb-0">Artist Title</h6>
+                                <a id="artistLink" class="my-auto mr-auto w-100">
+                                    <h6 id="artistTitle" class="text-truncate mb-0 font-weight-lighter">Artist Title</h6>
                                 </a>
                             </div>
                         </div>
@@ -378,8 +381,8 @@
                 </div>
                 <div class="d-flex">
                     <p class="my-0">Japanese Converter</p>
-                    <a href="https://github.com/fujaru/aromanize-js" class="ml-auto settings-value">
-                        <p class="ml-auto my-0">TODO by TODO</p>
+                    <a href="https://github.com/hexenq/kuroshiro" class="ml-auto settings-value">
+                        <p class="ml-auto my-0">Kuroshiro by Hexenq</p>
                     </a>
                 </div>
                 <div class="d-flex justify-content-between mt-3">
