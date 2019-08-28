@@ -16,7 +16,7 @@ var auto_auth_thread = null;
 
 $(() => {
     // Set the site version number for help
-    $("#versionNumber").text("v1.2.27");
+    $("#versionNumber").text("v2.0.0");
 
     // If the current lyrics are romanized or not
     let isRomanized = false;

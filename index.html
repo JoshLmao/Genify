@@ -105,7 +105,7 @@
 
 <body class="spotify-bg-secondary">
     <!-- Top Navigation Bar-->
-    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+    <nav class="navbar navbar-expand navbar-dark bg-primary">
         <div class="container">
             <div class="mx-auto order-0">
                 <a class="navbar-brand" href="index.html">
@@ -161,12 +161,12 @@
     </div>
 
     <!-- Master container -->
-    <div >
+    <div class="mx-0 px-0">
         <!-- Spotify media bar -->
         <div class="row mx-0 spotify-media-bar spotify-bg-tertiary">
             <div class="signed-in-ui container-fluid">
                 <div class="row h-100 align-items-center">
-                    <div class="col-xl-3 col-lg-3 col-md-3">
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5">
                         <div class="d-flex mx-2">
                             <!-- Album Art -->
                             <a id="albumLink">
@@ -184,7 +184,7 @@
                         </div>
                     </div>
                     <!-- Media Controls Column -->
-                    <div class="col-xl-6 col-lg-6 col-md-6 px-5 mx-auto">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-8 col-7 px-5 mx-auto">
                         <div class="d-flex justify-content-center">
                             <a class="mx-4 my-auto" href="#">
                                 <i class="fas fa-step-backward"></i>
@@ -208,26 +208,28 @@
                         </div>
                     </div>
                     <!-- Devices/volume column -->
-                    <div class="col-xl-2 col-lg-3 col-md-3 d-flex justify-content-center">
-                        <!-- Devices btn with Popover -->
-                        <a id="devicesBtn" class="my-auto mr-2" href="#" role="button" data-toggle="popover" data-placement="bottom" data-trigger="click" style="text-decoration: none;">
-                            <span class="spotify-devices-icon"></span>
-                        </a>
-                        <!-- Devices Popover Content -->
-                        <div id="devicesPopover" style="display: none;">
-                            <div id="devicesPopoverContent" class="list-group list-group-flush w-100">
+                    <div class="col-xl-2 col-lg-3 col-md-3 d-none d-md-block">
+                        <div class="d-flex justify-content-center">
+                            <!-- Devices btn with Popover -->
+                            <a id="devicesBtn" class="my-auto mr-2" href="#" role="button" data-toggle="popover" data-placement="bottom" data-trigger="click" style="text-decoration: none;">
+                                <span class="spotify-devices-icon"></span>
+                            </a>
+                            <!-- Devices Popover Content -->
+                            <div id="devicesPopover" style="display: none;">
+                                <div id="devicesPopoverContent" class="list-group list-group-flush w-100">
+                                </div>
                             </div>
-                        </div>
-                        <!-- Mute buttons -->
-                        <a id="unmuteBtn" class="mx-2 muted my-auto" href="#">
-                            <i class="fas fa-volume-mute"></i>
-                        </a>
-                        <a id="muteBtn" class="mx-2 my-auto unmuted" href="#">
-                            <i class="fas fa-volume-up"></i>
-                        </a>
-                        <!-- Volume progress -->
-                        <div class="progress w-100 my-auto spotify-progress-bar">
-                            <div id="volumeProgress" class="progress-bar spotify-progress-bar-inner" role="progressbar" style="width:0%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            <!-- Mute buttons -->
+                            <a id="unmuteBtn" class="mx-2 muted my-auto" href="#">
+                                <i class="fas fa-volume-mute"></i>
+                            </a>
+                            <a id="muteBtn" class="mx-2 my-auto unmuted" href="#">
+                                <i class="fas fa-volume-up"></i>
+                            </a>
+                            <!-- Volume progress -->
+                            <div class="progress w-100 my-auto spotify-progress-bar">
+                                <div id="volumeProgress" class="progress-bar spotify-progress-bar-inner" role="progressbar" style="width:0%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -242,7 +244,7 @@
             </div>
         </div>
         <!-- Lyrics bar -->
-        <div class="d-flex lyricsFill">
+        <div class="d-flex lyricsFill row mr-0" style="margin-right: 0px; margin-left:0px;">
             <div class="signed-in-ui buttons-dock">
                 <button type="button" class="btn btn-outline-light px-1 fa-sm" onclick="onPrevLyrics()">
                     <i class="fas fa-arrow-left "></i>
@@ -398,19 +400,20 @@
                 </div>
             </div>
             <!-- Youtube Video -->
-            <div class="youtube-player-ui container">
+            <div class="youtube-player-ui container col-md col-sm-12 px-0">
                 <!-- Loading Spinner -->
                 <div class="text-center align-middle mt-2" id="youtubeLoading">
                     <i class="fa fa-spinner fa-pulse fa-3x fa-fw" ></i>
                 </div>
                 <script src="https://apis.google.com/js/api.js"></script>
                 <script src="http://www.youtube.com/player_api"></script>
-                <div class="youtubeContainer my-3">
+                <!-- ## Margin 3 medium and above, Margin 3 on sides, 5 top on xs to sm ## -->
+                <div class="youtubeContainer m-md-3 mx-3 mt-5">
                     <div id="youtubePlayer"></div>
                 </div>
             </div>
             <!-- Genius Content -->
-            <div class="signed-in-ui mx-auto" id="geniusContent" style="min-width:35%;">
+            <div class="signed-in-ui mx-auto col-md col-sm-12" id="geniusContent" style="min-width:35%;">
                 <div class="d-inline-block overflow-y h-100 w-100">
                     <div class="card-body text-center">
                         <!-- Loading Spinner -->
@@ -418,9 +421,9 @@
                             <i class="fa fa-spinner fa-pulse fa-3x fa-fw" ></i>
                         </div>
                         <!-- Romanize Btn -->
-                        <button type="button" class="btn btn-outline-primary mb-3 py-1" id="romanizeBtn"></button>
+                        <button type="button" class="btn btn-outline-light mb-3 py-1" id="romanizeBtn"></button>
                         <!-- Trad to Simp Chinese Btn -->
-                        <button type="button" class="btn btn-outline-primary mb-3 py-1" id="tradSimpBtn"></button>
+                        <button type="button" class="btn btn-outline-light mb-3 py-1" id="tradSimpBtn"></button>
                         <!-- Lyrics Container -->
                         <div id="geniusLyricsContent" class="text-justify" style="white-space: pre-wrap;"></div>
                         <!-- Add Lyrics to Genius Btn -->
