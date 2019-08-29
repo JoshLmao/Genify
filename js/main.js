@@ -331,7 +331,6 @@ $(() => {
         $("#displayYoutubeSwitch").change( function () {
             var isChecked = $(this).is(':checked');
             cookies.setCookie(COOKIE_CONST.youtube_video, isChecked);
-            $(".youtube-player-ui").toggle(isChecked);
 
             spotify.getCurrentPlayback(function (trackData) {
                 // Update Youtube Video if track has changed

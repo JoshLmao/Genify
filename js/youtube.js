@@ -93,16 +93,17 @@ class youtube {
     static getRelevantSearch (searchResults, trackName, artistName) {
         var i = 0;
         for (i = 0; i < searchResults.length; i++) {
+            var videoTitle = searchResults[i].snippet.title.toLowerCase();
+            // Filter unwanted related videos by phrase (Lyric videos, covers)
+            if ( videoTitle.includes("lyrics") ||  videoTitle.includes("cover"))
+                continue;
+
             var channelName =  searchResults[i].snippet.channelTitle.toLowerCase();
             var cleanArtistName = artistName.replace(/ /g, '').toLowerCase();
-            if ( channelName.includes("vevo") || channelName.includes(cleanArtistName)) {
+            if ( channelName.includes("vevo") || channelName.includes(cleanArtistName))
                 break;
-            } 
-
-            var videoTitle = searchResults[i].snippet.title;
-            if (videoTitle.toLowerCase().includes("official video")) {
+            if (videoTitle.toLowerCase().includes("official video"))
                 break;
-            }
         }
 
         // If found no relevant video, return the first

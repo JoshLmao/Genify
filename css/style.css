@@ -152,8 +152,8 @@ pre {
 }
 
 .lyricsFill {
-    width: 100%;
-    height: calc(100% - 90px - 50px);
+    width: 100%!important;
+    height: calc(100% - 90px - 50px)!important;
 }
 
 .overflow-y {
@@ -184,6 +184,19 @@ pre {
 .spotify-devices-icon:before { 
     font-family: "glue1-spoticon", Verdana, Tahoma;
     content: "\f213";
+}
+
+.splash-container {
+    height: calc(100% - 50px)!important;
+}
+.splash-gradiant {
+    background: -webkit-gradient(linear, left top, left bottom,
+                                    color-stop(0%, #111), 
+                                    color-stop(160%, #9198e5));
+}
+.genify-splash-title {
+    font-weight: bolder;
+    font-size: 3rem;
 }
 
 /**/
@@ -289,3 +302,4 @@ pre {
   .slider.round:before {
     border-radius: 50%;
   }
+
