@@ -159,7 +159,6 @@
             </div>
         </div>
     </div>
-
     <!-- Master container -->
     <div class="mx-0 px-0">
         <!-- Spotify media bar -->
@@ -245,7 +244,7 @@
         </div>
         <!-- Lyrics bar -->
         <div class="d-flex lyricsFill row mr-0" style="margin-right: 0px; margin-left:0px;">
-            <div class="signed-in-ui buttons-dock">
+            <div class="signed-in-ui buttons-dock" style="z-index:100;">
                 <button type="button" class="btn btn-outline-light px-1 fa-sm" onclick="onPrevLyrics()">
                     <i class="fas fa-arrow-left "></i>
                 </button>
@@ -424,6 +423,8 @@
                         <button type="button" class="btn btn-outline-light mb-3 py-1" id="romanizeBtn"></button>
                         <!-- Trad to Simp Chinese Btn -->
                         <button type="button" class="btn btn-outline-light mb-3 py-1" id="tradSimpBtn"></button>
+                        <!-- Trad to Simp Chinese Btn -->
+                        <button type="button" class="btn btn-outline-light mb-3 py-1" id="hiraKataBtn"></button>
                         <!-- Lyrics Container -->
                         <div id="geniusLyricsContent" class="text-justify" style="white-space: pre-wrap;"></div>
                         <!-- Add Lyrics to Genius Btn -->
@@ -435,5 +436,6 @@
             </div>
         </div>
     </div>
+    
 </body>
 </html>

@@ -28,7 +28,7 @@ class helper {
                             <strong>${message}</strong>
                         </div>
                     </div>`;
-        $("#mainContent").before(html);
+        $("#messageContainer").append(html);
     }
 
     // Show and log a warning message
@@ -42,7 +42,7 @@ class helper {
                             <strong>${message}</strong>
                         </div>
                     </div>`;
-        $("#mainContent").before(html);
+        $("#mainContent").append(html);
     }
 
     // Formats total milliseconds to a displayable time format (like 00:00)

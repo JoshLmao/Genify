@@ -4,6 +4,7 @@ class lyricsService {
         this.language = "english";
         this.romanizedLyrics = "";
         this.isSimplified = false;
+        this.isHiragana = false;
 
         this.kuroshiro = new Kuroshiro();
         this.kuroshiro.init(new KuromojiAnalyzer({ dictPath: "/./vendor/kuroshiro/dict/" }));
@@ -14,7 +15,6 @@ class lyricsService {
         this.currentLyrics = lyrics;
 
         lyricsService.detectLanguage(lyrics);
-        $("#tradSimpBtn").text(this.isSimplified ? "To Traditional" : "To Simplified");
 
         if(this.language == "korean") {
             // Korean
@@ -28,9 +28,6 @@ class lyricsService {
             // Chinese
             this.romanizedLyrics = lyricsService.toPinyin(lyrics);
         }
-
-        $("#romanizeBtn").toggle(this.language != "english");
-        $("#tradSimpBtn").toggle(this.language == "chinese");
     }
 
     // Gets the current lyrics for the current song
@@ -51,6 +48,16 @@ class lyricsService {
         } else {
             return $.s2t(this.currentLyrics);
         }
+    }
+
+    static convertJapanese ( toKatakana, setLyricsCallback ) {
+        var toMode = "hiragana";
+        if ( toKatakana )
+            toMode = "katakana"   
+        this.kuroshiro.convert(this.currentLyrics, { 
+            to: toMode,
+            mode: "spaced",
+        }).then(setLyricsCallback);
     }
 
     // Detects for certain language using Regex and sets it
@@ -82,6 +89,9 @@ class lyricsService {
             // https://github.com/nickdrewe/traditional-or-simplified
             var result = detect(lyrics);
             this.isSimplified = result.detectedCharacters == 'simplified';
+        } else if ( this.langauge == "japanese" ) {
+            var hasHiragana = this.kuroshiro.hasHiragana(lyrics);
+            this.isHiragana = hasHiragana;
         }
 
         // No other languages, set to English

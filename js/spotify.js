@@ -246,7 +246,8 @@ class spotify {
 
                 activeDeviceId: response.device.id,
             };
-            callback(trackData);
+            if (callback)
+                callback(trackData);
         });
     }
 

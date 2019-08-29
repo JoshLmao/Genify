@@ -195,7 +195,7 @@ pre {
     z-index: 1; /* Stay on top */
     
     overflow-x: hidden; /* Disable horizontal scroll */
-    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+    transition: 0.15s; /* 0.5 second transition effect to slide in the sidenav */
 
     display: flex;
     flex-direction: column;
@@ -289,6 +289,3 @@ pre {
   .slider.round:before {
     border-radius: 50%;
   }
-
-
-  

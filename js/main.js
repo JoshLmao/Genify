@@ -5,6 +5,15 @@ const setLyrics = function (lyricsText) {
     var rawLyrics = lyricsText.trim();
     lyricsService.initLyrics(rawLyrics);
 
+    $("#tradSimpBtn").text(lyricsService.isSimplified ? "To Traditional" : "To Simplified");
+    $("#tradSimpBtn").toggle(lyricsService.language == "chinese");
+    
+    $("#hiraKataBtn").toggle(lyricsService.language == "japanese");
+    $("#hiraKataBtn").text(lyricsService.isHiragana ? "To Hiragana" : "To Katakana");
+
+    $("#romanizeBtn").toggle(this.language != "english");
+    
+
     // Reset romanized
     isRomanized = cookies.getCookie(COOKIE_CONST.auto_romanize);
     var lyrics = lyricsService.getLyrics(isRomanized);
@@ -21,6 +30,7 @@ $(() => {
     // If the current lyrics are romanized or not
     let isRomanized = false;
     let isSimplified = null;
+    let isHiragana = null;
 
     $("#pauseBtn").click(() => {
         spotify.pause();
@@ -60,8 +70,12 @@ $(() => {
         $("#geniusLyricsContent").text(lyrics);
 
         // Hide Tradition to Simplified btn is romanized
-        if( isSimplified != null )
+        if( isSimplified != null ) {
             $("#tradSimpBtn").toggle(!isRomanized);
+        }
+        if ( isHiragana != null ) {
+            $("#hiraKataBtn").toggle(!isRomanized);
+        }
     });
 
     $("#tradSimpBtn").click(() => {
@@ -75,6 +89,20 @@ $(() => {
         $("#tradSimpBtn").text( isSimplified ? "To Traditional" : "To Simplified");
         var lyrics = lyricsService.convertChinese(isSimplified);
         $("#geniusLyricsContent").text(lyrics);
+    });
+
+    $("#hiraKataBtn").click(() => {
+        // Hiragana or Katakana
+        if ( isHiragana == null ) {
+            isHiragana = !lyricsService.isHiragana;
+        } else {
+            isHiragana = !isHiragana;
+        }
+        
+        $("#hiraKataBtn").text( isHiragana ? "To Hiragana" : "To Katakana");
+        lyricsService.convertJapanese(isHiragana, function (lyrics) {
+            $("#geniusLyricsContent").text(lyrics);
+        })
     });
 
     // Handler for showing changelog
@@ -141,6 +169,7 @@ $(() => {
         $("#geniusLoading").show();
         $("#romanizeBtn").hide();
         $("#tradSimpBtn").hide();
+        $("#hiraKataBtn").hide();
 
         $("#geniusLyricsContent").text(null);
         $("#geniusAddLyrics").hide();
@@ -158,9 +187,8 @@ $(() => {
         doGeniusSearch(trackData);
 
         if ( youtube.isPlayerEnabled() ) {
-            youtube.findVideo(trackData.trackName, trackData.artistName, function (url) {
-                youtube.loadVideoId(url);
-                logger.log(`Updated Youtube video to url ${url}`);
+            loadYoutubeVideo(trackData.trackName, trackData.artistName, function(url) {
+                logger.log(`Updated Youtube video to url '${url}'`);
             });
         }
     };
@@ -221,6 +249,7 @@ $(() => {
 
             $("#romanizeBtn").hide();
             $("#tradSimpBtn").hide();
+            $("#hiraKataBtn").hide();
 
             logger.log(`Expires at '${auth.expireDate}'`);
             var date = auth.expireDate.toISOString().substring(0, 10);
@@ -241,16 +270,9 @@ $(() => {
                 console.log("Expires in '" + differenceMs + "' ms");
             }
 
-            spotify.getCurrentPlayback(function (data) {
-                setSpotifyUI(data);
-                doGeniusSearch(data);
-                
-                if (youtube.isPlayerEnabled())
-                    loadYoutubeVideo(data.trackName, data.artistName)
-                
-                spotify.startUpdateLoop(setSpotifyUI);
-                setStyle(true);
-            });
+            // Start update loop, sets UI
+            spotify.startUpdateLoop(setSpotifyUI);
+            
             spotify.getAccountInfo(function (data) {
                 $("#accountId").text(data.id);
                 $("#accountIdLink").attr("href", data.external_urls.spotify);
@@ -283,13 +305,15 @@ $(() => {
     });
 
     // Sets loading UI and searches and loads YT video
-    const loadYoutubeVideo = function (trackName, artistName) {
+    const loadYoutubeVideo = function (trackName, artistName, successCallback) {
         $("#youtubeLoading").show();
         $(".youtubeContainer").hide();
         youtube.findVideo(trackName, artistName, function (url) {
             youtube.loadVideoId(url);
             $("#youtubeLoading").hide();
             $(".youtubeContainer").show();
+            if (successCallback)
+                successCallback(url);
         });
     }
 
