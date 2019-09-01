@@ -1,9 +1,16 @@
+// Constant utility to help manage cookies by id
 const COOKIE_CONST = {
     youtube_video: "youtubeVideo",
     auto_romanize: "autoRomanize",
     player_color: "playerColor",
     web_playback: "spotify_web_playback",
-    auto_authentificate: "automaticAuthenticate"
+    auto_authentificate: "automaticAuthenticate",
+    zh_prefer: "zhPrefer",
+    jp_prefer: "jpPrefer"
+}
+
+function onCloseMessage(object) {
+    $(object).parent().parent().remove();
 }
 
 class helper {
@@ -20,29 +27,29 @@ class helper {
     // Show and log an error message
     static showErrorUI (message) {
         logger.error(message);
-        var html = `<div class="container mt-2">
-                        <div class="alert alert-primary alert-dismissable show fade text-center" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        var html = `<div class="message-ui align-content-middle d-flex justify-content-center">
+                        <div class="alert alert-primary alert-dismissable message-ui-inner mx-auto my-0">
+                            <button type="button" class="close ml-2" onclick="onCloseMessage(this)">
                                 <span aria-hidden="true">×</span>
                             </button>
                             <strong>${message}</strong>
                         </div>
                     </div>`;
-        $("#messageContainer").append(html);
+        $("body").prepend(html);
     }
 
     // Show and log a warning message
     static showWarningUI (message) {
         logger.warning(message);
-        var html = `<div class="container mt-2">
-                        <div class="alert alert-warning alert-dismissable show fade text-center" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        var html = `<div class="message-ui align-content-middle d-flex justify-content-center">
+                        <div class="alert alert-primary alert-dismissable message-ui-inner mx-auto my-0">
+                            <button type="button" class="close ml-2" onclick="onCloseMessage(this)">
                                 <span aria-hidden="true">×</span>
                             </button>
                             <strong>${message}</strong>
                         </div>
                     </div>`;
-        $("#mainContent").append(html);
+        $("#body").prepend(html);
     }
 
     // Formats total milliseconds to a displayable time format (like 00:00)

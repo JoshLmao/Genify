@@ -3,34 +3,74 @@ const setLyrics = function (lyricsText) {
     $("#geniusLoading").hide();
     
     var rawLyrics = lyricsText.trim();
-    lyricsService.initLyrics(rawLyrics);
-
-    $("#tradSimpBtn").text(lyricsService.isSimplified ? "To Traditional" : "To Simplified");
-    $("#tradSimpBtn").toggle(lyricsService.language == "chinese");
+    lyricsService.initLyrics(rawLyrics).then(function () {
+        var setBtns = function () {
+            $("#tradSimpBtn").text(lyricsService.isSimplified ? "To Traditional" : "To Simplified");
+            $("#tradSimpBtn").toggle(lyricsService.language == "chinese");
+            $("#hiraKataBtn").toggle(lyricsService.language == "japanese");
+            $("#hiraKataBtn").text(lyricsService.isHiragana ? "To Katakana" : "To Hiragana");
+            $("#romanizeBtn").toggle(lyricsService.language != "english");
+            $("#romanizeBtn").text( lyrics_isRomanized ? "Unromanize" : "Romanize");
+        }
     
-    $("#hiraKataBtn").toggle(lyricsService.language == "japanese");
-    $("#hiraKataBtn").text(lyricsService.isHiragana ? "To Hiragana" : "To Katakana");
-
-    $("#romanizeBtn").toggle(this.language != "english");
+        if (lyricsService.language == "japanese") {
+            var jpPref = cookies.getCookie(COOKIE_CONST.jp_prefer);
+            if(jpPref == "Katakana" || jpPref == "Hiragana") {
+                setJPLyrics(jpPref);
+                setBtns();
+                return;
+            }
+        } else if (lyricsService.language == "chinese") {
+            var zhPref = cookies.getCookie(COOKIE_CONST.zh_prefer);
+            if (zhPref == "Simplified" || zhPref == "Traditional") {
+                setZHLyrics(zhPref);
+                return;
+            }
+        } 
     
+        lyrics_isRomanized = cookies.getCookie(COOKIE_CONST.auto_romanize) == "true";
+        var lyrics = lyricsService.getLyrics(lyrics_isRomanized);
+        $("#geniusLyricsContent").text(lyrics);
+        setBtns();
+    });
+}
 
-    // Reset romanized
-    isRomanized = cookies.getCookie(COOKIE_CONST.auto_romanize);
-    var lyrics = lyricsService.getLyrics(isRomanized);
+const setJPLyrics = function (jpSetting) {
+    if (jpSetting == "Hiragana") {
+        jpLyricsToHiragana = true;
+    } else if ( jpSetting == "Katakana" ) {
+        jpLyricsToHiragana = false;
+    }
+    lyricsService.isHiragana = jpLyricsToHiragana;
+    lyricsService.convertJapanese(jpLyricsToHiragana, function (lyrics) {
+        $("#geniusLyricsContent").text(lyrics);
+    });
+}
+
+const setZHLyrics = function (zhSetting) {
+    if (zhSetting == "Simplified") {
+        zhLyricsIsSimplified = true;
+    } else if ( zhSetting == "Traditional" ) {
+        zhLyricsIsSimplified = false;
+    }
+    lyricsService.isSimplified = zhLyricsIsSimplified;
+    var lyrics = lyricsService.convertChinese(zhLyricsIsSimplified);
     $("#geniusLyricsContent").text(lyrics);
 }
 
 /* Variables */ 
+// Thread for auto renew user auth
 var auto_auth_thread = null;
+// Can change Spotify device
+var canChangeDevice = true;
+var zhLyricsIsSimplified = null;
+var jpLyricsToHiragana = null;
+// If the current lyrics are romanized or not
+var lyrics_isRomanized = false;
 
 $(() => {
     // Set the site version number for help
     $("#versionNumber").text("v2.0.0");
-
-    // If the current lyrics are romanized or not
-    let isRomanized = false;
-    let isSimplified = null;
-    let isHiragana = null;
 
     $("#pauseBtn").click(() => {
         spotify.pause();
@@ -64,43 +104,62 @@ $(() => {
 
     // Handler for when clicking the Romanize btn
     $("#romanizeBtn").click(() => {
-        isRomanized = !isRomanized;
-        $("#romanizeBtn").text( isRomanized ? "Unromanize" : "Romanize");
-        var lyrics = lyricsService.getLyrics(isRomanized);
-        $("#geniusLyricsContent").text(lyrics);
-
-        // Hide Tradition to Simplified btn is romanized
-        if( isSimplified != null ) {
-            $("#tradSimpBtn").toggle(!isRomanized);
-        }
-        if ( isHiragana != null ) {
-            $("#hiraKataBtn").toggle(!isRomanized);
+        lyrics_isRomanized = !lyrics_isRomanized;
+        $("#romanizeBtn").text( lyrics_isRomanized ? "Unromanize" : "Romanize");
+        if (lyrics_isRomanized) {
+            var lyrics = lyricsService.getLyrics(lyrics_isRomanized);
+            $("#geniusLyricsContent").text(lyrics);    
+        } else {
+            var setBtns = function () {
+                $("#tradSimpBtn").text(lyricsService.isSimplified ? "To Traditional" : "To Simplified");
+                $("#tradSimpBtn").toggle(lyricsService.language == "chinese");
+                $("#hiraKataBtn").toggle(lyricsService.language == "japanese");
+                $("#hiraKataBtn").text(lyricsService.isHiragana ? "To Katakana" : "To Hiragana");
+                $("#romanizeBtn").toggle(lyricsService.language != "english");
+            }
+            if (lyricsService.language == "japanese") {
+                var jpPref = cookies.getCookie(COOKIE_CONST.jp_prefer);
+                if(jpPref == "Katakana" || jpPref == "Hiragana") {
+                    setJPLyrics(jpPref);
+                    setBtns();
+                    return;
+                }
+            } else if (lyricsService.language == "chinese") {
+                var zhPref = cookies.getCookie(COOKIE_CONST.zh_prefer);
+                if (zhPref == "Simplified" || zhPref == "Traditional") {
+                    return;
+                }
+            } 
+            
+            var lyrics = lyricsService.getLyrics(lyrics_isRomanized);
+            $("#geniusLyricsContent").text(lyrics);
+            setBtns();
         }
     });
 
     $("#tradSimpBtn").click(() => {
         // Get simplified state from service first, then invert
-        if (isSimplified == null) {
-            isSimplified = !lyricsService.isSimplified;
+        if (zhLyricsIsSimplified == null) {
+            zhLyricsIsSimplified = !lyricsService.isSimplified;
         } else {
-            isSimplified = !isSimplified;
+            zhLyricsIsSimplified = !isSimplified;
         }
         
-        $("#tradSimpBtn").text( isSimplified ? "To Traditional" : "To Simplified");
-        var lyrics = lyricsService.convertChinese(isSimplified);
+        $("#tradSimpBtn").text( zhLyricsIsSimplified ? "To Traditional" : "To Simplified");
+        var lyrics = lyricsService.convertChinese(zhLyricsIsSimplified);
         $("#geniusLyricsContent").text(lyrics);
     });
 
     $("#hiraKataBtn").click(() => {
         // Hiragana or Katakana
-        if ( isHiragana == null ) {
-            isHiragana = !lyricsService.isHiragana;
+        if ( jpLyricsToHiragana == null ) {
+            jpLyricsToHiragana = !lyricsService.isHiragana;
         } else {
-            isHiragana = !isHiragana;
+            jpLyricsToHiragana = !jpLyricsToHiragana;
         }
         
-        $("#hiraKataBtn").text( isHiragana ? "To Hiragana" : "To Katakana");
-        lyricsService.convertJapanese(isHiragana, function (lyrics) {
+        $("#hiraKataBtn").text( jpLyricsToHiragana ? "To Katakana" : "To Hiragana");
+        lyricsService.convertJapanese(jpLyricsToHiragana, function (lyrics) {
             $("#geniusLyricsContent").text(lyrics);
         })
     });
@@ -160,7 +219,7 @@ $(() => {
         $("#albumLink").attr("href", trackData.albumUrl);
 
         // Reset simplified bool since song changed
-        isSimplified = null;
+        zhLyricsIsSimplified = null;
     }
 
     // Starts search into Genius for lyrics, updates UI
@@ -173,6 +232,9 @@ $(() => {
 
         $("#geniusLyricsContent").text(null);
         $("#geniusAddLyrics").hide();
+
+        lyrics_isRomanized = false;
+        $("#romanizeBtn").text( lyrics_isRomanized ? "Unromanize" : "Romanize");
 
         genius.getSearchFirstResult(trackData, function (url) {
             genius.getLyricsFromUrl(url, function (lyrics) {
@@ -316,43 +378,40 @@ $(() => {
                 successCallback(url);
         });
     }
+    
+    // Loads an individual setting and set the functionality for onChange
+    const loadSwitchSetting = function (switchId, cookieId, onChangedFunc) {
+        var isTrue = cookies.getCookie(cookieId)
+        $(switchId).prop('checked', isTrue);
+        $(switchId).change(function() {
+            var isChecked = $(this).is(':checked');
+            cookies.setCookie(cookieId, isChecked);
+            if (onChangedFunc)
+                onChangedFunc(isChecked);
+        });
+    }
 
+    // Loads all settings
     const loadSettings = function () {
         // Auto romanize JP/KR/ZH lyrics
-        var isAutoRomanize = cookies.getCookie(COOKIE_CONST.auto_romanize);
-        $("#autoRomanizeSwitch").prop('checked', isAutoRomanize);
-        $("#autoRomanizeSwitch").change( function () {
-            var isChecked = $(this).is(':checked');
-            cookies.setCookie(COOKIE_CONST.auto_romanize, isChecked);
-        });
+        loadSwitchSetting("#autoRomanizeSwitch", COOKIE_CONST.auto_romanize);
         // Enable/Display Youtube Embed player
-        var displayYoutubeVideo = cookies.getCookie(COOKIE_CONST.youtube_video) == "true";
-        $("#displayYoutubeSwitch").prop('checked', displayYoutubeVideo);
-        $("#displayYoutubeSwitch").change( function () {
-            var isChecked = $(this).is(':checked');
-            cookies.setCookie(COOKIE_CONST.youtube_video, isChecked);
-
+        loadSwitchSetting("#displayYoutubeSwitch", COOKIE_CONST.youtube_video, function (isChecked) {
             spotify.getCurrentPlayback(function (trackData) {
                 // Update Youtube Video if track has changed
-                if ( !player.getVideoData().title.includes(trackData.trackName) )
+                if ( !youtube.getPlayer().getVideoData().title.includes(trackData.trackName) )
                     loadYoutubeVideo(trackData.trackName, trackData.artistName);
-            })
+            });
         });
-        $(".youtube-player-ui").toggle(displayYoutubeVideo);
+        if (youtube.isPlayerEnabled()) {
+            $(".youtube-player-ui").show();
+            $(".youtubeContainer").hide();
+        }
+        
         // Set Youtube Embed player color
-        var playerColor = cookies.getCookie(COOKIE_CONST.player_color) == "true";
-        $("#ytPlayerColorSwitch").prop('checked', playerColor);
-        $("#ytPlayerColorSwitch").change( function () {
-            var isChecked = $(this).is(':checked');
-            cookies.setCookie(COOKIE_CONST.player_color, isChecked);
-        });
+        loadSwitchSetting("#ytPlayerColorSwitch", COOKIE_CONST.player_color);
         // Spotify web playback sdk enabled
-        var spotifyWebPlayback = cookies.getCookie(COOKIE_CONST.web_playback) == "true";
-        $("#webPlaybackSwitch").prop('checked', spotifyWebPlayback);
-        $("#webPlaybackSwitch").change( function () {
-            var isChecked = $(this).is(':checked');
-            cookies.setCookie(COOKIE_CONST.web_playback, isChecked);
-
+        loadSwitchSetting("#webPlaybackSwitch", COOKIE_CONST.web_playback, function (isChecked) {
             $(".spotify-web-playback").toggle(isChecked);
 
             $("#webPlaybackSwitchUI").hide();
@@ -362,14 +421,10 @@ $(() => {
                 $("#webPlaybackLoading").hide();
             });
         });
+        
         $("#webPlaybackDeviceName").text(`(Device Name: '${spotify.DEVICE_NAME}')`);
-
-        var autoAuth = cookies.getCookie( COOKIE_CONST.auto_authentificate) == "true";
-        $("#autoAuthSwitch").prop('checked', autoAuth);
-        $("#autoAuthSwitch").change( function () {
-            var isChecked = $(this).is(':checked');
-            cookies.setCookie(COOKIE_CONST.auto_authentificate, isChecked);
-
+        // Auto renew user authorization
+        loadSwitchSetting("#autoAuthSwitch", COOKIE_CONST.auto_authentificate, function (isChecked) {
             if ( auto_auth_thread == null ) {
                 var diffMs = spotify.currentAuthToken.expireDate - Date.now();
                 auto_auth_thread = setTimeout (function () {
@@ -380,6 +435,26 @@ $(() => {
                 clearTimeout( auto_auth_thread );
                 auto_auth_thread = null;
             }
+        });
+
+        // Prefer to use Simplified or Traditional chinese characters
+        var zhSetting = cookies.getCookie(COOKIE_CONST.zh_prefer);
+        if (!(zhSetting == "None" || zhSetting == "Simplified" || zhSetting == "Traditional"))
+            zhSetting = "None";
+        $("#chinesePrefSelect").val(zhSetting);
+        $("#chinesePrefSelect").change(function() {
+            var zhSetting = $("#chinesePrefSelect").val();
+            cookies.setCookie(COOKIE_CONST.zh_prefer, zhSetting);
+        });
+
+        // Should prefer to convert all japanese to Hiragana or Katakana
+        var jpSetting = cookies.getCookie(COOKIE_CONST.jp_prefer);
+        if (!(jpSetting == "None" || jpSetting == "Hiragana" || jpSetting == "Katakana"))
+            jpSetting = "None";
+        $("#japanesePrefSelect").val(jpSetting);
+        $("#japanesePrefSelect").change(function() {
+            var jpSetting = $("#japanesePrefSelect").val();
+            cookies.setCookie(COOKIE_CONST.jp_prefer, jpSetting);
         });
     }
 
@@ -479,7 +554,6 @@ function onPrevLyrics() {
     });
 }
 
-var canChangeDevice = true;
 function onChangeDevice (deviceId, deviceUIRef) {
     if (canChangeDevice) {
         canChangeDevice = false;

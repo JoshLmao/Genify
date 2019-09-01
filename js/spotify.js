@@ -203,7 +203,8 @@ class spotify {
     static progressLoop(setUIFunc) {
         this.getCurrentPlayback(function (data) {
             setUIFunc(data);
-            youtube.setPlayback(data.progress_ms);
+            if (cookies.getCookie(COOKIE_CONST.youtube_video) == "true")
+                youtube.setPlayback(data.progress_ms);
         })
     }
 

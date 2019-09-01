@@ -12,31 +12,39 @@ class lyricsService {
 
     // Initializes the latest lyrics and romanizes it
     static initLyrics (lyrics) {
-        this.currentLyrics = lyrics;
+        return new Promise(function (resolve, reject) {
+            lyricsService.currentLyrics = lyrics;
+            lyricsService.detectLanguage(lyrics);
 
-        lyricsService.detectLanguage(lyrics);
-
-        if(this.language == "korean") {
-            // Korean
-            this.romanizedLyrics = lyricsService.toRomaja(lyrics);
-        } else if (this.language == "japanese") {
-            // Japanese
-            lyricsService.toRomanji(lyrics, function (romanjiLyrics) {
-                lyricsService.romanizedLyrics = romanjiLyrics;
-            });
-        } else if (this.language == "chinese") {
-            // Chinese
-            this.romanizedLyrics = lyricsService.toPinyin(lyrics);
-        }
+            if(lyricsService.language == "korean") {
+                // Korean
+                lyricsService.romanizedLyrics = lyricsService.toRomaja(lyrics);
+                resolve();
+            } else if (lyricsService.language == "japanese") {
+                // Japanese
+                lyricsService.toRomanji(lyrics, function (romanjiLyrics) {
+                    lyricsService.romanizedLyrics = romanjiLyrics;
+                    resolve();
+                });
+            } else if (lyricsService.language == "chinese") {
+                // Chinese
+                lyricsService.romanizedLyrics = lyricsService.toPinyin(lyrics);
+                resolve();
+            } else {
+                // English, etc
+                resolve();
+            }
+        });
     }
 
     // Gets the current lyrics for the current song
     static getLyrics (isRomanized) {
-        if ( isRomanized ) {
-            return this.romanizedLyrics;
-        } else {
-            return this.currentLyrics;
+        if (  lyricsService.language != "english" ) {
+            if ( isRomanized ) {
+                return this.romanizedLyrics;
+            }
         }
+        return this.currentLyrics;
     }
 
     // Converts the current lyrics between Traditional or Simplified
@@ -50,10 +58,10 @@ class lyricsService {
         }
     }
 
-    static convertJapanese ( toKatakana, setLyricsCallback ) {
-        var toMode = "hiragana";
-        if ( toKatakana )
-            toMode = "katakana"   
+    static convertJapanese ( toHiragana, setLyricsCallback ) {
+        var toMode = "katakana";
+        if ( toHiragana )
+            toMode = "hiragana"   
         this.kuroshiro.convert(this.currentLyrics, { 
             to: toMode,
             mode: "spaced",

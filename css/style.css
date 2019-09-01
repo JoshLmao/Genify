@@ -162,7 +162,7 @@ pre {
 
 .buttons-dock {
     position: fixed;
-    right: 10px;
+    right: 30px;
     margin-top: 5px;
 }
 
@@ -195,8 +195,23 @@ pre {
                                     color-stop(160%, #9198e5));
 }
 .genify-splash-title {
-    font-weight: bolder;
     font-size: 3rem;
+    letter-spacing: 2px;
+}
+
+.message-ui {
+    position: fixed;
+    overflow: hidden;
+    box-sizing: border-box;
+    z-index: 999;
+    transition: opacity 1s ease;
+    flex-direction: column;
+    bottom:1em;
+    right:1em;
+    max-width: 25em;
+}
+.message-ui-inner {
+    max-width: 35em;
 }
 
 /**/
