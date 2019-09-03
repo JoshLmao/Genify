@@ -532,7 +532,7 @@ function onHideSettings() {
 function onSignOut() {
     logger.log("Signing out of Spotify");
     cookies.deleteAllCookies();
-    window.location.href = "https://genify.joshlmao.com";
+    window.location.href = helper.isDevMode() ? helper.getDevUrlPath() : "https://genify.joshlmao.com";
 }
 
 function onNextLyricsBtn() {

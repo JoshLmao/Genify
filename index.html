@@ -93,7 +93,6 @@
     <script src="./vendor/kuroshiro/kuroshiro-analyzer-kuromoji.min.js"></script>
 
     <!--Local Scripts-->
-    <script src="js/main.js"></script>
     <script src="js/spotify.js"></script>
     <script src="js/genius.js"></script>
     <script src="js/cookies.js"></script>
@@ -103,7 +102,7 @@
     <script src="js/youtube.js"></script>
 </head>
 
-<body class="spotify-bg-secondary">
+<body class="spotify-bg-secondary h-100">
     <!-- Top Navigation Bar-->
     <nav class="navbar navbar-expand navbar-dark bg-primary">
         <div class="container">
@@ -160,7 +159,7 @@
         </div>
     </div>
     <!-- Master container -->
-    <div class="mx-0 px-0">
+    <div class="mx-0 px-0 splash-container">
         <!-- Spotify media bar -->
         <div class="signed-in-ui row mx-0 spotify-media-bar spotify-bg-tertiary">
             <div class="container-fluid">
@@ -450,8 +449,8 @@
             </div>
         </div>
         <!-- Splash Content -->
-        <div class="signed-out-ui mx-auto w-100 splash-gradiant" style="height:calc(100% - 50px);">
-            <div class="row mx-0 h-100 text-center splash-container">
+        <div class="signed-out-ui mx-auto w-100 splash-gradiant h-100">
+            <div class="row mx-0 text-center splash-container">
                 <span class="container mx-auto my-auto">
                     <h1 class="genify-splash-title font-weight-light">Genify</h1>
                     <h4 class="mt-3 text-justify text-center font-weight-light mx-4">Combining music, lyrics and video</h4>
@@ -475,5 +474,7 @@
             </div>
         </div>
     </div>
+    <!-- Main script last -->
+    <script src="js/main.js"></script>
 </body>
 </html>

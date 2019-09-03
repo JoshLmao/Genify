@@ -19,6 +19,10 @@ class helper {
         return location.protocol == "file:" || location.hostname == "localhost";
     }
 
+    static getDevUrlPath() {
+        return "http://localhost:8000";
+    }
+
     // Get the CORS proxy URL, use whitelisted site on live
     static getProxyUrl() {
         return helper.isDevMode() ? "https://cors-anywhere.herokuapp.com/" : "https://genify-proxy.herokuapp.com/";

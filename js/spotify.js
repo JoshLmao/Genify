@@ -31,7 +31,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 }
 
 class spotify {
-    static DEVICE_NAME = "Genify Web Player";
+    static DEVICE_NAME () { return "Genify Web Player"; }
 
     static spotify() {
         $("#playBtn").hide();
@@ -58,14 +58,15 @@ class spotify {
     static getUserAuth() {
         var clientId = "f4dc97c399124fc99254c5d7ac2bf4bd";
         var respType = "token";
-        var redirectUri = encodeURIComponent("https://genify.joshlmao.com");
+        var redirectUri = helper.isDevMode() ? encodeURIComponent(helper.getDevUrlPath()) : encodeURIComponent("https://genify.joshlmao.com");
         var scopes = [
             'streaming',
             'user-read-currently-playing',
             'user-read-playback-state',
             'user-modify-playback-state',
             'app-remote-control',
-            'web-playback',
+            'user-read-email',
+            'user-read-private',
         ];
         var scopesEncoded = encodeURIComponent(scopes.join(' '));
         var apiUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=${respType}&redirect_uri=${redirectUri}&scope=${scopesEncoded}`;
