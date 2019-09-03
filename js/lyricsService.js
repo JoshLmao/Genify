@@ -4,37 +4,47 @@ class lyricsService {
         this.language = "english";
         this.romanizedLyrics = "";
         this.isSimplified = false;
+        this.isHiragana = false;
+
+        this.kuroshiro = new Kuroshiro();
+        this.kuroshiro.init(new KuromojiAnalyzer({ dictPath: "/./vendor/kuroshiro/dict/" }));
     }
 
     // Initializes the latest lyrics and romanizes it
     static initLyrics (lyrics) {
-        this.currentLyrics = lyrics;
+        return new Promise(function (resolve, reject) {
+            lyricsService.currentLyrics = lyrics;
+            lyricsService.detectLanguage(lyrics);
 
-        lyricsService.detectLanguage(lyrics);
-        $("#tradSimpBtn").text(this.isSimplified ? "To Traditional" : "To Simplified");
-
-        if(this.language == "korean") {
-            // Korean
-            this.romanizedLyrics = lyricsService.toRomaja(lyrics);
-        } else if (this.language == "japanese") {
-            // Japanese
-            this.romanizedLyrics = lyricsService.toRomanji(lyrics);
-        } else if (this.language == "chinese") {
-            // Chinese
-            this.romanizedLyrics = lyricsService.toPinyin(lyrics);
-        }
-
-        $("#romanizeBtn").toggle(this.language != "english");
-        $("#tradSimpBtn").toggle(this.language == "chinese");
+            if(lyricsService.language == "korean") {
+                // Korean
+                lyricsService.romanizedLyrics = lyricsService.toRomaja(lyrics);
+                resolve();
+            } else if (lyricsService.language == "japanese") {
+                // Japanese
+                lyricsService.toRomanji(lyrics, function (romanjiLyrics) {
+                    lyricsService.romanizedLyrics = romanjiLyrics;
+                    resolve();
+                });
+            } else if (lyricsService.language == "chinese") {
+                // Chinese
+                lyricsService.romanizedLyrics = lyricsService.toPinyin(lyrics);
+                resolve();
+            } else {
+                // English, etc
+                resolve();
+            }
+        });
     }
 
     // Gets the current lyrics for the current song
     static getLyrics (isRomanized) {
-        if ( isRomanized ) {
-            return this.romanizedLyrics;
-        } else {
-            return this.currentLyrics;
+        if (  lyricsService.language != "english" ) {
+            if ( isRomanized ) {
+                return this.romanizedLyrics;
+            }
         }
+        return this.currentLyrics;
     }
 
     // Converts the current lyrics between Traditional or Simplified
@@ -46,6 +56,16 @@ class lyricsService {
         } else {
             return $.s2t(this.currentLyrics);
         }
+    }
+
+    static convertJapanese ( toHiragana, setLyricsCallback ) {
+        var toMode = "katakana";
+        if ( toHiragana )
+            toMode = "hiragana"   
+        this.kuroshiro.convert(this.currentLyrics, { 
+            to: toMode,
+            mode: "spaced",
+        }).then(setLyricsCallback);
     }
 
     // Detects for certain language using Regex and sets it
@@ -77,6 +97,9 @@ class lyricsService {
             // https://github.com/nickdrewe/traditional-or-simplified
             var result = detect(lyrics);
             this.isSimplified = result.detectedCharacters == 'simplified';
+        } else if ( this.langauge == "japanese" ) {
+            var hasHiragana = this.kuroshiro.hasHiragana(lyrics);
+            this.isHiragana = hasHiragana;
         }
 
         // No other languages, set to English
@@ -93,10 +116,12 @@ class lyricsService {
     }
 
     // Japanese characters to Roman
-    static toRomanji (lyrics) {
-        // Using Romaji.js
-        // https://github.com/markni/romaji.js
-        return romaji.fromKana(lyrics);
+    static toRomanji (lyrics, convertCallback) {
+        // Using Kuroshiro
+        this.kuroshiro.convert(lyrics, { 
+            to: "romaji",
+            mode: "spaced",
+        }).then(convertCallback);
     }
 
     // Chinese characters to roman letters

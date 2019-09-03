@@ -44,9 +44,9 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
     <!--Bootstrap-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     
     <!-- CSS's -->
     <!-- Bootstrap Theme, from http://bootstrap.themes.guide/darkster -->
@@ -56,7 +56,7 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         
-    <!-- Cookie Content by Insites -->
+    <!-- Cookie Consent by Insites -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script>
     <script>
@@ -78,6 +78,8 @@
         }
         })});
     </script>
+    <!-- Spotify Web Playback API -->
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
 
     <!-- Translate scripts -->
     <script src="vendor/aromanizer/aromanize.js"></script>
@@ -86,6 +88,9 @@
     <!-- Simplified/Traditional scripts-->
     <script src="vendor/hustlzp/jquery.s2t.js"></script>
     <script src="vendor/nickdrewe/TradOrSimp.js"></script>
+    <!-- Kuroshiro scripts -->
+    <script src="./vendor/kuroshiro/kuroshiro.min.js"></script>
+    <script src="./vendor/kuroshiro/kuroshiro-analyzer-kuromoji.min.js"></script>
 
     <!--Local Scripts-->
     <script src="js/main.js"></script>
@@ -94,16 +99,17 @@
     <script src="js/cookies.js"></script>
     <script src="js/lyricsService.js"></script>
     <script src="js/helper.js"></script>
-    <script src="js/logger.js"></Script>
+    <script src="js/logger.js"></script>
+    <script src="js/youtube.js"></script>
 </head>
 
-<body>
+<body class="spotify-bg-secondary">
     <!-- Top Navigation Bar-->
-    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+    <nav class="navbar navbar-expand navbar-dark bg-primary">
         <div class="container">
             <div class="mx-auto order-0">
-                <a class="navbar-brand" href="index.html">
-                    <h1>Genify</h1>
+                <a class="navbar-brand" href="./">
+                    <h4 class="m-0">Genify</h4>
                 </a>
             </div>
             <div class="navbar-collapse mx-auto w-100 text-center text-md-left">
@@ -111,177 +117,29 @@
             </div>
             <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item mr-3">
-                        <a href="https://joshlmao.com">
-                            <h4 class="mt-2">
-                                <small>JoshLmao</small>
-                            </h4>
+                    <li class="nav-item mr-2 my-auto">
+                        <a href="https://joshlmao.com" title="JoshLmao">
+                            <img src="./img/logo_block.png" style="max-height: 30px; max-width:30px;"></img>
                         </a>
                     </li>
-                    <li class="nav-item mr-2">
-                        <a class="btn btn-outline-light btn-social rounded-circle" href="https://github.com/JoshLmao/Genify">
-                            <i class="fab fa-github btn-social-icon mt-1"></i>
+                    <li class="nav-item mr-2 my-auto">
+                        <a href="https://github.com/JoshLmao/Genify" title="Genify Github Repository">
+                            <div class="btn btn-sm btn-outline-light btn-social" style="height:auto;width:auto;">
+                                <i class="fab fa-github btn-social-icon my-auto"></i>
+                            </div>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-outline-light btn-social rounded-circle" href="https://twitter.com/JoshLmao">
-                            <i class="fab fa-fw fa-twitter btn-social-icon mt-1"></i>
+                        <a href="https://twitter.com/JoshLmao" title="JoshLmao's Twitter">
+                            <div class="btn btn-sm btn-outline-light btn-social" style="height:auto;width:auto;">
+                                <i class="fab fa-fw fa-twitter btn-social-icon"></i>
+                            </div>
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-
-    <!-- Content -->
-    <div class="container mt-3 hide-on-lyrics" id="mainContent">
-        <!-- Jumbotron Heading -->
-        <div class="jumbotron py-4 mx-auto copyable border-primary mb-3">
-            <a href="index.html" title="Genify Logo - Don't hover on me"> 
-                <img class="position-relative float-right ml-1 mb-1" src="img/favicon.png" style="max-width: 100px"></img>
-            </a>
-            <h1>What is Genify?</h1>
-            <p class="lead">
-                Ever wanted to sing along to the current song but couldn't find the lyrics quick enough? 
-                This tool can fix that! I've integrated Spotify connectivity to Genius to show the lyrics
-                so you can spend more time singing and less time searching online 😉
-                <br/>
-                TL;DR: I got tired of Spotify not having this integrated, so I did it myself
-            </p>    
-        </div>
-        <!-- How do I Use -->
-        <div class="card" id="howToUse">
-            <div class="card-body d-flex flex-column align-items-start">
-                <h3 class="card-title text-primary">How do I use it?</h3>
-                <p class="card-text">
-                    Click below to sign in to Spotify. You'll be sent back here and 
-                    signed in showing your current Spotify song and it's lyrics
-                </p>
-                <div class="container-fluid">
-                    <button class="btn btn-lg btn-block spotify-background text-white py-3" id="btnSignIn" type="button">
-                        <div class="container" id="signInBtnSignInContent">
-                            <i class="fab fa-spotify"></i> Sign In
-                        </div>
-                        <div class="container align-top" id="signInBtnLoadingContent">
-                            <i class="fa fa-spinner fa-pulse fa-fw mr-2"></i>Loading
-                        </div>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- About -->
-        <div class="card my-4">
-            <div class="card-body d-flex flex-column align-items-start">
-                <h3 class="text-primary">About</h3>
-                <p class="card-text">
-                    Genify was created by JoshLmao (me!) and is made and hosted on Github, with the code 
-                    <a href="https://github.com/joshlmao/genify">publicly available here</a>.
-                    <br/>
-                    For information on new features and progress, check out the <a href="https://github.com/users/JoshLmao/projects/1">project board here</a>
-                    <br/><br/>
-                    Thank you for using this! If you appreciate what I do, then please consider 
-                    <a href="https://twitter.com/JoshLmao">following me on Twitter</a>
-                    or supporting me by buying me a coffee (or two!) 😊
-                </p>
-                <div class="my-2 container">
-                    <a href="https://brave.com/jos677" class="d-flex justify-content-center align-items-center">
-                        <img src="img/BraveBat.png" height="50">
-                        <h6 class="flex-container">Supporter of Brave & BAT - Tips welcome!</h6>
-                    </a>
-                </div>
-                <div class="container d-flex justify-content-center my-2">
-                    <a class="mr-5" href="https://ko-fi.com/joshlmao" title="Thank you! <3">
-                        <img src="https://i.imgur.com/zDeHMoK.png" alt="KoFiDonate.png" height="50">
-                    </a>
-                    <a href="https://paypal.me/ijoshlmao?locale.x=en_GB" title="Thank you! <3">
-                        <img src="https://i.imgur.com/UfSd0gP.png" height="50">
-                    </a>
-                </div>
-                
-            </div>
-        </div>
-    </div>
-        
-    <!--Spotify Lyrics Container-->
-    <div class="container flex-grow-1 show-on-lyrics mt-3">
-        <div class="row">
-            <div class="col-md">
-                <div class="card border-primary">
-                    <div class="card-body d-flex flex-column">
-                        <div class="row justify-content-center mx-4">
-                            <!-- Album Art-->
-                            <a id="albumLink">
-                                <img id="albumArtwork" src="https://via.placeholder.com/250"></img>
-                            </a>
-                        </div>
-                        <!-- Current track Artist & Title -->
-                        <div class="row justify-content-center mt-3">
-                            <a id="artistLink">
-                                <h4 id="artistTitle">Artist Title</h4>
-                            </a>
-                        </div>
-                        <div class="row justify-content-center">
-                            <a id="songLink">
-                                <h4 id="trackTitle">Track Title</h4>
-                            </a>
-                        </div>
-                        <!-- Spotify Control buttons -->
-                        <div class="row justify-content-center">
-                            <button class="btn btn-lg btn-spotify" id="previousBtn">
-                                <i class="fas fa-step-backward"></i>
-                            </button>
-            
-                            <button class="btn btn-lg btn-spotify ml-3" id="pauseBtn">
-                                <i class="fas fa-pause"></i>
-                            </button>
-                            <button class="btn btn-lg btn-spotify ml-3" id="playBtn">
-                                <i class="fas fa-play"></i>
-                            </button>
-            
-                            <button class="btn btn-lg btn-spotify ml-3" id="nextBtn">
-                                <i class="fas fa-step-forward"></i>
-                            </button>
-                        </div>
-                    </div>  
-                </div>
-
-                <!-- Content below Spotify info -->
-                <div class="container d-flex justify-content-center">
-                    <button class="btn spotify-background text-white my-3 px-5" id="btnSignOut" type="button">
-                        <i class="fab fa-spotify mr-1"></i> Sign Out
-                    </button>
-                    <a class="ml-3 my-3 text-center" href="https://github.com/joshlmao/genify/issues">
-                        <button class="btn btn-outline-info">
-                            Problem?
-                        </button>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Genius Content -->
-            <div class="col-md flex-grow mb-3" id="geniusContent">
-                <div class="card border-primary">
-                    <div class="card-body d-flex flex-column text-center ">
-                        <!-- Loading Spinner -->
-                        <div class="align-middle" id="geniusLoading">
-                            <i class="fa fa-spinner fa-pulse fa-3x fa-fw" ></i>
-                        </div>
-                        <!-- Romanize Btn -->
-                        <button type="button" class="btn btn-outline-primary mb-3 py-1" id="romanizeBtn"></button>
-                        <!-- Trad to Simp Chinese Btn -->
-                        <button type="button" class="btn btn-outline-primary mb-3 py-1" id="tradSimpBtn"></button>
-                        <!-- Lyrics Container -->
-                        <pre id="geniusLyricsContent" class="text-left"></pre>
-                        <!-- Add Lyrics to Genius Btn -->
-                        <a href="https://genius.com/new"  id="geniusAddLyrics">
-                            <button type="button" class="btn btn-outline-primary my-2" >Add lyrics to Genius</button>
-                        </a>
-                    </div> 
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Popup Changelog -->
     <div class="modal fade" id="changelogModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
@@ -298,6 +156,322 @@
                 <div class="modal-footer" style="border-top: 1px solid rgba(0, 0, 0, 0.2)">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Master container -->
+    <div class="mx-0 px-0">
+        <!-- Spotify media bar -->
+        <div class="signed-in-ui row mx-0 spotify-media-bar spotify-bg-tertiary">
+            <div class="container-fluid">
+                <div class="row h-100 align-items-center">
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5">
+                        <div class="d-flex mx-2">
+                            <!-- Album Art -->
+                            <a id="albumLink">
+                                <img id="albumArtwork" class="album-art" src="https://via.placeholder.com/75"></img>
+                            </a>
+                            <!-- Track info -->
+                            <div class="d-flex flex-column ml-2 overflow-auto">
+                                <a id="songLink" class="mt-auto mr-auto w-100">
+                                    <h6 id="trackTitle" class="text-truncate mb-0">Track Title</h6>
+                                </a>
+                                <a id="artistLink" class="my-auto mr-auto w-100">
+                                    <h6 id="artistTitle" class="text-truncate mb-0 font-weight-lighter">Artist Title</h6>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Media Controls Column -->
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-8 col-7 px-5 mx-auto">
+                        <div class="d-flex justify-content-center">
+                            <a class="mx-4 my-auto" href="#">
+                                <i class="fas fa-step-backward"></i>
+                            </a>
+                            <button id="pauseBtn" type="button" class="btn btn-outline-light rounded-circle is-playing mx-1" style="width:35px;height:35px;">
+                                <i class="fas fa-pause" style="position:relative;right:2.2;font-size:1rem;"></i>
+                            </button>
+                            <button id="playBtn" type="button" class="btn btn-outline-light rounded-circle is-paused mx-1" style="width:35px;height:35px;">
+                                <i class="fas fa-play" style="position:relative;right:1.1;font-size:1rem;"></i>
+                            </button>
+                            <a class="mx-4 my-auto" href="#">
+                                <i class="fas fa-step-forward"></i>
+                            </a>
+                        </div>
+                        <div class="d-flex justify-content-around align-items-center mt-1">
+                            <p id="trackCurrentPosition" class="font-weight-light small px-2 my-auto">0:00</p>
+                            <div class="progress w-100 spotify-progress-bar">
+                                <div id="trackProgress" class="progress-bar spotify-progress-bar-inner" role="progressbar" style="width:0%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <p id="trackTotalDuration" class="font-weight-light small px-2 my-auto">9:99</p>
+                        </div>
+                    </div>
+                    <!-- Devices/volume column -->
+                    <div class="col-xl-2 col-lg-3 col-md-3 d-none d-md-block">
+                        <div class="d-flex justify-content-center">
+                            <!-- Devices btn with Popover -->
+                            <a id="devicesBtn" class="my-auto mr-2" href="#" role="button" data-toggle="popover" data-placement="bottom" data-trigger="click" style="text-decoration: none;">
+                                <span class="spotify-devices-icon"></span>
+                            </a>
+                            <!-- Devices Popover Content -->
+                            <div id="devicesPopover" style="display: none;">
+                                <div id="devicesPopoverContent" class="list-group list-group-flush w-100">
+                                </div>
+                            </div>
+                            <!-- Mute buttons -->
+                            <a id="unmuteBtn" class="mx-2 muted my-auto" href="#">
+                                <i class="fas fa-volume-mute"></i>
+                            </a>
+                            <a id="muteBtn" class="mx-2 my-auto unmuted" href="#">
+                                <i class="fas fa-volume-up"></i>
+                            </a>
+                            <!-- Volume progress -->
+                            <div class="progress w-100 my-auto spotify-progress-bar">
+                                <div id="volumeProgress" class="progress-bar spotify-progress-bar-inner" role="progressbar" style="width:0%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Lyrics bar -->
+        <div class="signed-in-ui lyricsFill mr-0" style="display: none;">
+            <div class="d-flex row mr-0 h-100" style="margin-right: 0px; margin-left:0px;">
+                <!-- Floating buttons dock -->
+                <div class="buttons-dock" style="z-index:100;">
+                    <button type="button" class="btn btn-outline-light px-1 fa-sm" onclick="onPrevLyrics()">
+                        <i class="fas fa-arrow-left "></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-light px-1 fa-sm" onclick="onNextLyricsBtn()">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-light" onclick="onToggleSettings()">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+                <!-- Settings UI -->
+                <div class="settings-ui container collapse overflow-y pb-4 h-100" id="settingsPage">
+                    <a href="javascript:void(0)" class="float-right close-settings-btn" onclick="onHideSettings()">&times;</a>
+                    <h1 class="my-3 font-weight-bold">Settings</h1>
+                    <h6 class="mx-0 mb-1 font-weight-bold">Spotify</h6>
+                    <hr class="spotify-separator"/>
+                    <!-- Account & Sign out-->
+                    <div class="d-flex">
+                        <p class="my-0 settings-key">Name</p>
+                        <p class="ml-auto my-0 settings-value" id="displayName">ACCOUNT NAME</p>
+                    </div>
+                    <div class="d-flex">
+                        <p class="settings-key my-0">Id</p>
+                        <a id="accountIdLink" class="ml-auto settings-value">
+                            <p class="my-0" id="accountId">ACCOUNT ID</p>
+                        </a>
+                    </div>
+                    <div class="d-flex">
+                        <p class="my-0 settings-key">Type</p>
+                        <p class="ml-auto my-0 settings-value" id="accountType">PRODUCT</p>
+                    </div>
+                    <div class="d-flex">
+                        <p class="my-0 settings-key">Auth Expire</p>
+                        <p class="ml-auto my-0 settings-value" id="authExpire">DATETIME</p>
+                    </div>
+                    <button class="btn spotify-background text-white mt-2 d-flex px-5 ml-auto" id="btnSignOut" type="button" onclick="onSignOut()">
+                        <i class="fab fa-spotify mr-2 my-auto"></i> Sign Out
+                    </button>
+                    <div class="d-flex mb-1 mt-3">
+                        <p class="my-0 settings-key my-auto">
+                            Automatic Authentification
+                        </p>
+                        <div class="settings-value ml-auto my-auto">
+                            <label class="switch my-auto">
+                                <input type="checkbox" id="autoAuthSwitch">
+                                <span class="slider" ></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="d-flex my-1">
+                        <p class="my-0 settings-key my-auto">
+                            Enable Web Playback
+                            <small class="font-weight-light ml-1" style="font-size: 14px;" id="webPlaybackDeviceName">()</small>
+                        </p>
+                        <div class="settings-value ml-auto my-auto">
+                            <div class="text-center align-middle my-auto collapse" id="webPlaybackLoading">
+                                <i class="fa fa-spinner fa-pulse fa-lg fa-fw" ></i>
+                            </div>
+                            <label class="switch my-auto" id="webPlaybackSwitchUI">
+                                <input type="checkbox" id="webPlaybackSwitch">
+                                <span class="slider" ></span>
+                            </label>
+                        </div>
+                    </div>
+                    <!-- Youtube Player settings -->
+                    <h6 class="mx-0 mb-1 mt-4 font-weight-bold">Youtube Player</h6>
+                    <hr class="spotify-separator"/>
+                    <!-- Display -->
+                    <div class="d-flex my-1">
+                        <p class="my-0">Enable Youtube Music Video</p>
+                        <div class="ml-auto my-auto settings-value">
+                            <label class="switch my-auto">
+                                <input type="checkbox" id="displayYoutubeSwitch">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <!-- Display -->
+                    <div class="d-flex my-1">
+                        <p class="my-0">
+                            White Player Style <small class="text-warning font-weight-light ml-1" style="font-size: 14px;">(Requires Refresh)</small>
+                        </p>
+                        <div class="ml-auto my-auto settings-value">
+                            <label class="switch my-auto">
+                                <input type="checkbox" id="ytPlayerColorSwitch">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+    
+                    <h6 class="mx-0 mb-1 mt-4 font-weight-bold">Language</h6>
+                    <hr class="spotify-separator"/>
+                    <small style="opacity: 0.5;font-size: 12px;">When lyrics are loaded, these will be the default settings. Changes won't apply until next song</small>
+                    <!-- Auto Romanize lyrics -->
+                    <div class="d-flex mt-1">
+                        <p class="my-0">Automatic Romanize</p>
+                        <div class="ml-auto my-auto settings-value">
+                            <label class="switch my-auto">
+                                <input type="checkbox" id="autoRomanizeSwitch">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="d-flex my-1">
+                        <p class="my-auto">Chinese convert preference</p>
+                        <div class="ml-auto my-auto settings-value" style="min-width:110px;">
+                            <select class="form-control form-control-sm" id="chinesePrefSelect">
+                                <option>None</option>
+                                <option>Simplified</option>
+                                <option>Traditional</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex my-1">
+                        <p class="my-auto">Japanese convert preference</p>
+                        <div class="ml-auto my-auto settings-value">
+                            <select class="form-control form-control-sm" id="japanesePrefSelect" style="min-width:110px;">
+                                <option>None</option>
+                                <option>Hiragana</option>
+                                <option>Katakana</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Credits -->
+                    <h6 class="mx-0 mb-1 mt-4 font-weight-bold">Credits</h6>
+                    <hr class="spotify-separator"/>
+                    <div class="d-flex">
+                        <p class="my-0">Created By</p>
+                        <a href="https://github.com/JoshLmao" class="ml-auto settings-value">
+                            <p class="my-0">JoshLmao</p>
+                        </a>
+                        <a href="https://twitter.com/JoshLmao" class="my-auto ml-2">
+                            <i class="fab fa-fw fa-twitter"></i>
+                        </a>
+                    </div>
+                    <div class="d-flex">
+                        <p class="my-0">Pinyin Converter</p>
+                        <a href="https://github.com/superbiger/pinyin4js" class="ml-auto settings-value">
+                            <p class="my-0">Pinyin4JS by SuperBiger</p>
+                        </a>
+                    </div>
+                    <div class="d-flex">
+                        <p class="my-0">Hangul Converter</p>
+                        <a href="https://github.com/fujaru/aromanize-js" class="ml-auto settings-value">
+                            <p class="ml-auto my-0">Aromanjize-JS by Fujaru</p>
+                        </a>
+                    </div>
+                    <div class="d-flex">
+                        <p class="my-0">Japanese Converter</p>
+                        <a href="https://github.com/hexenq/kuroshiro" class="ml-auto settings-value">
+                            <p class="ml-auto my-0">Kuroshiro by Hexenq</p>
+                        </a>
+                    </div>
+                    <div class="d-flex justify-content-center w-100 mt-3">
+                        <a href="https://github.com/JoshLmao/Genify/issues" target="_blank">
+                            <button type="button" class="btn btn-outline-light">
+                                Report an Issue
+                            </button>
+                        </a>
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+                        <a href="https://brave.com/jos677" class="d-flex justify-content-center align-items-center">
+                            <img src="img/BraveBat.png" height="45">
+                        </a>
+                        <a class="mr-5" href="https://ko-fi.com/joshlmao" title="Thank you! <3">
+                            <img src="https://i.imgur.com/zDeHMoK.png" alt="KoFiDonate.png" height="40">
+                        </a>
+                        <a href="https://paypal.me/xjoshlmao?locale.x=en_GB" title="Thank you! <3">
+                            <img src="https://i.imgur.com/UfSd0gP.png" height="40">
+                        </a>
+                    </div>
+                </div>
+                <!-- Youtube Video -->
+                <div class="youtube-player-ui container col-md col-sm-12 px-0">
+                    <!-- Loading Spinner -->
+                    <div class="text-center align-middle mt-2" id="youtubeLoading">
+                        <i class="fa fa-spinner fa-pulse fa-3x fa-fw" ></i>
+                    </div>
+                    <script src="https://apis.google.com/js/api.js"></script>
+                    <script src="http://www.youtube.com/player_api"></script>
+                    <!-- ## Margin 3 medium and above, Margin 3 on sides, 5 top on xs to sm ## -->
+                    <div class="youtubeContainer m-md-3 mx-3 mt-5">
+                        <div id="youtubePlayer"></div>
+                    </div>
+                </div>
+                <!-- Genius Content -->
+                <div class="signed-in-ui mx-auto col-md col-sm-12" id="geniusContent" style="min-width:35%;">
+                    <div class="d-inline-block overflow-y h-100 w-100">
+                        <div class="p-3 text-center align-self-center">
+                            <!-- Loading Spinner -->
+                            <div class="align-middle" id="geniusLoading">
+                                <i class="fa fa-spinner fa-pulse fa-3x fa-fw" ></i>
+                            </div>
+                            <!-- Romanize Btn -->
+                            <button type="button" class="btn btn-outline-light mb-3 py-1" id="romanizeBtn"></button>
+                            <!-- Trad to Simp Chinese Btn -->
+                            <button type="button" class="btn btn-outline-light mb-3 py-1" id="tradSimpBtn"></button>
+                            <!-- Trad to Simp Chinese Btn -->
+                            <button type="button" class="btn btn-outline-light mb-3 py-1" id="hiraKataBtn"></button>
+                            <!-- Lyrics Container -->
+                            <div id="geniusLyricsContent" class="text-justify" style="white-space: pre-wrap;justify-content: center;display: flex;"></div>
+                            <!-- Add Lyrics to Genius Btn -->
+                            <a href="https://genius.com/new"  id="geniusAddLyrics" class="collapse">
+                                <button type="button" class="btn btn-outline-light my-2" >Add lyrics to Genius</button>
+                            </a>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Splash Content -->
+        <div class="signed-out-ui mx-auto w-100 splash-gradiant" style="height:calc(100% - 50px);">
+            <div class="row mx-0 h-100 text-center splash-container">
+                <span class="container mx-auto my-auto">
+                    <h1 class="genify-splash-title font-weight-light">Genify</h1>
+                    <h4 class="mt-3 text-justify text-center font-weight-light mx-4">Combining music, lyrics and video</h4>
+                    <div class="container-fluid mt-3">
+                        <button class="btn btn-lg btn-block spotify-background text-white mx-auto" id="btnSignIn" type="button" style="width: 250px">
+                            <div class="container" id="signInBtnSignInContent">
+                                <i class="fab fa-spotify mr-1"></i> Sign In
+                            </div>
+                        </button>
+                    </div>
+                    <div class="text-center mx-auto my-2">
+                        <small>
+                            <a href="https://joshlmao.com" class="font-weight-light" target="_blank">JoshLmao</a>
+                            <i class="fas fa-ellipsis-v mx-1"></i>
+                            <a href="https://twitter.com/JoshLmao" target="_blank" class="btn px-0 my-auto text-white" title="JoshLmao's Twitter">
+                                <i class="fab fa-fw fa-twitter"></i>
+                            </a>
+                        </small>
+                    </div>
+                </span>
             </div>
         </div>
     </div>

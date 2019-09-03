@@ -1,16 +1,12 @@
-.body {
-    background: yellow;
-}
+/*$dark3-color:     #989ca8;*/
 
 .btn-social {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 1.25rem;
-    line-height: 2rem;
+    font-size: 1.15rem;
 }
 
 .btn-social-icon {
-    margin-left: -3px;
+    width: 20px;
+    height: 20px
 }
 
 pre {
@@ -20,6 +16,12 @@ pre {
 
 .spotify-background {
     background: #1DB954;
+}
+.spotify-bg-secondary {
+    background: rgb(24, 24, 24);
+}
+.spotify-bg-tertiary {
+    background: rgb(40, 40, 40);
 }
 
 .btn-spotify {
@@ -31,3 +33,288 @@ pre {
 .btn-spotify:hover {
     color: rgb(214, 205, 205);
 }
+
+.spotify-media-bar {
+    height: 90px;
+}
+
+/* Album art inside Spotify bar */
+.album-art {
+    max-width: 70px;
+    max-height: 70px;
+}
+
+/* Spotify bar - current track progress */
+.spotify-progress-bar {
+    height: 7px;
+    background: rgb(64, 64, 64);
+}
+
+.spotify-progress-bar-inner {
+    background: rgb(179, 179, 179);
+}
+
+.spotify-button {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+
+.settings-key {
+}
+
+.settings-value {
+    font-weight: lighter;
+}
+
+.youtubeContainer {
+	position: relative;
+	padding-bottom: 56.25%; /* 16:9 */
+	padding-top: 25px;
+    height: 0;
+}
+.youtubeContainer iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+    height: 100%;
+}
+
+.devices-menu {
+    /* Icon size */
+    font-size: 1rem;
+}
+
+.devices-menu .popover-header {
+    text-align: center;
+    background: rgb(40, 40, 40);
+    color: white;
+    border-bottom-width: 0px;
+    font-weight: bolder;
+}
+.devices-menu .popover-header:before {
+    border-bottom-color: rgb(40,40,40);
+}
+
+.devices-menu .popover-body {
+    padding: 0px;
+    background: rgb(40,40,40);
+}
+
+.devices-menu .list-group-item {
+    background: transparent;
+}
+
+/*Learn More btn*/
+.devices-menu .btn-warning {
+    background-color: rgb(70,135,214);
+}
+.devices-menu .btn-warning:hover {
+    background-color: rgb(59, 114, 180);
+}
+
+.devices-menu a {
+    border: 0px;
+}
+.devices-menu a:hover {
+    background: rgb(51, 51, 51);
+}
+
+.devices-menu .active-device {
+    color: rgb(31, 169, 79);
+}
+
+.devices-menu .arrow:after {
+    border-bottom-color: rgb(40,40,40);
+}
+
+/* Custom scrolbar*/
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+.navbar {
+    height: 50px;
+}
+
+.lyricsFill {
+    width: 100%!important;
+    height: calc(100% - 90px - 50px)!important;
+}
+
+.overflow-y {
+    overflow-y: auto;
+}
+
+.buttons-dock {
+    position: fixed;
+    right: 30px;
+    margin-top: 5px;
+}
+
+.spotify-separator {
+    margin: 0px;
+    margin-bottom: .75rem;
+    background: rgb(40, 40, 40);
+}
+
+.close-settings-btn {
+    font-size: 36px;
+}
+
+/* Devices icon - from font Glue1 */
+@font-face {
+    font-family: "glue1-spoticon";
+    src: url('https://open.scdn.co/fonts/spoticon_regular_2.woff2') format("truetype");
+}
+.spotify-devices-icon:before { 
+    font-family: "glue1-spoticon", Verdana, Tahoma;
+    content: "\f213";
+}
+
+.splash-container {
+    height: calc(100% - 50px)!important;
+}
+.splash-gradiant {
+    background: -webkit-gradient(linear, left top, left bottom,
+                                    color-stop(0%, #111), 
+                                    color-stop(160%, #9198e5));
+}
+.genify-splash-title {
+    font-size: 3rem;
+    letter-spacing: 2px;
+}
+
+.message-ui {
+    position: fixed;
+    overflow: hidden;
+    box-sizing: border-box;
+    z-index: 999;
+    transition: opacity 1s ease;
+    flex-direction: column;
+    bottom:1em;
+    right:1em;
+    max-width: 25em;
+}
+.message-ui-inner {
+    max-width: 35em;
+}
+
+/**/
+/* The side navigation menu */
+.sidenav {
+    height: 100%; /* 100% Full-height */
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    
+    overflow-x: hidden; /* Disable horizontal scroll */
+    transition: 0.15s; /* 0.5 second transition effect to slide in the sidenav */
+
+    display: flex;
+    flex-direction: column;
+  }
+    
+  /* When you mouse over the navigation links, change their color */
+  .sidenav a:hover {
+    color: #f1f1f1;
+  }
+  
+  /* Position and style the close button (top right corner) */
+  .sidenav .closebtn {
+    position: relative;
+    top: 0;
+    margin-left: 200px;
+    font-size: 36px;
+  }
+  
+  /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+  #main {
+    transition: margin-left .5s;
+    /*padding: 20px;*/
+  }
+  
+  /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+  @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+  }
+
+  /* Toggle Switch */
+  /* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(40, 40, 40);
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    width: 12px;
+    height: 12px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
