@@ -9,6 +9,11 @@ const COOKIE_CONST = {
     jp_prefer: "jpPrefer"
 }
 
+const CONST_APP = {
+    spotify_client_id: "",
+    genius_access_token: "",
+}
+
 function onCloseMessage(object) {
     $(object).parent().parent().remove();
 }

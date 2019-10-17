@@ -10,7 +10,7 @@ class genius {
     static search (searchTerm, successCallback, failedCallback) {
         var proxyUrl = helper.getProxyUrl();
         var url = proxyUrl + "https://api.genius.com/search?q=" + encodeURIComponent(searchTerm);
-        var accessToken = 'oIRErfK8KcmhxvvKzaDnt9GYLkfghdCz7pXxVi7Ce8c3V4INQC3qd_Djlc4ndnNq';
+        var accessToken = CONST_APP.genius_access_token;
         $.ajax({
             url: url,
             headers: {
@@ -29,7 +29,7 @@ class genius {
         var trackNameClean = genius.cleanName(trackData.trackName);
         var searchParams = encodeURIComponent(`${trackData.artistName} ${trackNameClean}`);
         var url = proxyUrl + "https://api.genius.com/search?q=" + searchParams;
-        var accessToken = 'oIRErfK8KcmhxvvKzaDnt9GYLkfghdCz7pXxVi7Ce8c3V4INQC3qd_Djlc4ndnNq';
+        var accessToken = CONST_APP.genius_access_token;
         $.ajax({
             url: url,
             headers: {

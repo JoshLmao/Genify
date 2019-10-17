@@ -56,7 +56,6 @@ class spotify {
 
     // Redirects the user to give auth to us
     static getUserAuth() {
-        var clientId = "f4dc97c399124fc99254c5d7ac2bf4bd";
         var respType = "token";
         var redirectUri = helper.isDevMode() ? encodeURIComponent(helper.getDevUrlPath()) : encodeURIComponent("https://genify.joshlmao.com");
         var scopes = [
@@ -69,7 +68,7 @@ class spotify {
             'user-read-private',
         ];
         var scopesEncoded = encodeURIComponent(scopes.join(' '));
-        var apiUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=${respType}&redirect_uri=${redirectUri}&scope=${scopesEncoded}`;
+        var apiUrl = `https://accounts.spotify.com/authorize?client_id=${CONST_APP.spotify_client_id}&response_type=${respType}&redirect_uri=${redirectUri}&scope=${scopesEncoded}`;
         window.location.href = apiUrl;
     }
 
