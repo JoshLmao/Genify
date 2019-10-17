@@ -196,17 +196,31 @@ $(() => {
 
     // Set the Spotify current track info UI
     const setSpotifyUI = function (trackData) {
+        var updateTextValue = function (id, value) {
+            if ($(id).text() != value)
+                $(id).text(value);
+        };
+        var updateAttrValue = function (id, attr, value) {
+            if($(id).attr(attr) != value)
+                $(id).attr(attr, value);
+        }
+        var updateCssValue = function (id, val, value) {
+            if ($(id).css(val) != value)
+                $(id).css(val, value);
+        }
+
         // Set track name, artist name and album image
-        $("#trackTitle").text(trackData.trackName);
-        $("#artistTitle").text(trackData.artistName);
-        $("#albumArtwork").attr("src", trackData.albumArtUrl);
+        updateTextValue("#trackTitle", trackData.trackName);
+        updateTextValue("#artistTitle", trackData.artistName);
+        updateAttrValue("#albumArtwork", "src", trackData.albumArtUrl);
 
-        $("#trackCurrentPosition").text(helper.msToTime(trackData.progress_ms));
-        $("#trackTotalDuration").text(helper.msToTime(trackData.duration_ms));
+        updateTextValue("#trackCurrentPosition", helper.msToTime(trackData.progress_ms));
+        updateTextValue("#trackTotalDuration", helper.msToTime(trackData.duration_ms))
+        
         var percentDuration = trackData.progress_ms / trackData.duration_ms * 100; 
-        $("#trackProgress").css("width", percentDuration + "%");
-
-        $("#volumeProgress").css("width", trackData.volume_percent + "%");
+        updateCssValue("#trackProgress", "width", percentDuration + "%")
+        updateCssValue("#volumeProgress", "width", trackData.volume_percent + "%")
+        
         $(".muted").toggle(trackData.volume_percent <= 0);
         $(".unmuted").toggle(trackData.volume_percent > 0);
 
@@ -214,12 +228,13 @@ $(() => {
         $(".is-paused").toggle(!trackData.isPlaying);
 
         // Links for viewing Spotify artist and track
-        $("#songLink").attr("href", trackData.songUrl);
-        $("#artistLink").attr("href", trackData.artistUrl);
-        $("#albumLink").attr("href", trackData.albumUrl);
+        updateAttrValue("#songLink", "href", trackData.songUrl);
+        updateAttrValue("#artistLink", "href", trackData.artistUrl);
+        updateAttrValue("#albumLink", "href", trackData.albumUrl);
 
         // Reset simplified bool since song changed
-        zhLyricsIsSimplified = null;
+        if (zhLyricsIsSimplified != null)
+            zhLyricsIsSimplified = null;
     }
 
     // Starts search into Genius for lyrics, updates UI
