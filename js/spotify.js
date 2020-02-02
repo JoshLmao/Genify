@@ -31,7 +31,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 }
 
 class spotify {
-    static DEVICE_NAME () { return "Genify Web Player"; }
+    static DEVICE_NAME = "Genify Web Player";
 
     static spotify() {
         $("#playBtn").hide();

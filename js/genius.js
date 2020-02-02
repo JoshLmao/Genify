@@ -102,6 +102,7 @@ class genius {
                 hitIndex: hitIndex,
                 track_name: trackData.trackName,
                 artist_name: trackData.artistName,
+                current_hit: hits[hitIndex].result,
             };
         } else {
             this.searchInfo = null;
@@ -128,6 +129,7 @@ class genius {
                 hitIndex: index,
                 track_name: trackName,
                 artist_name: artistName,
+                current_hit: hits[index].result,
             }
             genius.getLyricsFromUrl(hits[index].result.url, function(lyrics) {
                 logger.log(`Next lyrics '${hits[index].result.full_title}'`);

@@ -235,19 +235,22 @@
         </div>
         <!-- Lyrics bar -->
         <div class="signed-in-ui lyricsFill mr-0" style="display: none;">
-            <div class="d-flex row mr-0 h-100" style="margin-right: 0px; margin-left:0px;">
-                <!-- Floating buttons dock -->
-                <div class="buttons-dock" style="z-index:100;">
-                    <button type="button" class="btn btn-outline-light px-1 fa-sm" onclick="onPrevLyrics()">
+            <!-- Floating buttons dock -->
+            <div class="buttons-dock row mr-2 justify-content-end">
+                <div class="mr-0 d-flex my-1">
+                    <div class="mr-2 lyrics-title" id="geniusLyricsTitle"></div>
+                    <button type="button" class="btn btn-outline-light px-1 mx-1 fa-sm" onclick="onPrevLyrics()">
                         <i class="fas fa-arrow-left "></i>
                     </button>
-                    <button type="button" class="btn btn-outline-light px-1 fa-sm" onclick="onNextLyricsBtn()">
+                    <button type="button" class="btn btn-outline-light px-1 mx-1 fa-sm" onclick="onNextLyricsBtn()">
                         <i class="fas fa-arrow-right"></i>
                     </button>
-                    <button type="button" class="btn btn-outline-light" onclick="onToggleSettings()">
+                    <button type="button" class="btn btn-outline-light mx-1" onclick="onToggleSettings()">
                         <i class="fas fa-cog"></i>
                     </button>
                 </div>
+            </div>
+            <div class="d-flex row mr-0 h-100" style="margin-right: 0px; margin-left:0px;">
                 <!-- Settings UI -->
                 <div class="settings-ui container collapse overflow-y pb-4 h-100" id="settingsPage">
                     <a href="javascript:void(0)" class="float-right close-settings-btn" onclick="onHideSettings()">&times;</a>
@@ -424,7 +427,7 @@
                     </div>
                 </div>
                 <!-- Genius Content -->
-                <div class="signed-in-ui mx-auto col-md col-sm-12" id="geniusContent" style="min-width:35%;">
+                <div class="signed-in-ui mx-auto col-md-6 col-sm-12" id="geniusContent" style="min-width:35%;">
                     <div class="d-inline-block overflow-y h-100 w-100">
                         <div class="p-3 text-center align-self-center">
                             <!-- Loading Spinner -->

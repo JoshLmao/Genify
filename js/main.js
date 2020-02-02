@@ -2,6 +2,15 @@
 const setLyrics = function (lyricsText) {
     $("#geniusLoading").hide();
     
+    // Show current lyrics genius title and fade out after delay
+    if (genius.searchInfo != null) {
+        $("#geniusLyricsTitle").show();
+        $("#geniusLyricsTitle").text("Lyrics: '" + genius.searchInfo.current_hit.full_title + "'");
+        setTimeout(function() {
+            $("#geniusLyricsTitle").fadeOut();
+        }, 2000);
+    }
+
     var rawLyrics = lyricsText.trim();
     lyricsService.initLyrics(rawLyrics).then(function () {
         var setBtns = function () {
@@ -31,6 +40,7 @@ const setLyrics = function (lyricsText) {
         lyrics_isRomanized = cookies.getCookie(COOKIE_CONST.auto_romanize) == "true";
         var lyrics = lyricsService.getLyrics(lyrics_isRomanized);
         $("#geniusLyricsContent").text(lyrics);
+
         setBtns();
     });
 }
@@ -252,8 +262,8 @@ $(() => {
         $("#romanizeBtn").text( lyrics_isRomanized ? "Unromanize" : "Romanize");
 
         genius.getSearchFirstResult(trackData, function (url) {
-            genius.getLyricsFromUrl(url, function (lyrics) {
-                setLyrics(lyrics);
+            genius.getLyricsFromUrl(url, function (lyrics, hitResults) {
+                setLyrics(lyrics, hitResults);
             });
         });
     }
