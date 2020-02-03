@@ -152,7 +152,7 @@ $(() => {
         if (zhLyricsIsSimplified == null) {
             zhLyricsIsSimplified = !lyricsService.isSimplified;
         } else {
-            zhLyricsIsSimplified = !isSimplified;
+            zhLyricsIsSimplified = !zhLyricsIsSimplified;
         }
         
         $("#tradSimpBtn").text( zhLyricsIsSimplified ? "To Traditional" : "To Simplified");
@@ -241,10 +241,6 @@ $(() => {
         updateAttrValue("#songLink", "href", trackData.songUrl);
         updateAttrValue("#artistLink", "href", trackData.artistUrl);
         updateAttrValue("#albumLink", "href", trackData.albumUrl);
-
-        // Reset simplified bool since song changed
-        if (zhLyricsIsSimplified != null)
-            zhLyricsIsSimplified = null;
     }
 
     // Starts search into Genius for lyrics, updates UI
@@ -272,6 +268,12 @@ $(() => {
     spotify.onSongChanged = function (trackData) {
         setSpotifyUI(trackData);
         doGeniusSearch(trackData);
+
+        // Reset convert bools as song changed
+        if (zhLyricsIsSimplified != null)
+            zhLyricsIsSimplified = null;
+        if (jpLyricsToHiragana != null)
+            jpLyricsToHiragana = null;
 
         if ( youtube.isPlayerEnabled() ) {
             loadYoutubeVideo(trackData.trackName, trackData.artistName, function(url) {
