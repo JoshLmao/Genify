@@ -80,7 +80,7 @@ var lyrics_isRomanized = false;
 
 $(() => {
     // Set the site version number for help
-    $("#versionNumber").text("v2.0.0");
+    $("#versionNumber").text("v2.1.0");
 
     $("#pauseBtn").click(() => {
         spotify.pause();
