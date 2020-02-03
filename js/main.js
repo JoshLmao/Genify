@@ -2,6 +2,15 @@
 const setLyrics = function (lyricsText) {
     $("#geniusLoading").hide();
     
+    // Show current lyrics genius title and fade out after delay
+    if (genius.searchInfo != null) {
+        $("#geniusLyricsTitle").show();
+        $("#geniusLyricsTitle").text("Lyrics: '" + genius.searchInfo.current_hit.full_title + "'");
+        setTimeout(function() {
+            $("#geniusLyricsTitle").fadeOut();
+        }, 2000);
+    }
+
     var rawLyrics = lyricsText.trim();
     lyricsService.initLyrics(rawLyrics).then(function () {
         var setBtns = function () {
@@ -31,6 +40,7 @@ const setLyrics = function (lyricsText) {
         lyrics_isRomanized = cookies.getCookie(COOKIE_CONST.auto_romanize) == "true";
         var lyrics = lyricsService.getLyrics(lyrics_isRomanized);
         $("#geniusLyricsContent").text(lyrics);
+
         setBtns();
     });
 }
@@ -142,7 +152,7 @@ $(() => {
         if (zhLyricsIsSimplified == null) {
             zhLyricsIsSimplified = !lyricsService.isSimplified;
         } else {
-            zhLyricsIsSimplified = !isSimplified;
+            zhLyricsIsSimplified = !zhLyricsIsSimplified;
         }
         
         $("#tradSimpBtn").text( zhLyricsIsSimplified ? "To Traditional" : "To Simplified");
@@ -196,17 +206,31 @@ $(() => {
 
     // Set the Spotify current track info UI
     const setSpotifyUI = function (trackData) {
+        var updateTextValue = function (id, value) {
+            if ($(id).text() != value)
+                $(id).text(value);
+        };
+        var updateAttrValue = function (id, attr, value) {
+            if($(id).attr(attr) != value)
+                $(id).attr(attr, value);
+        }
+        var updateCssValue = function (id, val, value) {
+            if ($(id).css(val) != value)
+                $(id).css(val, value);
+        }
+
         // Set track name, artist name and album image
-        $("#trackTitle").text(trackData.trackName);
-        $("#artistTitle").text(trackData.artistName);
-        $("#albumArtwork").attr("src", trackData.albumArtUrl);
+        updateTextValue("#trackTitle", trackData.trackName);
+        updateTextValue("#artistTitle", trackData.artistName);
+        updateAttrValue("#albumArtwork", "src", trackData.albumArtUrl);
 
-        $("#trackCurrentPosition").text(helper.msToTime(trackData.progress_ms));
-        $("#trackTotalDuration").text(helper.msToTime(trackData.duration_ms));
+        updateTextValue("#trackCurrentPosition", helper.msToTime(trackData.progress_ms));
+        updateTextValue("#trackTotalDuration", helper.msToTime(trackData.duration_ms))
+        
         var percentDuration = trackData.progress_ms / trackData.duration_ms * 100; 
-        $("#trackProgress").css("width", percentDuration + "%");
-
-        $("#volumeProgress").css("width", trackData.volume_percent + "%");
+        updateCssValue("#trackProgress", "width", percentDuration + "%")
+        updateCssValue("#volumeProgress", "width", trackData.volume_percent + "%")
+        
         $(".muted").toggle(trackData.volume_percent <= 0);
         $(".unmuted").toggle(trackData.volume_percent > 0);
 
@@ -214,12 +238,9 @@ $(() => {
         $(".is-paused").toggle(!trackData.isPlaying);
 
         // Links for viewing Spotify artist and track
-        $("#songLink").attr("href", trackData.songUrl);
-        $("#artistLink").attr("href", trackData.artistUrl);
-        $("#albumLink").attr("href", trackData.albumUrl);
-
-        // Reset simplified bool since song changed
-        zhLyricsIsSimplified = null;
+        updateAttrValue("#songLink", "href", trackData.songUrl);
+        updateAttrValue("#artistLink", "href", trackData.artistUrl);
+        updateAttrValue("#albumLink", "href", trackData.albumUrl);
     }
 
     // Starts search into Genius for lyrics, updates UI
@@ -237,8 +258,8 @@ $(() => {
         $("#romanizeBtn").text( lyrics_isRomanized ? "Unromanize" : "Romanize");
 
         genius.getSearchFirstResult(trackData, function (url) {
-            genius.getLyricsFromUrl(url, function (lyrics) {
-                setLyrics(lyrics);
+            genius.getLyricsFromUrl(url, function (lyrics, hitResults) {
+                setLyrics(lyrics, hitResults);
             });
         });
     }
@@ -247,6 +268,12 @@ $(() => {
     spotify.onSongChanged = function (trackData) {
         setSpotifyUI(trackData);
         doGeniusSearch(trackData);
+
+        // Reset convert bools as song changed
+        if (zhLyricsIsSimplified != null)
+            zhLyricsIsSimplified = null;
+        if (jpLyricsToHiragana != null)
+            jpLyricsToHiragana = null;
 
         if ( youtube.isPlayerEnabled() ) {
             loadYoutubeVideo(trackData.trackName, trackData.artistName, function(url) {

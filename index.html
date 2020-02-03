@@ -164,7 +164,7 @@
         <div class="signed-in-ui row mx-0 spotify-media-bar spotify-bg-tertiary">
             <div class="container-fluid">
                 <div class="row h-100 align-items-center">
-                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5">
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-5 col-xs-12 px-2">
                         <div class="d-flex mx-2">
                             <!-- Album Art -->
                             <a id="albumLink">
@@ -182,7 +182,7 @@
                         </div>
                     </div>
                     <!-- Media Controls Column -->
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-8 col-7 px-5 mx-auto">
+                    <div class="col-xl-6 col-lg-6 col-md-5 col-sm-7 d-none d-sm-block px-3 mx-auto">
                         <div class="d-flex justify-content-center">
                             <a class="mx-4 my-auto" href="#">
                                 <i class="fas fa-step-backward"></i>
@@ -235,19 +235,22 @@
         </div>
         <!-- Lyrics bar -->
         <div class="signed-in-ui lyricsFill mr-0" style="display: none;">
-            <div class="d-flex row mr-0 h-100" style="margin-right: 0px; margin-left:0px;">
-                <!-- Floating buttons dock -->
-                <div class="buttons-dock" style="z-index:100;">
-                    <button type="button" class="btn btn-outline-light px-1 fa-sm" onclick="onPrevLyrics()">
+            <!-- Floating buttons dock -->
+            <div class="buttons-dock row mr-2 justify-content-end">
+                <div class="mr-0 d-flex my-1">
+                    <div class="mr-2 lyrics-title" id="geniusLyricsTitle"></div>
+                    <button type="button" class="btn btn-outline-light px-1 mx-1 fa-sm" onclick="onPrevLyrics()">
                         <i class="fas fa-arrow-left "></i>
                     </button>
-                    <button type="button" class="btn btn-outline-light px-1 fa-sm" onclick="onNextLyricsBtn()">
+                    <button type="button" class="btn btn-outline-light px-1 mx-1 fa-sm" onclick="onNextLyricsBtn()">
                         <i class="fas fa-arrow-right"></i>
                     </button>
-                    <button type="button" class="btn btn-outline-light" onclick="onToggleSettings()">
+                    <button type="button" class="btn btn-outline-light mx-1" onclick="onToggleSettings()">
                         <i class="fas fa-cog"></i>
                     </button>
                 </div>
+            </div>
+            <div class="d-flex row mr-0 h-100" style="margin-right: 0px; margin-left:0px;">
                 <!-- Settings UI -->
                 <div class="settings-ui container collapse overflow-y pb-4 h-100" id="settingsPage">
                     <a href="javascript:void(0)" class="float-right close-settings-btn" onclick="onHideSettings()">&times;</a>
@@ -424,7 +427,7 @@
                     </div>
                 </div>
                 <!-- Genius Content -->
-                <div class="signed-in-ui mx-auto col-md col-sm-12" id="geniusContent" style="min-width:35%;">
+                <div class="signed-in-ui mx-auto col-md-6 col-sm-12" id="geniusContent" style="min-width:35%;">
                     <div class="d-inline-block overflow-y h-100 w-100">
                         <div class="p-3 text-center align-self-center">
                             <!-- Loading Spinner -->
@@ -433,9 +436,9 @@
                             </div>
                             <!-- Romanize Btn -->
                             <button type="button" class="btn btn-outline-light mb-3 py-1" id="romanizeBtn"></button>
-                            <!-- Trad to Simp Chinese Btn -->
+                            <!-- Trad/Simp Chinese Btn -->
                             <button type="button" class="btn btn-outline-light mb-3 py-1" id="tradSimpBtn"></button>
-                            <!-- Trad to Simp Chinese Btn -->
+                            <!-- Hiragana/Katakana Btn -->
                             <button type="button" class="btn btn-outline-light mb-3 py-1" id="hiraKataBtn"></button>
                             <!-- Lyrics Container -->
                             <div id="geniusLyricsContent" class="text-justify" style="white-space: pre-wrap;justify-content: center;display: flex;"></div>

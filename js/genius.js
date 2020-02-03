@@ -10,7 +10,7 @@ class genius {
     static search (searchTerm, successCallback, failedCallback) {
         var proxyUrl = helper.getProxyUrl();
         var url = proxyUrl + "https://api.genius.com/search?q=" + encodeURIComponent(searchTerm);
-        var accessToken = 'oIRErfK8KcmhxvvKzaDnt9GYLkfghdCz7pXxVi7Ce8c3V4INQC3qd_Djlc4ndnNq';
+        var accessToken = CONST_APP.genius_access_token;
         $.ajax({
             url: url,
             headers: {
@@ -29,7 +29,7 @@ class genius {
         var trackNameClean = genius.cleanName(trackData.trackName);
         var searchParams = encodeURIComponent(`${trackData.artistName} ${trackNameClean}`);
         var url = proxyUrl + "https://api.genius.com/search?q=" + searchParams;
-        var accessToken = 'oIRErfK8KcmhxvvKzaDnt9GYLkfghdCz7pXxVi7Ce8c3V4INQC3qd_Djlc4ndnNq';
+        var accessToken = CONST_APP.genius_access_token;
         $.ajax({
             url: url,
             headers: {
@@ -102,6 +102,7 @@ class genius {
                 hitIndex: hitIndex,
                 track_name: trackData.trackName,
                 artist_name: trackData.artistName,
+                current_hit: hits[hitIndex].result,
             };
         } else {
             this.searchInfo = null;
@@ -128,6 +129,7 @@ class genius {
                 hitIndex: index,
                 track_name: trackName,
                 artist_name: artistName,
+                current_hit: hits[index].result,
             }
             genius.getLyricsFromUrl(hits[index].result.url, function(lyrics) {
                 logger.log(`Next lyrics '${hits[index].result.full_title}'`);

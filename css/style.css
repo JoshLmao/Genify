@@ -1,4 +1,9 @@
 /*$dark3-color:     #989ca8;*/
+:root {
+    --nav-height: 90px;
+    --spotify-banner-height: 50px;
+    --settings-height: 40px;
+}
 
 .btn-social {
     font-size: 1.15rem;
@@ -62,6 +67,11 @@ pre {
   font-size: 12px;
   line-height: 1.428571429;
   border-radius: 15px;
+}
+
+.lyrics-title {
+    font-size: small;
+    white-space: nowrap;
 }
 
 .settings-key {
@@ -153,7 +163,7 @@ pre {
 
 .lyricsFill {
     width: 100%!important;
-    height: calc(100% - 90px - 50px)!important;
+    height: calc(100% - var(--nav-height) - var(--spotify-banner-height) - var(--settings-height))!important;
 }
 
 .overflow-y {
@@ -161,9 +171,7 @@ pre {
 }
 
 .buttons-dock {
-    position: fixed;
-    right: 30px;
-    margin-top: 5px;
+    height: 40px
 }
 
 .spotify-separator {
