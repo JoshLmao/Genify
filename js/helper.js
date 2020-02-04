@@ -10,8 +10,8 @@ const COOKIE_CONST = {
 }
 
 const CONST_APP = {
-    spotify_client_id: "",
-    genius_access_token: "",
+    spotify_client_id: "f4dc97c399124fc99254c5d7ac2bf4bd",
+    genius_access_token: "jZPEvjdl6Sk1RJUDoo0tTuEFYv2B8rbosLsOUnFBqbi11dCtfftjiN911-a9q0lo",
 }
 
 function onCloseMessage(object) {
