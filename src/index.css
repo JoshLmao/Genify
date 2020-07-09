@@ -1,3 +1,7 @@
+:root {
+    --navbar-height: 56px;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +14,17 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Make everything match 100% */
+html, body, #root {
+    height: 100%!important;
+}
+
+.genify-home {
+    height: calc(100% - var(--navbar-height));
+}
+
+.genify-navbar {
+    height: var(--navbar-height);
 }

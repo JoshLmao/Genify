@@ -1,0 +1,10 @@
+{
+    "logs": [
+      {
+        "version": "3.0.0",
+        "changes": [
+          "Changed site to use React"
+        ]
+      }
+    ]
+  }
