@@ -16,9 +16,10 @@ code {
     monospace;
 }
 
-/* Make everything match 100% */
+/* Make everything match 100%, set font white */
 html, body, #root {
     height: 100%!important;
+    color: white;
 }
 
 .genify-home {

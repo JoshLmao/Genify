@@ -18,6 +18,7 @@ import {
 } from "../../consts";
 
 import changelogs from "../../json/changelog.json";
+let pkg = require('../../../package.json');
 
 function getChangelog() {
     return changelogs.logs.map((log) => {
@@ -56,6 +57,8 @@ class Navigation extends Component {
     }
 
     render() {
+        let modalBgColor = "#111";
+        let modalSeparatorColor = "#222";
         return (
             <div className="genify-navbar">
                 <Navbar 
@@ -67,7 +70,11 @@ class Navigation extends Component {
                             className="p-0 align-bottom mt-1"
                             style={{ fontSize: "0.85rem" }}
                             href="" 
-                            onClick={this.toggleChangelog}>v1.2.3</Nav.Link>
+                            onClick={this.toggleChangelog}>
+                                {
+                                    pkg ? "v" + pkg.version : "v0.0.0"
+                                }
+                            </Nav.Link>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="ml-auto">
@@ -91,17 +98,30 @@ class Navigation extends Component {
                         size="lg"
                         show={this.state.displayChangelog}
                         onHide={() => this.toggleChangelog()}>
-                        <Modal.Header closeButton>
+                        <Modal.Header 
+                            closeButton
+                            style={{ 
+                                backgroundColor: modalBgColor,
+                                borderColor: modalSeparatorColor,
+                            }}>
                             <Modal.Title id="example-modal-sizes-title-lg">
                                 Changelog
                             </Modal.Title>
                         </Modal.Header>
-                        <Modal.Body>
+                        <Modal.Body
+                            style={{ 
+                                backgroundColor: modalBgColor,
+                                borderColor: modalSeparatorColor,
+                            }}>
                             {   
                                 getChangelog()
                             }
                         </Modal.Body>
-                        <Modal.Footer>
+                        <Modal.Footer
+                            style={{ 
+                                backgroundColor: modalBgColor,
+                                borderColor: modalSeparatorColor,
+                            }}>
                             <Button className="ml-auto" onClick={() => this.toggleChangelog()}>
                                 Close
                             </Button>

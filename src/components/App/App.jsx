@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { 
-    HashRouter,
     Route,
-    Switch
+    Switch,
+    BrowserRouter
 } from 'react-router-dom';
 
 import Home from "../Home";
@@ -12,20 +12,28 @@ import Service from "../Service";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+function testing(message, callback) {
+    // this is the default behavior
+    const allowTransition = window.confirm(message);
+    callback(allowTransition);
+}
+
 class App extends Component {
     render() {
         return (
-            <HashRouter>
+            <BrowserRouter
+                getUserConfirmation={(message, callback) => testing(message, callback)}>
                 <Navigation />
 
                 <Switch>
+                    {/* Homepage */}
                     <Route exact path="/" component={Home} />
-
-                    <Route exact path="/service" component={Service} />
+                    {/* Main App service page */}
+                    <Route exact path="/app" component={Service} />
 
                     <Route component={FourOhFour} />
                 </Switch>
-            </HashRouter>
+            </BrowserRouter>
         );
     }
 }

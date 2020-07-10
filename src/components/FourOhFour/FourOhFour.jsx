@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class FourOhFour extends Component {
     render() {
         return (
-            <div>
+            <div style={{ color: "black" }}>
                 404, Not Found
             </div>
         );
