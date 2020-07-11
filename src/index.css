@@ -1,5 +1,6 @@
 :root {
     --navbar-height: 56px;
+    --player-height: 90px;
 }
 
 body {
@@ -28,4 +29,25 @@ html, body, #root {
 
 .genify-navbar {
     height: var(--navbar-height);
+}
+
+.genify-player {
+    height: var(--player-height);
+}
+
+.lyrics-content {
+    white-space: pre-wrap;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+}
+
+.lyrics-container {
+    height: calc(100% - var(--player-height))!important;
+}
+
+.song-info {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

@@ -14,11 +14,6 @@ import {
     faVolumeMute,
     faVolumeUp, 
 } from "@fortawesome/free-solid-svg-icons";
-import {
-    PLAYER_UPDATE_MS
-} from "../../consts";
-
-import SpotifyService from "../../services/spotify";
 
 // Formats total milliseconds to a displayable time format (like 00:00)
 function msToTime(millisec) {
@@ -46,8 +41,7 @@ class Player extends Component {
 
         this.state = {
             authToken: props.authToken,
-            playState: null,
-            loaded: false,
+            playState: props.playState,
         };
 
         this.onPlayPause = this.onPlayPause.bind(this);
@@ -56,22 +50,12 @@ class Player extends Component {
         this.onToggleVolumeMute = this.onToggleVolumeMute.bind(this);
     }
 
-    componentDidMount() {
-        SpotifyService.getCurrentPlaybackState(this.state.authToken, (data) => {
-            console.log(data);
+    componentDidUpdate(prevProps) {
+        if (prevProps.playState !== this.props.playState) {
             this.setState({
-                playState: data,
-                loaded: true,
+                playState: this.props.playState,
             });
-        });
-
-        setInterval(() => {
-            SpotifyService.getCurrentPlaybackState(this.state.authToken, (data) => {
-                this.setState({
-                    playState: data,
-                });
-            });
-        }, PLAYER_UPDATE_MS);
+        }
     }
 
     onPlayPause() {
@@ -97,7 +81,7 @@ class Player extends Component {
     render() {
         return (
             <Row 
-                className="w-100 mx-0"
+                className="w-100 mx-0 genify-player"
                 style={{ backgroundColor: "rgb(40,40,40)" }}>
                 {/* Album Art & Song Info */}
                 <Col md={3}>
@@ -113,13 +97,13 @@ class Player extends Component {
                         <div className="w-100 ml-2">
                             <a 
                                 href={ this.state.playState ? this.state.playState.item?.external_urls?.spotify : "#" }>
-                                <h6>
+                                <h6 className="song-info">
                                     { this.state.playState ? this.state.playState.item?.name : "Unknown" }
                                 </h6>
                             </a>
                             <a 
                                 href={ this.state.playState ? this.state.playState.item?.artists[0].external_urls?.spotify : "#" }>
-                                <h6>
+                                <h6 className="song-info">
                                     { this.state.playState ? this.state.playState.item?.artists[0].name : "Unknown" }
                                 </h6>
                             </a>
