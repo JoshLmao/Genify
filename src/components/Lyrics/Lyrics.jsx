@@ -16,6 +16,8 @@ class Lyrics extends Component {
             playState: props.playState,
 
             originalLyrics: null,
+            lyricsInfo: null,
+            loaded: false,
         };
 
         this.updateLyrics = this.updateLyrics.bind(this);
@@ -29,31 +31,52 @@ class Lyrics extends Component {
         if(prevProps.playState !== this.props.playState) {
             this.setState({
                 playState: this.props.playState,
-                originalLyrics: null,
-
-                loaded: false,
             }, () => {
-                this.updateLyrics(); 
+                this.updateLyrics();
             });
         }
     }
 
     updateLyrics() {
-        if(this.state.playState) {
-            GeniusService.getRelevantResult(this.state.playState, (result) => {
+        if(this.state.playState && !this.state.loaded) {
+            if (this.state.lyricsInfo?.result?.title === this.state.playState.item.name) {
+                return;
+            }
+
+            GeniusService.search(this.state.playState, (result) => {
                 //console.log(result);
                 if(result.response.hits.length > 0) {
-                    console.log(result.response.hits[0]);
+                    //console.log(result.response.hits[0]);
 
-                    GeniusService.parseLyricsFromUrl(result.response.hits[0].result.url, (lyrics) => {
+                    let info = GeniusService.getRelevantResult(result.response.hits, this.state.playState.item);
+                    this.setState({
+                        lyricsInfo:  info,
+                    });
+
+                    if (info) {
+                        // Relevant Genius lyrics found
+                        console.log(`Relevant Result: ${info.result.full_title}`);
+                        GeniusService.parseLyricsFromUrl(info.result.url, (lyrics) => {
+                            this.setState({
+                                originalLyrics: lyrics.trim(),
+                                loaded: true,
+                            });
+                        });
+                    } else {
+                        // No Genius lyrics found
+                        console.log(`No lyrics found for song '${this.state.playState.item.artists[0].name} - ${this.state.playState.item.name}'`);
                         this.setState({
-                            originalLyrics: lyrics.trim(),
+                            originalLyrics: null,
                             loaded: true,
                         });
-                    });
+                    }
                 } else {
+                    // No search hits found at all
+                    console.log("Didn't find any search results on Genius");
                     this.setState({
                         loaded: true,
+                        originalLyrics: null,
+                        lyricsInfo: null,
                     });
                 }
             });

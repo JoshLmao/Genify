@@ -7,7 +7,7 @@ import {
 
 const GeniusService = {
 
-    getRelevantResult: function (playData, callback) {
+    search: function (playData, callback) {
         if (!playData) 
             return null;
 
@@ -51,13 +51,33 @@ const GeniusService = {
                   
                 let html = parseHTML(result.request.responseText);
                 let filtered = html.querySelectorAll(".lyrics");
-
-                callback(filtered[0].textContent);
+                if (filtered.length > 0) {
+                    callback(filtered[0].textContent);
+                }
             }
         }).catch(error => {
             console.error(error);
         });
     },
+
+    getRelevantResult: function (hits, trackInfo) {
+        if (!trackInfo) {
+            return;
+        }
+        if (hits.length > 0) {
+            for(let hit of hits) {
+                let artist = hit.result.primary_artist.name;
+                let song = hit.result.title;
+                if (artist.toLowerCase().includes(trackInfo.artists[0].name.toLowerCase())
+                    && song.toLowerCase().includes(trackInfo.name.toLowerCase())) {
+                        return hit;
+                }
+            }
+        } else {
+            return null;
+        }
+    }
+    
 }
 
 export default GeniusService;

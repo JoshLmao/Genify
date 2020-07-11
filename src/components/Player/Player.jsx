@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
     Row,
     Col,
-    ProgressBar,
     Button
 } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -32,7 +31,7 @@ function msToTime(millisec) {
 
     seconds = Math.floor(seconds % 60);
     seconds = (seconds >= 10) ? seconds : "0" + seconds;
-    if (hours != "") {
+    if (hours !== "") {
         return hours + ":" + minutes + ":" + seconds;
     }
     return minutes + ":" + seconds;
@@ -145,7 +144,12 @@ class Player extends Component {
                 className="w-100 mx-0 genify-player"
                 style={{ backgroundColor: "rgb(40,40,40)" }}>
                 {/* Album Art & Song Info */}
-                <Col md={3}>
+                <Col
+                    xl={3}
+                    lg={3} 
+                    md={4}
+                    sm={5}
+                    xs={12}>
                     <div className="d-flex align-items-center my-auto">
                         <a 
                             href={ this.state.playState ? this.state.playState.item?.album?.external_urls?.spotify : "#" } 
@@ -173,8 +177,11 @@ class Player extends Component {
                 </Col>
                 {/* Media Controls */}
                 <Col 
-                    md={6}
-                    className="my-auto">
+                    xl={6}
+                    lg={6}
+                    md={5}
+                    sm={7}
+                    className="d-none d-sm-block my-auto">
                     <div className="d-flex align-items-center my-1">
                         <div className="mx-auto my-1">
                             <Button 
@@ -221,8 +228,10 @@ class Player extends Component {
                 </Col>
                 {/* Volume, Devices */}
                 <Col 
+                    xl={3}
+                    lg={3}
                     md={3} 
-                    className="my-auto">
+                    className="d-none d-md-block my-auto">
                     <div className="d-flex align-items-center">
                         <Button 
                             className="mx-2"

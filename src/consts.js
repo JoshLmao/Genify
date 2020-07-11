@@ -14,4 +14,4 @@ export const REQUEST_TIMEOUT_MS = 30000;
 /// Time in ms that the Spotify player updates its play state
 export const PLAYER_UPDATE_MS = 2000;
 /// Proxy URL to use to aviod CORS issue
-export const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
+export const PROXY_URL = "https://genify-proxy.herokuapp.com/";

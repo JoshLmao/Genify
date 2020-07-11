@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { 
     Container,
     Button,
-    Row
+    Row,
+    Toast
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTwitter, faSpotify } from '@fortawesome/free-brands-svg-icons';
@@ -11,9 +12,30 @@ import SpotifyService from "../../services/spotify";
 
 import "./Home.css";
 
+function getAuthMessage(authStatus) {
+    switch(authStatus)
+    {
+        case "invalid":
+            return "A problem has occured trying to get the user auth. Please try again";
+        case "expired":
+            return "User's authorization has expired. Please sign in again";
+        default:
+            return "Unknown error";
+    }
+}
+
 class Home extends Component {
     constructor(props) {
         super(props);
+
+        // Check if auth expired or invalid
+        var params = new URLSearchParams(this.props.location.search);
+        var authStatus = params.get('auth');
+
+        this.state = {
+            authStatus: authStatus,
+            showAuthError: authStatus !== null,
+        };
 
         this.onGetSpotifyAuth = this.onGetSpotifyAuth.bind(this);
     }
@@ -51,9 +73,30 @@ class Home extends Component {
                             <Button variant="outline-light">
                                 <FontAwesomeIcon icon={faTwitter} />
                             </Button>
-                        </div>                    
+                        </div>
                     </Container>
                 </Row>
+                {
+                    this.state.authStatus && 
+                        <Toast 
+                            show={this.state.showAuthError}
+                            onClose={() => this.setState({ showAuthError: false })}
+                            className="mr-2 mb-2 text-left"
+                            style={{
+                                position: 'absolute',
+                                bottom: 0,
+                                right: 0,
+                                color: "black",
+                            }}>
+                            <Toast.Header>
+                                <strong className="mr-auto">A Problem Occured</strong>
+                                {/* <small>11 mins ago</small> */}
+                            </Toast.Header>
+                            <Toast.Body>
+                                { getAuthMessage(this.state.authStatus) }
+                            </Toast.Body>
+                        </Toast>
+                }
             </div>
         );
     }

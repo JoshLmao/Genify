@@ -62,7 +62,7 @@ const SpotifyService = {
 
     // Gets the date plus the amount of seconds added on
     getAuthExpireTime: function (seconds) {
-        return new Date(Date.now() + seconds * 1000)
+        return new Date(Date.now() + seconds * 1000);
     },
 
     /// Gets the current playback state of Spotify
