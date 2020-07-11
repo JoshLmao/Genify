@@ -1,6 +1,8 @@
 :root {
     --navbar-height: 56px;
     --player-height: 90px;
+
+    --spotify-black: rgb(25, 20, 20);
 }
 
 body {
@@ -50,4 +52,8 @@ html, body, #root {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.spotify-black {
+    background-color: var(--spotify-black);
 }

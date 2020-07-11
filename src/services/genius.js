@@ -28,21 +28,14 @@ const GeniusService = {
     },
 
     parseLyricsFromUrl(geniusUrl, callback) {
-        var url = PROXY_URL + url;
-        // $.get(url, function( html ) {
-        //     var lyrics = $(html).find("div").filter(".lyrics").text();
-        //     callback(lyrics);
-        // });
+        var url = PROXY_URL + geniusUrl;
         axios({
             method: 'GET',
-            url: PROXY_URL + geniusUrl,
+            url: url,
             headers: { 'Authorization': 'Bearer ' + GENIUS_ACCESS_TOKEN },
             timeout: REQUEST_TIMEOUT_MS,
         }).then(result => {
-            //console.log(result);
             if(callback) {
-                //console.log(result.request.responseText);
-
                 var parseHTML = function(str) {
                     var tmp = document.implementation.createHTMLDocument();
                     tmp.body.innerHTML = str;
@@ -53,6 +46,8 @@ const GeniusService = {
                 let filtered = html.querySelectorAll(".lyrics");
                 if (filtered.length > 0) {
                     callback(filtered[0].textContent);
+                } else {
+                    console.error(`Unable to parse lyrics from URL: ${geniusUrl}`);
                 }
             }
         }).catch(error => {
@@ -64,7 +59,7 @@ const GeniusService = {
         if (!trackInfo) {
             return;
         }
-        if (hits.length > 0) {
+        if (hits && hits.length > 0) {
             for(let hit of hits) {
                 let artist = hit.result.primary_artist.name;
                 let song = hit.result.title;

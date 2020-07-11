@@ -1,37 +1,49 @@
 import React, { Component } from 'react';
 import {
     Row,
-    Col,
-    Container,
     Toast,
 } from "react-bootstrap";
 import {
     PLAYER_UPDATE_MS
 } from "../../consts";
+import { Redirect } from 'react-router-dom';
 
 import Player from "../Player";
 
 import SpotifyService from "../../services/spotify";
+import Cookies from "../../helpers/cookieHelper";
 import Lyrics from '../Lyrics/Lyrics';
 
 class Service extends Component {
     constructor(props) {
         super(props);
 
-        let auth = null;
-        //console.log(props.location);
-        if (props.location?.hash) {
-            auth = SpotifyService.parseAuth(props.location.hash.substring(1));
-        }
-
         this.state = {
-            auth: auth,
+            auth: null,
 
             infoMessage: "",
             showInfoMessage: false,
-        };
 
-        console.log(auth);
+            redirect: null,
+        };
+        //console.log(auth);
+    }
+
+    componentWillMount() {
+        // Retrieve saved auth in cookies
+        let authStringified = Cookies.getCookie("spotify-auth");
+        let auth = JSON.parse(authStringified);
+        if (auth === null) {
+            this.setState({
+                redirect: "/",
+            });
+            console.log("No auth found in cookies, going home");
+        } else {
+            auth.expireDate = new Date(auth.expireDate);
+            this.setState({ auth: auth });
+
+            console.log(`Auth found. Expires at '${auth.expireDate.toLocaleString()}'`);
+        }
     }
     
     componentDidMount() {
@@ -105,6 +117,10 @@ class Service extends Component {
                             { this.state.infoMessage }
                         </Toast.Body>
                     </Toast>
+                }
+
+                {
+                    this.state.redirect && <Redirect to={this.state.redirect} />
                 }
             </div>
         );

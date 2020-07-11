@@ -11,7 +11,7 @@ const SpotifyService = {
     /// Returns the auth url to redirect the user to
     getUserAuthentificationUrl: function () {
         var respType = "token";
-        var redirectUri = encodeURIComponent("http://localhost:3000/app"); //helper.isDevMode() ? encodeURIComponent(helper.getDevUrlPath()) : encodeURIComponent("https://genify.joshlmao.com");
+        var redirectUri = encodeURIComponent("http://localhost:3000/callback"); //helper.isDevMode() ? encodeURIComponent(helper.getDevUrlPath()) : encodeURIComponent("https://genify.joshlmao.com");
         var scopes = [
             'streaming',
             'user-read-currently-playing',

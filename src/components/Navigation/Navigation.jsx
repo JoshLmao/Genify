@@ -65,7 +65,7 @@ class Navigation extends Component {
                     expand="sm" 
                     style={{ backgroundColor: "#111111" }}>
                     <Container>
-                        <Navbar.Brand href="#" className="text-white">Genify</Navbar.Brand>
+                        <Navbar.Brand href="/" className="text-white">Genify</Navbar.Brand>
                         <Nav.Link 
                             className="p-0 align-bottom mt-1"
                             style={{ fontSize: "0.85rem" }}

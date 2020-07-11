@@ -12,6 +12,7 @@ import Service from "../Service";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
+import Callback from '../Callback/Callback';
 
 function testing(message, callback) {
     // this is the default behavior
@@ -31,7 +32,9 @@ class App extends Component {
                     <Route exact path="/" component={Home} />
                     {/* Main App service page */}
                     <Route exact path="/app" component={Service} />
-
+                    {/* Spotify callback for retrieving/parsing auth*/}
+                    <Route exact path="/callback" component={Callback} />
+                    {/* 404 error page handling */}
                     <Route component={FourOhFour} />
                 </Switch>
             </BrowserRouter>

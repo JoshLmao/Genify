@@ -17,7 +17,7 @@ class Lyrics extends Component {
 
             originalLyrics: null,
             lyricsInfo: null,
-            loaded: false,
+            loaded: true,
         };
 
         this.updateLyrics = this.updateLyrics.bind(this);
@@ -38,27 +38,27 @@ class Lyrics extends Component {
     }
 
     updateLyrics() {
-        if(this.state.playState && !this.state.loaded) {
+        if(this.state.playState) {
             if (this.state.lyricsInfo?.result?.title === this.state.playState.item.name) {
                 return;
             }
+            else if (!this.state.loaded) {
+                return;
+            }
+
+            this.setState({ loaded: false, });
 
             GeniusService.search(this.state.playState, (result) => {
-                //console.log(result);
                 if(result.response.hits.length > 0) {
-                    //console.log(result.response.hits[0]);
-
+                    // Search hits for most relevant result
                     let info = GeniusService.getRelevantResult(result.response.hits, this.state.playState.item);
-                    this.setState({
-                        lyricsInfo:  info,
-                    });
-
                     if (info) {
                         // Relevant Genius lyrics found
                         console.log(`Relevant Result: ${info.result.full_title}`);
                         GeniusService.parseLyricsFromUrl(info.result.url, (lyrics) => {
                             this.setState({
                                 originalLyrics: lyrics.trim(),
+                                lyricsInfo: info,
                                 loaded: true,
                             });
                         });
