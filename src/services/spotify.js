@@ -1,6 +1,7 @@
 import {
     SPOTIFY_CLIENT_ID,
-    REQUEST_TIMEOUT_MS
+    REQUEST_TIMEOUT_MS,
+    PROXY_URL,
 } from "../consts";
 
 import axios from "axios";
@@ -84,6 +85,61 @@ const SpotifyService = {
             console.error(error);
         });
     },
+
+    makeApiRequest: function (method, url, authToken, callback) {
+        axios({
+            method: method,
+            url: url,
+            headers: { 
+                'Authorization': 'Bearer ' + authToken,
+            },
+            timeout: REQUEST_TIMEOUT_MS,
+        }).then(result => {
+            if(callback)
+                callback(result.data);
+        }).catch(error => {
+            console.error(error);
+        });
+    },
+
+    /// Pauses the current track
+    pause: function (authToken) {
+        let endpointUrl = PROXY_URL + "https://api.spotify.com/v1/me/player/pause";
+        this.makeApiRequest("PUT", endpointUrl, authToken);
+    },
+
+    /// Plays the current track
+    play: function(authToken) {
+        let endpointUrl = PROXY_URL + "https://api.spotify.com/v1/me/player/play";
+        this.makeApiRequest("PUT", endpointUrl, authToken);
+    },
+
+    /// Changes current track to the previous 
+    previousTrack: function (authToken) {
+        let url = PROXY_URL + "https://api.spotify.com/v1/me/player/previous";
+        this.makeApiRequest("POST", url, authToken);
+    },
+
+    /// Skips to the next track
+    nextTrack: function (authToken) {
+        let url = PROXY_URL + "https://api.spotify.com/v1/me/player/next";
+        this.makeApiRequest("POST", url, authToken);
+    },
+
+    /// Sets the current device's volume
+    setVolume: function (authToken, volume) {
+        let url = PROXY_URL + "https://api.spotify.com/v1/me/player/volume";
+        url += "?volume_percent=" + volume;
+        this.makeApiRequest("PUT", url, authToken);
+    },
+
+    /// Seeks to a certain ms position in the current song
+    seek: function (authToken, positionMs) {
+        let url  = PROXY_URL + "https://api.spotify.com/v1/me/player/seek";
+        url += "?position_ms=" + positionMs;
+        this.makeApiRequest("PUT", url, authToken);
+    }
+
 }
 
 export default SpotifyService;

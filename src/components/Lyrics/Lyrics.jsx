@@ -5,6 +5,8 @@ import {
 
 import GeniusService from '../../services/genius';
 import "./Lyrics.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 class Lyrics extends Component {
     constructor(props) {
@@ -27,6 +29,9 @@ class Lyrics extends Component {
         if(prevProps.playState !== this.props.playState) {
             this.setState({
                 playState: this.props.playState,
+                originalLyrics: null,
+
+                loaded: false,
             }, () => {
                 this.updateLyrics(); 
             });
@@ -43,7 +48,12 @@ class Lyrics extends Component {
                     GeniusService.parseLyricsFromUrl(result.response.hits[0].result.url, (lyrics) => {
                         this.setState({
                             originalLyrics: lyrics.trim(),
+                            loaded: true,
                         });
+                    });
+                } else {
+                    this.setState({
+                        loaded: true,
                     });
                 }
             });
@@ -54,16 +64,19 @@ class Lyrics extends Component {
         return (
             <div className="w-100 lyrics-container py-2">
                 <div className="text-center h-100">
+                    {
+                        !this.state.loaded && <FontAwesomeIcon className="fa-spin" size="3x" icon={faSpinner} />
+                    }
                     {/* Lyrics container */}
                     {
-                        this.state.originalLyrics && 
+                        this.state.originalLyrics && this.state.loaded &&
                         <div
                             className="lyrics-content" >
                             { this.state.originalLyrics }
                         </div>
                     }
                     {
-                        !this.state.originalLyrics && 
+                        !this.state.originalLyrics && this.state.loaded && 
                                 <a href="https://genius.com/new">
                                     <Button variant="outline-light" className="mt-2"> 
                                         Add to Genius

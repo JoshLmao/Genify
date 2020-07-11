@@ -64,7 +64,8 @@ class Service extends Component {
                 style={{ backgroundColor: "rgb(24, 24, 24)" }}>
                 <Row className="mx-0">
                     <Player 
-                        playState={this.state.playState}/>
+                        playState={this.state.playState}
+                        authToken={this.state.auth.authToken} />
                 </Row>
                 <Lyrics 
                     playState={this.state.playState} />

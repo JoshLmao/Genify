@@ -14,6 +14,9 @@ import {
     faVolumeMute,
     faVolumeUp, 
 } from "@fortawesome/free-solid-svg-icons";
+import RangeSlider from "react-bootstrap-range-slider";
+
+import SpotifyService from '../../services/spotify';
 
 // Formats total milliseconds to a displayable time format (like 00:00)
 function msToTime(millisec) {
@@ -42,40 +45,98 @@ class Player extends Component {
         this.state = {
             authToken: props.authToken,
             playState: props.playState,
+
+            volumePercent: props.playState?.device?.volume_percent,
+            trackProgressMs: props.playState?.progress_ms,
+            isChangingTrackProgress: false,
         };
 
         this.onPlayPause = this.onPlayPause.bind(this);
         this.onNextTrack = this.onNextTrack.bind(this);
         this.onPreviousTrack = this.onPreviousTrack.bind(this);
         this.onToggleVolumeMute = this.onToggleVolumeMute.bind(this);
+        this.onVolumeChanged = this.onVolumeChanged.bind(this);
+        this.onFinishVolumeChanged = this.onFinishVolumeChanged.bind(this);
+        this.onProgressChanged = this.onProgressChanged.bind(this);
+        this.onFinishProgressChanged = this.onFinishProgressChanged.bind(this);
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.playState !== this.props.playState) {
             this.setState({
                 playState: this.props.playState,
+
+                volumePercent: this.props.playState?.device?.volume_percent,
+                trackProgressMs: this.props.playState?.progress_ms,
+            });
+        }
+
+        if(prevProps.authToken !== this.props.authToken) {
+            this.setState({
+                authToken: this.props.authToken,
             });
         }
     }
 
     onPlayPause() {
-        
+        if (this.state.playState) {
+            if (this.state.playState.is_playing) {
+                SpotifyService.pause(this.state.authToken);
+            } else {
+                SpotifyService.play(this.state.authToken);
+            }
+        }
     }
 
     onNextTrack() {
-
+        SpotifyService.nextTrack(this.state.authToken);
     }
     
     onPreviousTrack() {
-
+        SpotifyService.previousTrack(this.state.authToken);
     }
 
     onToggleVolumeMute() {
-        if (this.state.playState.device?.volume_percent > 0) {
-            
-        } else {
-            
+        if (this.state.playState) {
+            if (this.state.playState.device?.volume_percent > 0) {
+                SpotifyService.setVolume(this.state.authToken, 0);
+            } else {
+                SpotifyService.setVolume(this.state.authToken, 25);
+            }
         }
+    }
+    
+    onVolumeChanged(changedEvent) {
+        this.setState({
+            volumePercent: parseInt(changedEvent.target.value),
+        });
+    }
+
+    onFinishVolumeChanged() {
+        if(this.state.volumePercent !== this.state.playState.device?.volume_percent) {
+            console.log("Web API: Set volume to " + this.state.volumePercent);
+            SpotifyService.setVolume(this.state.authToken, this.state.volumePercent);
+        }
+    }
+
+    onProgressChanged (changedEvent) {
+        this.setState({
+            trackProgressMs: parseInt(changedEvent.target.value),
+        });
+
+        if (!this.state.isChangingTrackProgress) {
+            this.setState({ isChangingTrackProgress: true });
+        }
+    }
+
+    onFinishProgressChanged() {
+        if(this.state.playState) {
+            if (this.state.playState.progress_ms !== this.state.trackProgressMs) {
+                SpotifyService.seek(this.state.authToken, this.state.trackProgressMs);
+            }
+        }
+
+        this.setState({ isChangingTrackProgress: false });
     }
 
     render() {
@@ -138,14 +199,20 @@ class Player extends Component {
                     </div>
                     <div className="d-flex align-items-center my-1">
                             <h6 className="my-auto mx-2">
-                                { this.state.playState && msToTime(this.state.playState.progress_ms) }    
+                                { this.state.playState && msToTime(this.state.isChangingTrackProgress ? this.state.trackProgressMs : this.state.playState.progress_ms) }    
                                 { !this.state.playState && "0:00" }
                             </h6>
-                            <ProgressBar 
-                                className="flex-grow-1"
-                                min={0} 
-                                max={this.state.playState ? this.state.playState.item?.duration_ms : 100} 
-                                now={this.state.playState ? this.state.playState.progress_ms : 50} />
+                            <div 
+                                className="w-100"
+                                onMouseUp={this.onFinishProgressChanged}>
+                                <RangeSlider 
+                                    value={this.state.trackProgressMs}
+                                    min={0}
+                                    max={this.state.playState ? this.state.playState.item?.duration_ms : 100}
+                                    onChange={this.onProgressChanged}
+                                    tooltip="off"
+                                    />
+                            </div>
                             <h6 className="my-auto mx-2">
                                 { this.state.playState && msToTime(this.state.playState.item?.duration_ms) }
                                 { !this.state.playState && "9:59" }
@@ -161,13 +228,17 @@ class Player extends Component {
                             className="mx-2"
                             variant="outline-light"
                             onClick={this.onToggleVolumeMute}>
-                            <FontAwesomeIcon icon={this.state.volume === 0 ? faVolumeMute : faVolumeUp} />
+                            <FontAwesomeIcon icon={this.state.volumePercent === 0 ? faVolumeMute : faVolumeUp} />
                         </Button>
-                        <ProgressBar 
-                            className="flex-grow-1"
-                            min={0} 
-                            max={100} 
-                            now={this.state.playState ? this.state.playState.device?.volume_percent : 50} />
+                        <div 
+                            onMouseUp={this.onFinishVolumeChanged}
+                            className="w-100">
+                            <RangeSlider
+                                value={this.state.volumePercent}
+                                onChange={this.onVolumeChanged}
+                                tooltip="auto"
+                                variant='primary' />
+                        </div>
                     </div>
                 </Col>
             </Row>

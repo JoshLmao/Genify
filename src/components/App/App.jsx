@@ -11,6 +11,7 @@ import FourOhFour from "../FourOhFour";
 import Service from "../Service";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 
 function testing(message, callback) {
     // this is the default behavior
