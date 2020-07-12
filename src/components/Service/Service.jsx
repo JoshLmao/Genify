@@ -11,45 +11,47 @@ import { Redirect } from 'react-router-dom';
 import Player from "../Player";
 
 import SpotifyService from "../../services/spotify";
-import Cookies from "../../helpers/cookieHelper";
+import Cookies, { EGenifyCookieNames } from "../../helpers/cookieHelper";
 import Lyrics from '../Lyrics/Lyrics';
 
 class Service extends Component {
     constructor(props) {
         super(props);
 
+        // Retrieve saved auth in cookies
+        let redirect = "";
+        let authStringified = Cookies.getCookie(EGenifyCookieNames.SPOTIFY_AUTH);
+        let auth = JSON.parse(authStringified);
+        if (auth === null) {
+            redirect = "/?auth=invalid";
+            console.log("No auth found in cookies, going home");
+        } else {
+            auth.expireDate = new Date(auth.expireDate);
+
+            if (auth.expireDate < Date.now()) {
+                redirect = "/?auth=expired";
+                console.log("Auth found but has expired");
+            } else {
+                console.log(`Auth found. Expires at '${auth.expireDate.toLocaleString()}'`);
+            }
+        }
+
         this.state = {
-            auth: null,
+            auth: auth,
 
             infoMessage: "",
             showInfoMessage: false,
 
-            redirect: null,
+            redirect: redirect,
         };
-        //console.log(auth);
-    }
-
-    componentWillMount() {
-        // Retrieve saved auth in cookies
-        let authStringified = Cookies.getCookie("spotify-auth");
-        let auth = JSON.parse(authStringified);
-        if (auth === null) {
-            this.setState({
-                redirect: "/",
-            });
-            console.log("No auth found in cookies, going home");
-        } else {
-            auth.expireDate = new Date(auth.expireDate);
-            this.setState({ auth: auth });
-
-            console.log(`Auth found. Expires at '${auth.expireDate.toLocaleString()}'`);
-        }
     }
     
     componentDidMount() {
         if(this.state.auth === null ){
             // Redirect to home if auth is invalid
-            window.location = "http://localhost:3000/?auth=invalid";
+            this.setState({
+                redirect: "/?auth=invalid",
+            });
         } else {
             // Get inital Spotify track status
             SpotifyService.getCurrentPlaybackState(this.state.auth.authToken, (data) => {
@@ -88,8 +90,7 @@ class Service extends Component {
     render() {
         return (
             <div
-                className="genify-home" 
-                style={{ backgroundColor: "rgb(24, 24, 24)" }}>
+                className="genify-home spotify-black">
                 <Row className="mx-0">
                     <Player 
                         playState={this.state.playState}

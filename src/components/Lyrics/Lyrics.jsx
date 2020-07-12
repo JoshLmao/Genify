@@ -39,9 +39,10 @@ class Lyrics extends Component {
 
     updateLyrics() {
         if(this.state.playState) {
-            if (this.state.lyricsInfo?.result?.title === this.state.playState.item.name) {
+            if (this.state.lyricsInfo && this.state.lyricsInfo.result.title.toLowerCase() === this.state.playState.item.name.toLowerCase()) {
                 return;
             }
+            // If attempting to load lyrics, dont try again
             else if (!this.state.loaded) {
                 return;
             }
@@ -57,7 +58,7 @@ class Lyrics extends Component {
                         console.log(`Relevant Result: ${info.result.full_title}`);
                         GeniusService.parseLyricsFromUrl(info.result.url, (lyrics) => {
                             this.setState({
-                                originalLyrics: lyrics.trim(),
+                                originalLyrics: lyrics,
                                 lyricsInfo: info,
                                 loaded: true,
                             });

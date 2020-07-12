@@ -7,8 +7,10 @@ import {
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTwitter, faSpotify } from '@fortawesome/free-brands-svg-icons';
+import { Redirect } from "react-router-dom";
 
 import SpotifyService from "../../services/spotify";
+import Cookies, { EGenifyCookieNames } from "../../helpers/cookieHelper";
 
 import "./Home.css";
 
@@ -35,14 +37,22 @@ class Home extends Component {
         this.state = {
             authStatus: authStatus,
             showAuthError: authStatus !== null,
+            redirect: null,
         };
 
         this.onGetSpotifyAuth = this.onGetSpotifyAuth.bind(this);
     }
 
     onGetSpotifyAuth() {
-        let url = SpotifyService.getUserAuthentificationUrl();
-        window.location = url;
+        if (Cookies.getCookie(EGenifyCookieNames.SPOTIFY_AUTH) !== null) {
+            this.setState({
+                redirect: "/app",
+            });
+        } else {
+            // No auth stored, reget auth
+            let url = SpotifyService.getUserAuthentificationUrl();
+            window.location = url;
+        }
     }
 
     render() {
@@ -96,6 +106,9 @@ class Home extends Component {
                                 { getAuthMessage(this.state.authStatus) }
                             </Toast.Body>
                         </Toast>
+                }
+                {
+                    this.state.redirect && <Redirect to={this.state.redirect} />
                 }
             </div>
         );

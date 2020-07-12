@@ -11,10 +11,10 @@ class Cookies {
         var ca = document.cookie.split(';');
         for(var i = 0; i < ca.length; i++) {
             var c = ca[i];
-            while (c.charAt(0) == ' ') {
+            while (c.charAt(0) === ' ') {
                 c = c.substring(1);
             }
-            if (c.indexOf(name) == 0) {
+            if (c.indexOf(name) === 0) {
                 return c.substring(name.length, c.length);
             }
         }
@@ -28,10 +28,10 @@ class Cookies {
         var index = -1;
         for( var i = 0; i < ca.length; i++ ) {
             var c = ca[i];
-            while (c.charAt(0) == ' ') {
+            while (c.charAt(0) === ' ') {
                 c = c.substring(1);
             }
-            if (c.indexOf(name) == 0) {
+            if (c.indexOf(name) === 0) {
                 index = i;
             }
         }
@@ -42,8 +42,14 @@ class Cookies {
   
     static checkCookie(cname) {
         var hasCookie = Cookies.getCookie(cname);
-        return hasCookie != "";
+        return hasCookie !== "";
     }
 }
 
 export default Cookies;
+
+// Cookie names used to store cookies
+export const EGenifyCookieNames = {
+    // Stores JSON stringified of last auth
+    SPOTIFY_AUTH: "spotify-auth",
+};

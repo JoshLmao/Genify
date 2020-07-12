@@ -16,6 +16,9 @@ import {
 import RangeSlider from "react-bootstrap-range-slider";
 
 import SpotifyService from '../../services/spotify';
+import {
+    getFormattedArtists
+} from "../../helpers/spotifyHelper";
 
 // Formats total milliseconds to a displayable time format (like 00:00)
 function msToTime(millisec) {
@@ -45,8 +48,8 @@ class Player extends Component {
             authToken: props.authToken,
             playState: props.playState,
 
-            volumePercent: props.playState?.device?.volume_percent,
-            trackProgressMs: props.playState?.progress_ms,
+            volumePercent: props.playState ? props.playState.device?.volume_percent : 0,
+            trackProgressMs: props.playState ? props.playState.progress_ms : 0,
             isChangingTrackProgress: false,
         };
 
@@ -156,7 +159,8 @@ class Player extends Component {
                             className="ml-2 p-2">
                             <img 
                                 className="album-art" 
-                                src={this.state.playState ? this.state.playState?.item?.album?.images[1].url : "https://via.placeholder.com/75"}
+                                alt={ this.state.playState ? this.state.playState.item?.artists[0].name + "Album Art" : "Unknown Album" }
+                                src={ this.state.playState ? this.state.playState?.item?.album?.images[1].url : "https://via.placeholder.com/75" }
                                 style={{ maxWidth: "75px", maxHeight: "75px" }}></img>
                         </a>
                         <div className="w-100 ml-2">
@@ -166,12 +170,10 @@ class Player extends Component {
                                     { this.state.playState ? this.state.playState.item?.name : "Unknown" }
                                 </h6>
                             </a>
-                            <a 
-                                href={ this.state.playState ? this.state.playState.item?.artists[0].external_urls?.spotify : "#" }>
-                                <h6 className="song-info">
-                                    { this.state.playState ? this.state.playState.item?.artists[0].name : "Unknown" }
-                                </h6>
-                            </a>
+                            {/* Artists */}
+                            <h6 className="song-info">
+                                { this.state.playState ? getFormattedArtists(this.state.playState) : "Unknown" }
+                            </h6>
                         </div>
                     </div>
                 </Col>
