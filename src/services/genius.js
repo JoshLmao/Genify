@@ -4,7 +4,7 @@ import {
     REQUEST_TIMEOUT_MS,
     PROXY_URL
 } from "../consts";
-import { findAllByLabelText } from "@testing-library/react";
+import { filterBrackets } from "../helpers/filterHelper";
 
 const GeniusService = {
 
@@ -13,7 +13,8 @@ const GeniusService = {
         if (!playData) 
             return null;
 
-        let searchTerm = encodeURIComponent(`${playData.item.name} ${playData.item.artists[0].name}`);
+        let filteredTitle = filterBrackets(playData.item.name);
+        let searchTerm = encodeURIComponent(`${filteredTitle} ${playData.item.artists[0].name}`);
         let geniusUrl = PROXY_URL + "https://api.genius.com/search?q=" + searchTerm;
         axios({
             method: 'GET',
@@ -90,9 +91,12 @@ const GeniusService = {
         if (hits && hits.length > 0) {
             for(let hit of hits) {
                 let artist = hit.result.primary_artist.name;
-                let song = hit.result.title;
-                if (artist.toLowerCase().includes(trackInfo.artists[0].name.toLowerCase())
-                    && song.toLowerCase().includes(trackInfo.name.toLowerCase())) {
+                let song = filterBrackets(hit.result.title);
+
+                let spotifyTrackName = filterBrackets(trackInfo.name).toLowerCase();
+                let spotifyFirstArtistName = trackInfo.artists[0].name.toLowerCase();
+                if (artist.toLowerCase().includes(spotifyFirstArtistName)
+                    && song.toLowerCase().includes(spotifyTrackName)) {
                         return hit;
                 }
             }

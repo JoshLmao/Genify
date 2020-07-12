@@ -13,10 +13,15 @@ class Lyrics extends Component {
         super(props);
 
         this.state = {
+            // Current playState of Spotify
             playState: props.playState,
 
             originalLyrics: null,
+            // Current lyrics that are loaded, the spotify track info
+            lyricsSpotifyTrackName: null,
+            // Current lyrics info from Genius
             lyricsInfo: null,
+            // Are the lyrics loaded
             loaded: true,
         };
 
@@ -39,7 +44,7 @@ class Lyrics extends Component {
 
     updateLyrics() {
         if(this.state.playState) {
-            if (this.state.lyricsInfo && this.state.lyricsInfo.result.title.toLowerCase() === this.state.playState.item.name.toLowerCase()) {
+            if (this.state.playState.item.name === this.state.lyricsSpotifyTrackName?.name) {
                 return;
             }
             // If attempting to load lyrics, dont try again
@@ -61,6 +66,7 @@ class Lyrics extends Component {
                                 originalLyrics: lyrics,
                                 lyricsInfo: info,
                                 loaded: true,
+                                lyricsSpotifyTrackName: this.state.playState.item,
                             });
                         });
                     } else {
