@@ -1,0 +1,44 @@
+<h3>v2.1.0</h3>
+<ul>
+    <li>Improved values being updated</li>
+    <li>Can see the title of the currently loaded lyrics</li>
+    <li>Fixed 'To Simplified' button not working</li>
+</ul>
+<hr/>
+
+<h1>v2.0.0 🎉</h1>
+<ul>
+    <li>Redesigned the site!</li>
+    <li>Settings page for viewing details and settings</li>
+    <li>Added Kuroshiro for full Japanese Romanization</li>
+    <li>Can automatically reauthorize with Spotify</li>
+    <li>Able to use the Youtube Player and display the music video or top relevant video</li>
+    <li>Can stream Spotify through the browser using 'Web Playback'</li>
+    <li>Able to change the device Spotify plays through</li>
+    <li>Can automatically romanize lyrics if they are in Japanese/Korean/Chinese</li>
+</ul>
+<hr/>
+<hr/>
+
+<h3>v0.1.25</h3>
+<ul>
+  <li>Displays a warning when close to reauthorizing with Spotify</li>
+  <li>Automatically reasks for reauthorization with Spotify when expired</li>
+  <li>Fixed inconsistencies with authorization object when loaded from params and cookies</li>
+</ul>
+<hr/>
+
+<h3>v0.1.22</h3>
+<ul>
+  <li>Can convert Chinese lyrics between Traditional and Simplified</li>
+</ul>
+<hr/>
+
+<h3><= v0.1.21</h3>
+<ul>
+  <li>Able to authorize with Spotify</li>
+  <li>Updates to latest Spotify song automatically</li>
+  <li>Get's most relevant lyrics from Genius</li>
+  <li>Added Japanese, Chinese and Korean romanization</li>
+  <li>Changelog to display the latest changes and updates for user</li>
+</ul>
