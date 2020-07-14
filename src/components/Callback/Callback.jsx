@@ -32,7 +32,7 @@ class Callback extends Component {
             this.setState({
                 redirect: "/app",
             });
-        }, 1000);
+        }, 100);
     }
 
     render() {

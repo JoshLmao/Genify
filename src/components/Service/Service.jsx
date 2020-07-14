@@ -24,11 +24,12 @@ class Service extends Component {
         let auth = JSON.parse(authStringified);
         if (auth === null) {
             redirect = "/?auth=invalid";
-            console.log("No auth found in cookies, going home");
+            console.log("No or auth found in cookies, going home");
         } else {
             auth.expireDate = new Date(auth.expireDate);
 
             if (auth.expireDate < Date.now()) {
+                Cookies.deleteCookie(EGenifyCookieNames.SPOTIFY_AUTH);
                 redirect = "/?auth=expired";
                 console.log("Auth found but has expired");
             } else {

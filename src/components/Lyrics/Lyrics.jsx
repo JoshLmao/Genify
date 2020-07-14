@@ -1,35 +1,58 @@
 import React, { Component } from 'react';
 import {
-    Button
+    Button, 
+    Form
 } from "react-bootstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import {
+    determineLanguage,
+    ELanguages
+} from "../../helpers/languageHelper";
+
+import Kuroshiro from "kuroshiro";
+import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
+import pinyin4js from 'pinyin4js';
+import Aromanize, { romanize } from "aromanize";
+import cyrillicToTranslit from "cyrillic-to-translit-js";
 
 import GeniusService from '../../services/genius';
 import "./Lyrics.css";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 class Lyrics extends Component {
     constructor(props) {
         super(props);
+
+        const kuroshiro = new Kuroshiro();
+        kuroshiro.init(new KuromojiAnalyzer({ 
+            // Path starts at base of public folder
+            dictPath: "./dict" 
+        }));
 
         this.state = {
             // Current playState of Spotify
             playState: props.playState,
 
             originalLyrics: null,
+            romanizedLyrics: null,
+
             // Current lyrics that are loaded, the spotify track info
             lyricsSpotifyTrackName: null,
             // Current lyrics info from Genius
             lyricsInfo: null,
             // Are the lyrics loaded
             loaded: true,
+            /// Are the current romanizedLyrics romanized or not?
+            isRomanized: false,
+            /// Current determined language of the original lyric language
+            originalLyricLanguage: ELanguages.NONE,
+
+            kuroshiro: kuroshiro,
         };
 
         this.updateLyrics = this.updateLyrics.bind(this);
-    }
-
-    componentDidMount() {
-        this.updateLyrics();
+        this.onToggleRomanize = this.onToggleRomanize.bind(this);
+        this.resetLyricState = this.resetLyricState.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -44,50 +67,117 @@ class Lyrics extends Component {
 
     updateLyrics() {
         if(this.state.playState) {
-            if (this.state.playState.item.name === this.state.lyricsSpotifyTrackName?.name) {
-                return;
-            }
-            // If attempting to load lyrics, dont try again
-            else if (!this.state.loaded) {
-                return;
-            }
+            if (this.state.lyricsSpotifyTrackName === null ||
+                    (this.state.lyricsSpotifyTrackName !== null && this.state.playState.item.name !== this.state.lyricsSpotifyTrackName?.name)
+                    || !this.state.loaded) 
+                {
+                this.setState({ 
+                    loaded: false, 
+                });
 
-            this.setState({ loaded: false, });
+                GeniusService.search(this.state.playState, (result) => {
+                    if(result.response.hits.length > 0) {
+                        // Search hits for most relevant result
+                        let info = GeniusService.getRelevantResult(result.response.hits, this.state.playState.item);
+                        if (info) {
+                            // Relevant Genius lyrics found
+                            console.log(`Relevant Result: ${info.result.full_title}`);
+                            GeniusService.parseLyricsFromUrl(info.result.url, (lyrics) => {
+                                console.log(`Loaded and set lyrics from ${info.result.url}`);
+                                let origLyricLang = determineLanguage(lyrics);
+                                console.log(`Original lyrics language: '${origLyricLang}'`);
+                                this.setState({
+                                    originalLyrics: lyrics,
+                                    romanizedLyrics: lyrics,
+                                    originalLyricLanguage: origLyricLang,
 
-            GeniusService.search(this.state.playState, (result) => {
-                if(result.response.hits.length > 0) {
-                    // Search hits for most relevant result
-                    let info = GeniusService.getRelevantResult(result.response.hits, this.state.playState.item);
-                    if (info) {
-                        // Relevant Genius lyrics found
-                        console.log(`Relevant Result: ${info.result.full_title}`);
-                        GeniusService.parseLyricsFromUrl(info.result.url, (lyrics) => {
-                            this.setState({
-                                originalLyrics: lyrics,
-                                lyricsInfo: info,
-                                loaded: true,
-                                lyricsSpotifyTrackName: this.state.playState.item,
+                                    lyricsInfo: info,
+                                    loaded: true,
+                                    lyricsSpotifyTrackName: this.state.playState.item,
+                                });
                             });
-                        });
+                        } else {
+                            // No relevant Genius lyrics found
+                            console.log(`No related lyrics found for song '${this.state.playState.item.artists[0].name} - ${this.state.playState.item.name}'`);
+                            this.setState({
+                                loaded: true,
+                            });
+                            this.resetLyricState();
+                        }
                     } else {
-                        // No Genius lyrics found
-                        console.log(`No lyrics found for song '${this.state.playState.item.artists[0].name} - ${this.state.playState.item.name}'`);
+                        // No search hits found at all
+                        console.log("Didn't find any search results on Genius");
                         this.setState({
-                            originalLyrics: null,
                             loaded: true,
                         });
+                        this.resetLyricState();
                     }
-                } else {
-                    // No search hits found at all
-                    console.log("Didn't find any search results on Genius");
-                    this.setState({
-                        loaded: true,
-                        originalLyrics: null,
-                        lyricsInfo: null,
-                    });
-                }
+                });
+            }
+        }
+    }
+
+    resetLyricState() {
+        this.setState({
+            originalLyrics: null,
+            romanizedLyrics: null,
+            lyricsInfo: null,
+            isRomanized: false,
+            originalLyricLanguage: ELanguages.NONE,
+        });
+    }
+
+    onToggleRomanize() {
+        if (this.state.isRomanized) {
+            this.setState({
+                romanizedLyrics: this.state.originalLyrics,
+            });
+        } else {
+            let romanizedLyrics = "";
+            switch(this.state.originalLyricLanguage)
+            {
+                case ELanguages.JP:
+                    {
+                        romanizedLyrics = "ROMANIZED";
+                        this.state.kuroshiro.convert(this.state.originalLyrics, { 
+                            to: "romaji",
+                            mode: "spaced",
+                        }).then((romajiLyrics) => {
+                            // remove double space added inbetween other phrases
+                            romajiLyrics = romajiLyrics.replace(/ +(?= )/g,'');
+                            this.setState({
+                                romanizedLyrics: romajiLyrics,
+                            });
+                        });
+                        break;
+                    }
+                    case ELanguages.SZH:
+                    case ELanguages.TZH:
+                        {
+                            romanizedLyrics = pinyin4js.convertToPinyinString(this.state.originalLyrics, ' ', pinyin4js.WITH_TONE_MARK)
+                            break;
+                        }
+                    case ELanguages.KR:
+                        {
+                            romanizedLyrics = Aromanize.romanize(this.state.originalLyrics);
+                            break;
+                        }
+                    case ELanguages.RU:
+                        {
+                            romanizedLyrics = cyrillicToTranslit().transform(this.state.originalLyrics, " ");
+                            break;
+                        }
+                default:
+                    break;
+            }
+            this.setState({
+                romanizedLyrics: romanizedLyrics,
             });
         }
+
+        this.setState({
+            isRomanized: !this.state.isRomanized,
+        });
     }
     
     render() {
@@ -99,10 +189,38 @@ class Lyrics extends Component {
                     }
                     {/* Lyrics container */}
                     {
-                        this.state.originalLyrics && this.state.loaded &&
-                        <div
-                            className="lyrics-content" >
-                            { this.state.originalLyrics }
+                        this.state.romanizedLyrics && this.state.loaded &&
+                        <div className="h-100">
+                             <div 
+                                    className="pr-5 mb-2 text-right d-none d-sm-block"
+                                    style={{ 
+                                        height: "35px", 
+                                        position: "absolute", 
+                                        right: 0,
+                                        fontSize: "0.8rem",
+                                        }}>
+                                        <h6 className="mb-1">Lyric Info</h6>
+                                        <a 
+                                            href={this.state.lyricsInfo.result.url}
+                                            className="py-1">
+                                            {this.state.lyricsInfo.result.full_title}
+                                        </a>
+                                        {
+                                            this.state.originalLyricLanguage !== ELanguages.ENG && 
+                                            <Form>
+                                                <Form.Check
+                                                    type="switch"
+                                                    id="custom-switch"
+                                                    label="Romanize"
+                                                    onChange={this.onToggleRomanize}>
+                                                </Form.Check>
+                                            </Form>
+                                            
+                                        }
+                                </div>
+                                <div className="lyrics-content" >
+                                    { this.state.romanizedLyrics }
+                                </div>
                         </div>
                     }
                     {

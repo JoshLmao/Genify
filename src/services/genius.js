@@ -4,7 +4,10 @@ import {
     REQUEST_TIMEOUT_MS,
     PROXY_URL
 } from "../consts";
-import { filterBrackets } from "../helpers/filterHelper";
+import { 
+    filterBrackets,
+    filterStartEndSpaceChars 
+} from "../helpers/filterHelper";
 
 const GeniusService = {
 
@@ -48,10 +51,10 @@ const GeniusService = {
                   
                 let allLyrics = "";
 
-                let isNewGeniusLayout = true;
+                let html = parseHTML(result.request.responseText);
+                let isNewGeniusLayout = html.querySelectorAll(".lyrics").length <= 0;
                 if (isNewGeniusLayout) {
                     // Using new Genius layout
-                    let html = parseHTML(result.request.responseText);
                     let allDivs = html.getElementsByTagName("div");
                     for(let div of allDivs) {
                         let lowercase = div.className.toLowerCase();
@@ -65,13 +68,20 @@ const GeniusService = {
                             allLyrics  += aGone;
                         }
                     }
-                    callback(allLyrics);
+                    if (allLyrics) 
+                    {
+                        let filteredLyrics = filterStartEndSpaceChars(allLyrics);
+                        callback(filteredLyrics);
+                    } else {
+                        console.error(`Unable to parse lyrics correctly from page ${url}`);
+                    }
                 } else {
                     //Old Genius layout, use old algorithm
-                    let html = parseHTML(result.request.responseText);
                     let filtered = html.querySelectorAll(".lyrics");
-                    if (filtered.length > 0) {
-                        callback(filtered[0].textContent);
+                    if (filtered.length > 0) 
+                    {
+                        let filteredLyrics = filterStartEndSpaceChars(filtered[0].textContent);
+                        callback(filteredLyrics);
                     }
                     else
                         console.error("Unable to parse lyrics from old Genius layout");
@@ -90,13 +100,14 @@ const GeniusService = {
         }
         if (hits && hits.length > 0) {
             for(let hit of hits) {
-                let artist = hit.result.primary_artist.name;
-                let song = filterBrackets(hit.result.title);
+                let geniusArtist = hit.result.primary_artist.name.toLowerCase();
+                let geniusTrackName = filterBrackets(hit.result.title).toLowerCase();
 
                 let spotifyTrackName = filterBrackets(trackInfo.name).toLowerCase();
                 let spotifyFirstArtistName = trackInfo.artists[0].name.toLowerCase();
-                if (artist.toLowerCase().includes(spotifyFirstArtistName)
-                    && song.toLowerCase().includes(spotifyTrackName)) {
+                // Check if Genius track name/artist includes Spotify track name/artist or vice versa
+                if ((geniusArtist.includes(spotifyFirstArtistName) && geniusTrackName.includes(spotifyTrackName))
+                    || (spotifyFirstArtistName.includes(geniusArtist) && spotifyTrackName.includes(geniusTrackName))) {
                         return hit;
                 }
             }

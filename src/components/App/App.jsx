@@ -14,17 +14,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 import Callback from '../Callback/Callback';
 
-function testing(message, callback) {
-    // this is the default behavior
-    const allowTransition = window.confirm(message);
-    callback(allowTransition);
-}
-
 class App extends Component {
     render() {
         return (
-            <BrowserRouter
-                getUserConfirmation={(message, callback) => testing(message, callback)}>
+            <BrowserRouter>
                 <Navigation />
 
                 <Switch>
