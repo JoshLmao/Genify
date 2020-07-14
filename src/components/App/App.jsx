@@ -17,7 +17,7 @@ import Callback from '../Callback/Callback';
 class App extends Component {
     render() {
         return (
-            <BrowserRouter>
+            <BrowserRouter basename={process.env.PUBLIC_URL}>
                 <Navigation />
 
                 <Switch>

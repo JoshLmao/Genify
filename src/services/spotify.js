@@ -2,7 +2,11 @@ import {
     SPOTIFY_CLIENT_ID,
     REQUEST_TIMEOUT_MS,
     PROXY_URL,
+    HOMEPAGE
 } from "../consts";
+import {
+    isDev
+} from "../helpers/devHelper";
 
 import axios from "axios";
 
@@ -10,9 +14,10 @@ const SpotifyService = {
 
     /// Returns the auth url to redirect the user to
     getUserAuthentificationUrl: function () {
-        var respType = "token";
-        var redirectUri = encodeURIComponent("http://localhost:3000/callback"); //helper.isDevMode() ? encodeURIComponent(helper.getDevUrlPath()) : encodeURIComponent("https://genify.joshlmao.com");
-        var scopes = [
+        let respType = "token";
+        let baseUrl = isDev() ? "http://localhost:3000" : HOMEPAGE;
+        let redirectUri = encodeURIComponent(baseUrl + "/callback");
+        let scopes = [
             'streaming',
             'user-read-currently-playing',
             'user-read-playback-state',
@@ -21,8 +26,8 @@ const SpotifyService = {
             'user-read-email',
             'user-read-private',
         ];
-        var scopesEncoded = encodeURIComponent(scopes.join(' '));
-        var apiUrl = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=${respType}&redirect_uri=${redirectUri}&scope=${scopesEncoded}`;
+        let scopesEncoded = encodeURIComponent(scopes.join(' '));
+        let apiUrl = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=${respType}&redirect_uri=${redirectUri}&scope=${scopesEncoded}`;
         return apiUrl;
     },
 

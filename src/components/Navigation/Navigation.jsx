@@ -122,7 +122,9 @@ class Navigation extends Component {
                                 backgroundColor: modalBgColor,
                                 borderColor: modalSeparatorColor,
                             }}>
-                            <Button className="ml-auto" onClick={() => this.toggleChangelog()}>
+                            <Button 
+                                variant="outline-light"
+                                className="ml-auto" onClick={() => this.toggleChangelog()}>
                                 Close
                             </Button>
                         </Modal.Footer>

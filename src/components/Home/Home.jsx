@@ -49,7 +49,7 @@ class Home extends Component {
                 redirect: "/app",
             });
         } else {
-            // No auth stored, reget auth
+            // No auth stored, get new auth from user
             let url = SpotifyService.getUserAuthentificationUrl();
             window.location = url;
         }

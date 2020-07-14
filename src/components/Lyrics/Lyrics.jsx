@@ -13,7 +13,7 @@ import {
 import Kuroshiro from "kuroshiro";
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 import pinyin4js from 'pinyin4js';
-import Aromanize, { romanize } from "aromanize";
+import Aromanize from "aromanize";
 import cyrillicToTranslit from "cyrillic-to-translit-js";
 
 import GeniusService from '../../services/genius';

@@ -1,6 +1,7 @@
 {
   "name": "genify",
   "version": "3.0.0",
+  "homepage": "https://genify.joshlmao.com",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.29",
