@@ -1,0 +1,17 @@
+:root {
+    --spotify-main: #1DB954;
+}
+
+.spotify-background {
+    background: var(--spotify-main)!important;
+    border-color: var(--spotify-main)!important;
+}
+
+.splash-gradiant {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#111111+0,9198e5+100 */
+    background: rgb(17,17,17); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(17,17,17,1) 0%, rgba(145,152,229,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(17,17,17,1) 0%,rgba(145,152,229,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(17,17,17,1) 0%,rgba(145,152,229,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#111111', endColorstr='#9198e5',GradientType=0 ); /* IE6-9 */
+}

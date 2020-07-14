@@ -39,6 +39,8 @@ Lyrics can be converted to their romanized version. Chinese can be converted to 
 
 **Chinese** - Pinyin, Simplified & Traditional: [Pinyin4JS by SuperBiger](https://github.com/superbiger/pinyin4js)
 
+- [Traditional or Simplified](https://github.com/nickdrewe/traditional-or-simplified)
+
 **Japanese** - Hiragana, Katakana & Romanji: [Kuroshiro by Hexenq](https://github.com/hexenq/kuroshiro)
 
 ## Donations
