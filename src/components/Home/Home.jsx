@@ -44,7 +44,8 @@ class Home extends Component {
     }
 
     onGetSpotifyAuth() {
-        if (Cookies.getCookie(EGenifyCookieNames.SPOTIFY_AUTH) !== null) {
+        let oldAuth = Cookies.getCookie(EGenifyCookieNames.SPOTIFY_AUTH);
+        if (oldAuth !== null && Date.now() < oldAuth.expiryDate) {
             this.setState({
                 redirect: "/app",
             });
@@ -77,12 +78,16 @@ class Home extends Component {
                             Sign In
                         </Button>
                         <div className="mx-auto mt-3">
-                            <a href="joshlmao.com" className="my-auto mr-2 text-white">
+                            <a href="https://joshlmao.com" className="my-auto mr-2 text-white">
                                 JoshLmao
                             </a>
-                            <Button variant="outline-light">
-                                <FontAwesomeIcon icon={faTwitter} />
-                            </Button>
+                            <a href="https://twitter.com/joshlmao">
+                                <Button 
+                                    className="py-0 px-2"
+                                    variant="outline-light">
+                                    <FontAwesomeIcon icon={faTwitter} />
+                                </Button>
+                            </a>
                         </div>
                     </Container>
                 </Row>

@@ -1,6 +1,6 @@
 {
   "name": "genify",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "homepage": "https://genify.joshlmao.com",
   "private": true,
   "dependencies": {
