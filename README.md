@@ -1,7 +1,7 @@
 <!-- Workaround for align right with hyperlink-->
 <p align="right">
   <a href="https://genify.joshlmao.com" target="_blank">
-    <img src="img/favicon.png" width="65px" align="right"></img>
+    <img src="public/img/favicon.png" width="65px" align="right"></img>
   </a>
 </p>
 
@@ -25,32 +25,45 @@
 </p>
 
 
-<a href="https://genify.joshlmao.com" target="_blank"><img src="https://i.imgur.com/qObiub9.jpg"/></a>
+<a href="https://genify.joshlmao.com" target="_blank"><img src="https://i.imgur.com/jB9u55X.png"/></a>
 
 # About Genify
 
 Combining the music from Spotify, the lyrics from Genius and the video from Youtube! Genify is a project aimed at combining all music resources together for the best experience.
 
+Updated as of v3.0 to take use of React which will allow for easier updating!
+
 ## Lyric Libraries
 
-Lyrics can be converted to their romanized version. Chinese can be converted to all Simplified or Traditional. Japanese can be converted to all Hiragana or Katakana.
+Lyrics can be converted to their romanized version. Below is a list of all romanization currently supported and the appropriate API's used to make it happen
 
-**Korean** - Romaja: [Aromanjize-JS by Fujaru](https://github.com/fujaru/aromanize-js)
+- Korean
+    - [Aromanjize-JS by Fujaru](https://github.com/fujaru/aromanize-js)
 
-**Chinese** - Pinyin, Simplified & Traditional: [Pinyin4JS by SuperBiger](https://github.com/superbiger/pinyin4js)
+- Chinese
+    - [Pinyin4JS by SuperBiger](https://github.com/superbiger/pinyin4js)
+    - [Traditional or Simplified by nickdrewe](https://github.com/nickdrewe/traditional-or-simplified)
 
-- [Traditional or Simplified](https://github.com/nickdrewe/traditional-or-simplified)
+- Japanese
+    - [Kuroshiro by Hexenq](https://github.com/hexenq/kuroshiro)
 
-**Japanese** - Hiragana, Katakana & Romanji: [Kuroshiro by Hexenq](https://github.com/hexenq/kuroshiro)
+- Russian:
+    - [cyrillic-to-translit-js by greybax](https://www.npmjs.com/package/cyrillic-to-translit-js)
 
-## Donations
+## Support me
 
-If you want to support my open source work, please consider buying me a coffee (or two! ;D)
+If you enjoy this app, please consider supporting me through one of the options below. If not, thank you for using and enjoying the app! 🤗
 
 <p align="center">
-    <a href="https://brave.com/jos677">
-      <img src="img/BraveBat.png" height="50px"/>
+    <a href="https://github.com/sponsors/JoshLmao">
+        <img src="public/img/github-sponsor.png" height="75px">
     </a>
-    <a href="https://ko-fi.com/joshlmao"><img src="https://i.imgur.com/zDeHMoK.png" height="50px"/>
-    <a href="https://paypal.me/xjoshlmao"><img src="https://i.imgur.com/UfSd0gP.png" height="60px"/>
+</p>
+<p align=center>
+    <a href="https://brave.com/jos677" style="margin-right: 1rem">
+      <img src="public/img/BraveBat.png" height="50px"/>
+    </a>
+    <a href="https://paypal.me/xjoshlmao">
+        <img src="https://i.imgur.com/UfSd0gP.png" height="60px"/>
+    </a>
 </p>

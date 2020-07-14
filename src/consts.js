@@ -15,4 +15,5 @@ export const REQUEST_TIMEOUT_MS = 30000;
 export const PLAYER_UPDATE_MS = 2000;
 /// Proxy URL to use to aviod CORS issue
 export const PROXY_URL = "https://genify-proxy.herokuapp.com/";
+/// Mirror Homepage property in package.json. Used in services when can't access it
 export const HOMEPAGE = "https://genify.joshlmao.com";
