@@ -40,6 +40,21 @@ function msToTime(millisec) {
     return minutes + ":" + seconds;
 }
 
+/// Gets the largest album art from Spotify
+function retrieveAlbumArt(playState) {
+    // Default img if no album art found
+    let url = "https://via.placeholder.com/75";
+    if (playState) {
+        if (playState.item.album && playState.item.album.images.length > 0) {   
+            // Get biggest (first) art
+            let image = playState.item.album.images[0];
+            url = image.url;
+        }
+    } 
+
+    return url;
+}
+
 class Player extends Component {
     constructor(props) {
         super(props);
@@ -160,7 +175,7 @@ class Player extends Component {
                             <img 
                                 className="album-art" 
                                 alt={ this.state.playState ? this.state.playState.item?.artists[0].name + "Album Art" : "Unknown Album" }
-                                src={ this.state.playState ? this.state.playState?.item?.album?.images[1].url : "https://via.placeholder.com/75" }
+                                src={ retrieveAlbumArt(this.state.playState) }
                                 style={{ maxWidth: "75px", maxHeight: "75px" }}></img>
                         </a>
                         <div className="w-100 ml-2">

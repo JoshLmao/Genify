@@ -28,7 +28,7 @@
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -m \"v3.0.0 update\"",
+    "deploy": "gh-pages -d build -m \"Updated live build to the latest changes\"",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
