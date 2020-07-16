@@ -1,25 +1,32 @@
 {
     "logs": [
         {
+            "version": "3.0.2",
+            "changes": [
+                "Implemented new Spotify auth path: [Proof Key for Code Exchange](https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow-with-proof-key-for-code-exchange-pkce)",
+                "Lyrics only get updated when track change"
+            ]
+        },
+        {
             "version": "3.0.1",
             "changes": [
                 "Fixed the app using expired auth causing no access"
             ]
         },
         {
-        "version": "3.0.0: The React Update 🎉",
-        "changes": [
-            "Changed site to use React",
-            "Site speed improved by a lot",
-            "Removed Youtube video player and options (for now)",
-            "Removed ability to change Spotify playback device (for now)",
-            "Improved overall app flow for getting user authorization",
-            "Added information about current Genius lyrics",
-            "Able to detect and romanize Russian lyrics",
-            "Can set the current playback time of the current Spotify track",
-            "User can set volume of current playback device",
-            "Can view and navigate to all artists on current track"
-        ]
+            "version": "3.0.0: The React Update 🎉",
+            "changes": [
+                "Changed site to use React",
+                "Site speed improved by a lot",
+                "Removed Youtube video player and options (for now)",
+                "Removed ability to change Spotify playback device (for now)",
+                "Improved overall app flow for getting user authorization",
+                "Added information about current Genius lyrics",
+                "Able to detect and romanize Russian lyrics",
+                "Can set the current playback time of the current Spotify track",
+                "User can set volume of current playback device",
+                "Can view and navigate to all artists on current track"
+            ]
         }
     ]
   }

@@ -1,5 +1,6 @@
 import {
     SPOTIFY_CLIENT_ID,
+    SPOTIFY_CODE_VERIFIER,
     REQUEST_TIMEOUT_MS,
     PROXY_URL,
     HOMEPAGE
@@ -7,14 +8,16 @@ import {
 import {
     isDev
 } from "../helpers/devHelper";
-
 import axios from "axios";
+import sha256 from 'crypto-js/sha256';
+import Base64 from 'crypto-js/enc-base64';
+import { urlEncodeData } from "../helpers/spotifyHelper";
 
 const SpotifyService = {
-
-    /// Returns the auth url to redirect the user to
-    getUserAuthentificationUrl: function () {
-        let respType = "token";
+    /// Generates an Spotify auth uri for the PKCE auth flow
+    /// https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow-with-proof-key-for-code-exchange-pkce
+    getPKCEAuthUri: function () {
+        let responseType = "code";
         let baseUrl = isDev() ? "http://localhost:3000" : HOMEPAGE;
         let redirectUri = encodeURIComponent(baseUrl + "/callback");
         let scopes = [
@@ -27,47 +30,141 @@ const SpotifyService = {
             'user-read-private',
         ];
         let scopesEncoded = encodeURIComponent(scopes.join(' '));
-        let apiUrl = `https://accounts.spotify.com/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=${respType}&redirect_uri=${redirectUri}&scope=${scopesEncoded}`;
-        return apiUrl;
+        
+        let challenge = this.encodePKCEChallenge(SPOTIFY_CODE_VERIFIER);
+        let codeChallengeMethod = challenge.method;
+        let codeChallenge = challenge.challenge;
+
+        let appState = "jhkmsdgfiudf3243";
+        let params = [
+            `response_type=${responseType}`,
+            `client_id=${SPOTIFY_CLIENT_ID}`,
+            `redirect_uri=${redirectUri}`,
+            `code_challenge=${codeChallenge}`,
+            `code_challenge_method=${codeChallengeMethod}`,
+            `state=${appState}`,
+            `scope=${scopesEncoded}`,
+        ];
+
+        let endpoint = "https://accounts.spotify.com/authorize";
+        return endpoint + "?" + params.join("&");
     },
 
-    /// Parses url auth from Spotify
-    parseAuth: function (authData) {
-        var split = authData.split("&");
-        if (split.length === 2 && split[0].substring(0, 4) === "error") {
-            // Authorization was denied by user
-            return false;
-        } else {
-            var authToken = split[0].split("=")[1];
-            var tokenType = split[1].substring(611);
-            var expiresSeconds = split[2].substring(11);
+    /// Encodes a code verifier into a code challenge using SHA256, encoded into base64
+    encodePKCEChallenge: function (verifier) {
+        let sha = sha256(verifier);
+        let base64 = Base64.stringify(sha).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+        return {
+            method: "S256",
+            challenge: base64,
+        };
+    },
 
-            let authExpireTime = this.getAuthExpireTime(expiresSeconds);
+    /// Exchanges the PKCE code and responds with relevant encoded data
+    /// Callback for handling recieving final Spotify auth
+    exchangePKCECode: function (pkceCode, authCallback) {
+        let baseUrl = isDev() ? "http://localhost:3000" : HOMEPAGE;
+        let redirectUri = baseUrl + "/callback";
 
-            // Save token info in cookies
-            // cookies.setCookie("authToken", this.currentAuthToken);
-            // cookies.setCookie("expireDate", this.authExpireTime);
+        let encodedBody = urlEncodeData({
+            grant_type: encodeURIComponent('authorization_code'),
+            client_id: encodeURIComponent(SPOTIFY_CLIENT_ID),
+            code: encodeURIComponent(pkceCode),
+            redirect_uri: redirectUri,
+            code_verifier: encodeURIComponent(SPOTIFY_CODE_VERIFIER),
+        });
 
-            // Find ms difference between the expire time and now
-            //var msDifference = authExpireTime - Date.now();
-            // Require auth once it has expired
-            // this.reauthThread = setTimeout(function() {
-            //     spotify.reaquireAuth();
-            // }, msDifference);
+        axios({
+            method: 'POST',
+            url: 'https://accounts.spotify.com/api/token',
+            headers: { 
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            data: encodedBody,
+            timeout: REQUEST_TIMEOUT_MS,
+        }).then(result => {
+            if(authCallback)
+                authCallback(result.data);
+        }).catch(error => {
+            console.error(error);
+            console.error(error.response.data);
+        });
+    },
 
-
-            var obj = {
-                authToken: authToken,
-                tokenType: tokenType,
-                expireDate: authExpireTime,
-            };
-            return obj;
+    /// Parses auth from Spotify into a better object
+    parseAuth: function (data) {
+        if(!data) {
+            return null;
         }
+        
+        let expiresSeconds = data.expires_in;
+        let authExpireTime = this.getAuthExpireTime(expiresSeconds);
+
+        let scopes = data.scope.split(' ');
+
+        return {
+            authToken: data.access_token,
+            tokenType: data.token_type,
+            scopes: scopes,
+            refreshToken:  data.refresh_token,
+
+            expireDate: authExpireTime,
+        };
+    },
+
+    /// Refreshes old authentification using a refresh token
+    /// Callback for handling recieveing new Spotify auth
+    refreshAuth: function (refreshToken, authCallback) {
+        if(refreshToken) {
+            let encodedData = urlEncodeData({
+                grant_type: encodeURIComponent("refresh_token"),
+                refresh_token: refreshToken,
+                client_id: encodeURIComponent(SPOTIFY_CLIENT_ID),
+            });
+
+            axios({
+                method: 'POST',
+                url: 'https://accounts.spotify.com/api/token',
+                headers: { 
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                },
+                data: encodedData,
+                timeout: REQUEST_TIMEOUT_MS,
+            }).then(result => {
+                if(authCallback)
+                    authCallback(result.data);
+            }).catch(error => {
+               this.handleApiError(error);
+            });
+        }
+
+        return null;
+    },
+
+    /// Debug with more info any API errors
+    handleApiError: function (error, apiPath) {
+        console.error(`Spotify API Error: '${apiPath}': '${error?.response?.data?.error?.message}'`);
     },
 
     // Gets the date plus the amount of seconds added on
     getAuthExpireTime: function (seconds) {
         return new Date(Date.now() + seconds * 1000);
+    },
+
+    makeApiRequest: function (method, url, authToken, callback) {
+        axios({
+            method: method,
+            url: url,
+            headers: { 
+                'Authorization': 'Bearer ' + authToken,
+            },
+            timeout: REQUEST_TIMEOUT_MS,
+        }).then(result => {
+            if(callback)
+                callback(result.data);
+        }).catch(error => {
+            this.handleApiError(error, url);
+        });
     },
 
     /// Gets the current playback state of Spotify
@@ -87,23 +184,7 @@ const SpotifyService = {
                 //console.log(result.data);
             }
         }).catch(error => {
-            console.error(error);
-        });
-    },
-
-    makeApiRequest: function (method, url, authToken, callback) {
-        axios({
-            method: method,
-            url: url,
-            headers: { 
-                'Authorization': 'Bearer ' + authToken,
-            },
-            timeout: REQUEST_TIMEOUT_MS,
-        }).then(result => {
-            if(callback)
-                callback(result.data);
-        }).catch(error => {
-            console.error(error);
+            this.handleApiError(error);
         });
     },
 

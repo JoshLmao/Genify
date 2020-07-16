@@ -1,6 +1,6 @@
 {
   "name": "genify",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "homepage": "https://genify.joshlmao.com",
   "private": true,
   "dependencies": {
@@ -14,6 +14,7 @@
     "aromanize": "^0.1.5",
     "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
+    "crypto-js": "^4.0.0",
     "cyrillic-to-translit-js": "^3.1.0",
     "kuroshiro": "^1.1.2",
     "kuroshiro-analyzer-kuromoji": "^1.1.0",
@@ -22,6 +23,7 @@
     "react-bootstrap": "^1.1.1",
     "react-bootstrap-range-slider": "^1.0.0",
     "react-dom": "^16.13.1",
+    "react-markdown": "^4.3.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "traditional-or-simplified": "^1.0.3"

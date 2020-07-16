@@ -4,13 +4,14 @@ import {
     Toast,
 } from "react-bootstrap";
 import {
-    PLAYER_UPDATE_MS
+    PLAYER_UPDATE_MS,
+    SPOTIFY_REFRESH_MINUTES
 } from "../../consts";
 import { Redirect } from 'react-router-dom';
 
 import Player from "../Player";
-
 import SpotifyService from "../../services/spotify";
+import { hasAuthExpired } from "../../helpers/spotifyHelper";
 import Cookies, { EGenifyCookieNames } from "../../helpers/cookieHelper";
 import Lyrics from '../Lyrics/Lyrics';
 
@@ -22,16 +23,25 @@ class Service extends Component {
         let redirect = "";
         let authStringified = Cookies.getCookie(EGenifyCookieNames.SPOTIFY_AUTH);
         let auth = JSON.parse(authStringified);
+        let isRefreshing = false;
         if (auth === null) {
             redirect = "/?auth=invalid";
             console.log("No or auth found in cookies, going home");
         } else {
             auth.expireDate = new Date(auth.expireDate);
 
+            // Check if auth has expired
             if (auth.expireDate < Date.now()) {
-                Cookies.deleteCookie(EGenifyCookieNames.SPOTIFY_AUTH);
-                redirect = "/?auth=expired";
-                console.log("Auth found but has expired");
+                // If auth has a refresh token, use it to refresh otherwise delete and redirect user to home
+                if(auth.refreshToken) {
+                    console.log(`Auth expired at '${auth.expireDate.toLocaleString()}'. Using refreshToken to get new auth'`);
+                    isRefreshing = true;
+                    this.refreshAuth(auth.refreshToken);
+                } else {
+                    Cookies.deleteCookie(EGenifyCookieNames.SPOTIFY_AUTH);
+                    redirect = "/?auth=expired";
+                    console.log("Auth found but has expired");
+                }
             } else {
                 console.log(`Auth found. Expires at '${auth.expireDate.toLocaleString()}'`);
             }
@@ -39,32 +49,50 @@ class Service extends Component {
 
         this.state = {
             auth: auth,
+            isRefreshingAuth: isRefreshing,
+            /// Timeout handle for auto refreshing auth
+            refreshAuthRoutine: null,
+            /// Interval handle for updating the current Spotify context
+            spotifyUpdateRoutine: null,
 
             infoMessage: "",
             showInfoMessage: false,
 
             redirect: redirect,
         };
+
+        this.initService = this.initService.bind(this);
+        this.refreshAuth = this.refreshAuth.bind(this);
     }
     
     componentDidMount() {
-        if(this.state.auth === null ){
-            // Redirect to home if auth is invalid
+        // If contains no auth and not refreshing, return home
+        if(this.state.auth === null && !this.state.isRefreshingAuth) {
+            this.setState({ redirect: "/?auth=invalid" });
+        }
+            
+        /// If contains a previous auth that is within expiry
+        if (this.state.auth !== null && !this.state.isRefreshingAuth) {
+            this.initService();
+        }
+    }
+
+    /// Initializes the service to perform the relevant actions on start
+    initService () {
+        // Get inital Spotify track status
+        SpotifyService.getCurrentPlaybackState(this.state.auth.authToken, (data) => {
             this.setState({
-                redirect: "/?auth=invalid",
+                playState: data,
+                loaded: true,
             });
-        } else {
-            // Get inital Spotify track status
-            SpotifyService.getCurrentPlaybackState(this.state.auth.authToken, (data) => {
-                console.log(data);
-                this.setState({
-                    playState: data,
-                    loaded: true,
-                });
-            });
-    
+        });
+
+        if(!this.state.spotifyUpdateRoutine) {
             // Start auto retrieval of Spotify track status
-            setInterval(() => {
+            let spotifyUpdateRoutine = setInterval(() => {
+                if (hasAuthExpired(this.state.auth)) {
+                    return;
+                }
                 SpotifyService.getCurrentPlaybackState(this.state.auth.authToken, (data) => {
                     // If track changed
                     if (data.item?.name !== this.state.playState.item?.name) {
@@ -76,16 +104,51 @@ class Service extends Component {
                 });
             }, PLAYER_UPDATE_MS);
 
-            // Set timer when auth expired
-            let expireMs = this.state.auth.expireDate - new Date(Date.now());
-            setTimeout(() => {
-                console.log("showing info message");
-                this.setState({
-                    infoMessage: "User authorization is about to expire in one minute",
-                    showInfoMessage: true,
-                });
-            }, expireMs - 1 * 60 * 1000);
+            this.setState({ updateRoutine: spotifyUpdateRoutine });
         }
+
+        if (!this.state.refreshAuthRoutine) {
+            let expireMs = this.state.auth.expireDate - new Date(Date.now());
+            let refreshAuthRoutine = setTimeout(() => {
+                console.log(`Auth will expire in ${SPOTIFY_REFRESH_MINUTES} minute(s). Refreshing...`);
+                this.setState({
+                    refreshAuthRoutine: null,
+                });
+                this.refreshAuth(this.state.auth.refreshToken);
+            }, expireMs - SPOTIFY_REFRESH_MINUTES * 60 * 1000);
+
+            this.setState({
+                refreshAuthRoutine: refreshAuthRoutine,
+            });
+        }
+    }
+
+    /// Performes a refresh of the current Spotify auth
+    refreshAuth (refreshToken) {
+        this.setState({
+            isRefreshingAuth: true,
+        });
+
+        SpotifyService.refreshAuth(refreshToken, (refreshedAuth) => {
+            let auth = SpotifyService.parseAuth(refreshedAuth);
+            if(auth) {
+                console.log(`Successfully refreshed auth. Expires at '${auth.expireDate.toLocaleString()}'`);
+                let stringified = JSON.stringify(auth);
+                Cookies.setCookie(EGenifyCookieNames.SPOTIFY_AUTH, stringified);
+            } else {
+                // Unable to refresh the previous auth
+                console.error("Error when trying to refresh auth");
+                Cookies.deleteCookie(EGenifyCookieNames.SPOTIFY_AUTH);
+                this.setState({ redirect: "/?auth=refresh_error" })
+            }
+
+            this.setState({
+                isRefreshingAuth: false,
+                auth: auth,
+            }, () => {
+                this.initService();
+            });
+        });
     }
 
     render() {

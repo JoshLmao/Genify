@@ -46,74 +46,80 @@ class Lyrics extends Component {
             isRomanized: false,
             /// Current determined language of the original lyric language
             originalLyricLanguage: ELanguages.NONE,
-
+            // Kuroshiro object for using Kuroshiro functions
             kuroshiro: kuroshiro,
+            // Should lyrics perform an update/search for (new) lyrics
+            shouldUpdateLyrics: true,
         };
 
         this.updateLyrics = this.updateLyrics.bind(this);
         this.onToggleRomanize = this.onToggleRomanize.bind(this);
         this.resetLyricState = this.resetLyricState.bind(this);
+        this.onRetryLyricsBtn = this.onRetryLyricsBtn.bind(this);
     }
 
     componentDidUpdate(prevProps) {
         if(prevProps.playState !== this.props.playState) {
             this.setState({
                 playState: this.props.playState,
-            }, () => {
-                this.updateLyrics();
+            },() => {
+                // prevProps hasnt been set or song changed
+                if (prevProps.playState === null || prevProps.playState?.item.name !== this.props.playState.item.name) {
+                    this.updateLyrics();
+                }
             });
         }
     }
 
     updateLyrics() {
-        if(this.state.playState) {
-            if (this.state.lyricsSpotifyTrackName === null ||
-                    (this.state.lyricsSpotifyTrackName !== null && this.state.playState.item.name !== this.state.lyricsSpotifyTrackName?.name)
-                    || !this.state.loaded) 
-                {
-                this.setState({ 
-                    loaded: false, 
-                });
+        // Only continue if we have a valid state and isn't loading other lyrics
+        if(this.state.playState && this.state.loaded) {
+            this.setState({ 
+                loaded: false, 
+                shouldUpdateLyrics: false,
+                lyricsSpotifyTrackName: null,
+            });
 
-                GeniusService.search(this.state.playState, (result) => {
-                    if(result.response.hits.length > 0) {
-                        // Search hits for most relevant result
-                        let info = GeniusService.getRelevantResult(result.response.hits, this.state.playState.item);
-                        if (info) {
-                            // Relevant Genius lyrics found
-                            console.log(`Relevant Result: ${info.result.full_title}`);
-                            GeniusService.parseLyricsFromUrl(info.result.url, (lyrics) => {
-                                console.log(`Loaded and set lyrics from ${info.result.url}`);
-                                let origLyricLang = determineLanguage(lyrics);
-                                console.log(`Original lyrics language: '${origLyricLang}'`);
-                                this.setState({
-                                    originalLyrics: lyrics,
-                                    romanizedLyrics: lyrics,
-                                    originalLyricLanguage: origLyricLang,
-
-                                    lyricsInfo: info,
-                                    loaded: true,
-                                    lyricsSpotifyTrackName: this.state.playState.item,
-                                });
-                            });
-                        } else {
-                            // No relevant Genius lyrics found
-                            console.log(`No related lyrics found for song '${this.state.playState.item.artists[0].name} - ${this.state.playState.item.name}'`);
+            GeniusService.search(this.state.playState, (result) => {
+                if(result.response.hits.length > 0) {
+                    // Search hits for most relevant result
+                    let info = GeniusService.getRelevantResult(result.response.hits, this.state.playState.item);
+                    if (info) {
+                        // Relevant Genius lyrics found
+                        console.log(`Relevant Result: ${info.result.full_title}`);
+                        GeniusService.parseLyricsFromUrl(info.result.url, (lyrics) => {
+                            console.log(`Loaded and set lyrics from ${info.result.url}`);
+                            let origLyricLang = determineLanguage(lyrics);
+                            console.log(`Original lyrics language: '${origLyricLang}'`);
                             this.setState({
+                                originalLyrics: lyrics,
+                                romanizedLyrics: lyrics,
+                                isRomanized: false,
+
+                                originalLyricLanguage: origLyricLang,
+
+                                lyricsInfo: info,
                                 loaded: true,
+                                lyricsSpotifyTrackName: this.state.playState.item,
                             });
-                            this.resetLyricState();
-                        }
+                        });
                     } else {
-                        // No search hits found at all
-                        console.log("Didn't find any search results on Genius");
+                        // No relevant Genius lyrics found
+                        console.log(`No related lyrics found for song '${this.state.playState.item.artists[0].name} - ${this.state.playState.item.name}'`);
                         this.setState({
                             loaded: true,
                         });
                         this.resetLyricState();
                     }
-                });
-            }
+                } else {
+                    // No search hits found at all
+                    console.log("Didn't find any search results on Genius");
+                    this.setState({
+                        loaded: true,
+                    });
+                    this.resetLyricState();
+                }
+            });
         }
     }
 
@@ -128,6 +134,10 @@ class Lyrics extends Component {
     }
 
     onToggleRomanize() {
+        if (!this.state.originalLyrics) {
+            return;
+        }
+
         if (this.state.isRomanized) {
             this.setState({
                 romanizedLyrics: this.state.originalLyrics,
@@ -138,7 +148,8 @@ class Lyrics extends Component {
             {
                 case ELanguages.JP:
                     {
-                        romanizedLyrics = "ROMANIZED";
+                        if (!this.state.kuroshiro) { break; }
+                        romanizedLyrics = "...";
                         this.state.kuroshiro.convert(this.state.originalLyrics, { 
                             to: "romaji",
                             mode: "spaced",
@@ -178,6 +189,13 @@ class Lyrics extends Component {
         this.setState({
             isRomanized: !this.state.isRomanized,
         });
+    }
+
+    onRetryLyricsBtn() {
+        if (!this.state.shouldUpdateLyrics) {
+            this.setState({ shouldUpdateLyrics: true }, () => this.updateLyrics() );
+            console.log("Retrying lyrics at request of user");
+        }
     }
     
     render() {
@@ -225,11 +243,19 @@ class Lyrics extends Component {
                     }
                     {
                         !this.state.originalLyrics && this.state.loaded && 
-                                <a href="https://genius.com/new">
-                                    <Button variant="outline-light" className="mt-2"> 
-                                        Add to Genius
-                                    </Button>
-                                </a>
+                        <div className="d-flex flex-column">
+                            <a href="https://genius.com/new">
+                                <Button variant="outline-light" className="mt-2"> 
+                                    Add to Genius
+                                </Button>
+                            </a>
+                            <Button 
+                                className="mx-auto my-2"
+                                variant="outline-light" 
+                                onClick={this.onRetryLyricsBtn}>
+                                Retry Lyrics
+                            </Button>
+                        </div>
                     }
                 </div>
             </div>

@@ -11,6 +11,7 @@ import {
     faTwitter
 } from '@fortawesome/free-brands-svg-icons' ;
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ReactMarkdown from "react-markdown";
 
 import {
     TWITTER_LINK,
@@ -19,25 +20,6 @@ import {
 
 import changelogs from "../../json/changelog.json";
 let pkg = require('../../../package.json');
-
-function getChangelog() {
-    return changelogs.logs.map((log) => {
-        return (
-            <div>
-                <h3>{log.version}</h3>
-                <ul>
-                    {
-                        log.changes.map((change) => {
-                            return (
-                                <li>{change}</li>
-                            );
-                        })
-                    }
-                </ul>
-            </div>
-        )
-    });
-}
 
 class Navigation extends Component {
     constructor(props) {
@@ -114,7 +96,24 @@ class Navigation extends Component {
                                 borderColor: modalSeparatorColor,
                             }}>
                             {   
-                                getChangelog()
+                                changelogs.logs.map((log) => {
+                                    return (
+                                        <div>
+                                            <h3>{log.version}</h3>
+                                            <ul>
+                                                {
+                                                    log.changes.map((change) => {
+                                                        return (
+                                                            <li>
+                                                                <ReactMarkdown source={change} className="nochildmargins"/>
+                                                            </li>
+                                                        );
+                                                    })
+                                                }
+                                            </ul>
+                                        </div>
+                                    )
+                                })
                             }
                         </Modal.Body>
                         <Modal.Footer
@@ -124,7 +123,7 @@ class Navigation extends Component {
                             }}>
                             <Button 
                                 variant="outline-light"
-                                className="ml-auto" onClick={() => this.toggleChangelog()}>
+                                className="ml-auto" onClick={() => { this.toggleChangelog(); console.log("updating"); }}>
                                 Close
                             </Button>
                         </Modal.Footer>

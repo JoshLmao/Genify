@@ -14,6 +14,7 @@ import Cookies, { EGenifyCookieNames } from "../../helpers/cookieHelper";
 
 import "./Home.css";
 
+/// Handles converting an auth error code to an error message
 function getAuthMessage(authStatus) {
     switch(authStatus)
     {
@@ -21,6 +22,8 @@ function getAuthMessage(authStatus) {
             return "A problem has occured trying to get the user auth. Please try again";
         case "expired":
             return "User's authorization has expired. Please sign in again";
+        case "refresh_error":
+            return "An error occured when attempting to refresh the previous Spotify auth. Please sign in again";
         default:
             return "Unknown error";
     }
@@ -44,14 +47,15 @@ class Home extends Component {
     }
 
     onGetSpotifyAuth() {
-        let oldAuth = Cookies.getCookie(EGenifyCookieNames.SPOTIFY_AUTH);
-        if (oldAuth !== null && Date.now() < oldAuth.expiryDate) {
+        let prevAuthStr = Cookies.getCookie(EGenifyCookieNames.SPOTIFY_AUTH);
+        let prevAuth = JSON.parse(prevAuthStr);
+        if (prevAuth !== null && prevAuth.refreshToken) {
             this.setState({
                 redirect: "/app",
             });
         } else {
-            // No auth stored, get new auth from user
-            let url = SpotifyService.getUserAuthentificationUrl();
+            // No auth stored, ask for auth from the user
+            let url = SpotifyService.getPKCEAuthUri();
             window.location = url;
         }
     }

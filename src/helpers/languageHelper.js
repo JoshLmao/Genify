@@ -46,12 +46,13 @@ export function determineLanguage(str) {
     if( lang === "chinese" ) {
         // Using to detect
         // https://github.com/nickdrewe/traditional-or-simplified
-        var result = TradOrSimp.detect(str);
-        if (result.detectedCharacters === 'simplified') {
-            lang = ELanguages.SZH;
-        } else {
-            lang = ELanguages.TZH;
-        }
+        //var result = TradOrSimp.detect(str);
+        // if (result.detectedCharacters === 'simplified') {
+        //     lang = ELanguages.SZH;
+        // } else {
+        //     lang = ELanguages.TZH;
+        // }
+        lang = ELanguages.SZH;
     }
     
     // No other languages, set to English

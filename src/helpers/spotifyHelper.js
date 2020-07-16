@@ -26,3 +26,21 @@ export function getFormattedArtists (playState) {
     }
     return null;
 }
+
+/// Encodes the data into application/x-www-form-urlencoded for POST requests
+/// https://stackoverflow.com/a/37562814/11593118
+export function urlEncodeData(data) {
+    var formBody = [];
+    for (var property in data) {
+        var encodedKey = encodeURIComponent(property);
+        var encodedValue = encodeURIComponent(data[property]);
+        formBody.push(encodedKey + "=" + encodedValue);
+    }
+    formBody = formBody.join("&");
+    return formBody;
+}
+
+/// Checks if the current auth is invalid, null or expired
+export function hasAuthExpired(auth) {
+    return auth === null || (auth != null && auth.expireDate < Date.now());
+}
