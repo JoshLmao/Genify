@@ -6,7 +6,8 @@ import {
 } from "../consts";
 import { 
     filterBrackets,
-    filterStartEndSpaceChars 
+    filterStartEndSpaceChars,
+    processString
 } from "../helpers/filterHelper";
 
 const GeniusService = {
@@ -100,22 +101,25 @@ const GeniusService = {
         }
         if (hits && hits.length > 0) {
             for(let hit of hits) {
-                let geniusArtist = hit.result.primary_artist.name.toLowerCase();
-                let geniusTrackName = filterBrackets(hit.result.title).toLowerCase();
+                // genius artist - track
+                var geniusArtist = processString(hit.result.primary_artist.name);
+                var geniusTrackName = processString(hit.result.title);
+                // spotify artist - track
+                var spotifyTrackName = processString(trackInfo.name);
+                var spotifyFirstArtistName = processString(trackInfo.artists[0].name);
 
-                let spotifyTrackName = filterBrackets(trackInfo.name).toLowerCase();
-                let spotifyFirstArtistName = trackInfo.artists[0].name.toLowerCase();
                 // Check if Genius track name/artist includes Spotify track name/artist or vice versa
-                if ((geniusArtist.includes(spotifyFirstArtistName) && geniusTrackName.includes(spotifyTrackName))
-                    || (spotifyFirstArtistName.includes(geniusArtist) && spotifyTrackName.includes(geniusTrackName))) {
-                        return hit;
+                let geniusIncludes = geniusArtist.includes(spotifyFirstArtistName) && geniusTrackName.includes(spotifyTrackName);
+                let spotifyIncludes = spotifyFirstArtistName.includes(geniusArtist) && spotifyTrackName.includes(geniusTrackName);
+
+                if (geniusIncludes || spotifyIncludes) {
+                    return hit;
                 }
             }
         } else {
             return null;
         }
-    }
-    
+    },
 }
 
 export default GeniusService;
