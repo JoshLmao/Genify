@@ -1,5 +1,3 @@
-import TradOrSimp from "traditional-or-simplified";
-
 /// Enum of all supported languages to romanize/unromanize
 export const ELanguages = {
     NONE: "none",

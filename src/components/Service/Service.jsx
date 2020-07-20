@@ -81,6 +81,8 @@ class Service extends Component {
     initService () {
         // Get inital Spotify track status
         SpotifyService.getCurrentPlaybackState(this.state.auth.authToken, (data) => {
+            // console.log("Initial State:");
+            // console.log(data);
             this.setState({
                 playState: data,
                 loaded: true,
@@ -158,7 +160,7 @@ class Service extends Component {
                 <Row className="mx-0">
                     <Player 
                         playState={this.state.playState}
-                        authToken={this.state.auth?.authToken} />
+                        auth={this.state.auth} />
                 </Row>
                 <Lyrics 
                     playState={this.state.playState} />

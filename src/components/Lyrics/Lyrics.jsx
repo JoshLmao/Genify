@@ -64,7 +64,7 @@ class Lyrics extends Component {
                 playState: this.props.playState,
             },() => {
                 // prevProps hasnt been set or song changed
-                if (prevProps.playState === null || prevProps.playState?.item.name !== this.props.playState.item.name) {
+                if (prevProps.playState === null || prevProps.playState?.item?.name !== this.props.playState.item?.name) {
                     this.updateLyrics();
                 }
             });
@@ -105,7 +105,7 @@ class Lyrics extends Component {
                         });
                     } else {
                         // No relevant Genius lyrics found
-                        console.log(`No related lyrics found for song '${this.state.playState.item.artists[0].name} - ${this.state.playState.item.name}'`);
+                        console.log(`No related lyrics found out of '${result.response.hits.length}' results for song '${this.state.playState.item.artists[0].name} - ${this.state.playState.item.name}'`);
                         this.setState({
                             loaded: true,
                         });

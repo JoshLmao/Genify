@@ -60,7 +60,7 @@ class Player extends Component {
         super(props);
 
         this.state = {
-            authToken: props.authToken,
+            auth: props.auth,
             playState: props.playState,
 
             volumePercent: props.playState ? props.playState.device?.volume_percent : 0,
@@ -88,37 +88,38 @@ class Player extends Component {
             });
         }
 
-        if(prevProps.authToken !== this.props.authToken) {
+        if(prevProps.auth !== this.props.auth) {
             this.setState({
-                authToken: this.props.authToken,
+                auth: this.props.auth,
             });
+            console.log("Player Auth recieved update");
         }
     }
 
     onPlayPause() {
         if (this.state.playState) {
             if (this.state.playState.is_playing) {
-                SpotifyService.pause(this.state.authToken);
+                SpotifyService.pause(this.state.auth.authToken);
             } else {
-                SpotifyService.play(this.state.authToken);
+                SpotifyService.play(this.state.auth.authToken);
             }
         }
     }
 
     onNextTrack() {
-        SpotifyService.nextTrack(this.state.authToken);
+        SpotifyService.nextTrack(this.state.auth.authToken);
     }
     
     onPreviousTrack() {
-        SpotifyService.previousTrack(this.state.authToken);
+        SpotifyService.previousTrack(this.state.auth.authToken);
     }
 
     onToggleVolumeMute() {
         if (this.state.playState) {
             if (this.state.playState.device?.volume_percent > 0) {
-                SpotifyService.setVolume(this.state.authToken, 0);
+                SpotifyService.setVolume(this.state.auth.authToken, 0);
             } else {
-                SpotifyService.setVolume(this.state.authToken, 25);
+                SpotifyService.setVolume(this.state.auth.authToken, 25);
             }
         }
     }
@@ -132,7 +133,7 @@ class Player extends Component {
     onFinishVolumeChanged() {
         if(this.state.volumePercent !== this.state.playState.device?.volume_percent) {
             console.log("Web API: Set volume to " + this.state.volumePercent);
-            SpotifyService.setVolume(this.state.authToken, this.state.volumePercent);
+            SpotifyService.setVolume(this.state.auth.authToken, this.state.volumePercent);
         }
     }
 
@@ -149,7 +150,7 @@ class Player extends Component {
     onFinishProgressChanged() {
         if(this.state.playState) {
             if (this.state.playState.progress_ms !== this.state.trackProgressMs) {
-                SpotifyService.seek(this.state.authToken, this.state.trackProgressMs);
+                SpotifyService.seek(this.state.auth.authToken, this.state.trackProgressMs);
             }
         }
 
@@ -169,28 +170,38 @@ class Player extends Component {
                     sm={5}
                     xs={12}>
                     <div className="d-flex align-items-center my-auto">
-                        <a 
-                            href={ this.state.playState ? this.state.playState.item?.album?.external_urls?.spotify : "#" } 
-                            className="ml-2 p-2">
-                            <img 
-                                className="album-art" 
-                                alt={ this.state.playState ? this.state.playState.item?.artists[0].name + "Album Art" : "Unknown Album" }
-                                src={ retrieveAlbumArt(this.state.playState) }
-                                style={{ maxWidth: "75px", maxHeight: "75px" }}></img>
-                        </a>
+                        {
+                            this.state.playState &&
+                            <a 
+                                href={ this.state.playState ? this.state.playState.item?.album?.external_urls?.spotify : "#" } 
+                                className="ml-2 p-2">
+                                <img 
+                                    className="album-art" 
+                                    alt={ this.state.playState ? this.state.playState.item?.artists[0].name + "Album Art" : "Unknown Album" }
+                                    src={ retrieveAlbumArt(this.state.playState) }
+                                    style={{ maxWidth: "75px", maxHeight: "75px" }}></img>
+                            </a>
+                        }
                         <div className="w-100 ml-2">
                             <a 
                                 href={ this.state.playState ? this.state.playState.item?.external_urls?.spotify : "#" }>
                                 <h6 className="song-info">
-                                    { this.state.playState ? this.state.playState.item?.name : "Unknown" }
+                                    { this.state.playState ? this.state.playState.item?.name : "" }
                                 </h6>
                             </a>
                             {/* Artists */}
                             <h6 className="song-info">
-                                { this.state.playState ? getFormattedArtists(this.state.playState) : "Unknown" }
+                                { this.state.playState ? getFormattedArtists(this.state.playState) : "" }
                             </h6>
                         </div>
                     </div>
+                    {   
+                        !this.state.playState && 
+                        <div className="my-auto">
+                            <h6>No song currently playing.</h6>
+                            <h6>Play a song to get started!</h6>
+                        </div>
+                    }
                 </Col>
                 {/* Media Controls */}
                 <Col 

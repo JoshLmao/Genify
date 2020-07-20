@@ -1,6 +1,14 @@
 {
     "logs": [
         {
+            "version": "3.0.3",
+            "changes": [
+                "Updated icon and added for mobile devices",
+                "Fixed [issue 7](https://github.com/JoshLmao/Genify/issues/7) where the white space from Genius was unexpected",
+                "Implemented a fix for [issue 8](https://github.com/JoshLmao/Genify/issues/8) causing app to crash and auth to not get updated"
+            ]
+        },
+        {
             "version": "3.0.2",
             "changes": [
                 "Implemented new Spotify auth path: [Proof Key for Code Exchange](https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow-with-proof-key-for-code-exchange-pkce)",

@@ -94,6 +94,7 @@ class Navigation extends Component {
                             style={{ 
                                 backgroundColor: modalBgColor,
                                 borderColor: modalSeparatorColor,
+                                fontSize: "0.85rem",
                             }}>
                             {   
                                 changelogs.logs.map((log) => {
@@ -105,7 +106,7 @@ class Navigation extends Component {
                                                     log.changes.map((change) => {
                                                         return (
                                                             <li>
-                                                                <ReactMarkdown source={change} className="nochildmargins"/>
+                                                                <ReactMarkdown source={change} className="no-child-margins"/>
                                                             </li>
                                                         );
                                                     })

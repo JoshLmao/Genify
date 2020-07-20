@@ -1,9 +1,10 @@
 import {
     SPOTIFY_CLIENT_ID,
     SPOTIFY_CODE_VERIFIER,
+    SPOTIFY_REFRESH_MINUTES,
     REQUEST_TIMEOUT_MS,
     PROXY_URL,
-    HOMEPAGE
+    HOMEPAGE,
 } from "../consts";
 import {
     isDev
@@ -98,8 +99,10 @@ const SpotifyService = {
         }
         
         let expiresSeconds = data.expires_in;
+        /// Uncomment following to debug refreshing auth and having stable site state
+        // let minutes = 2;
+        // expiresSeconds = (SPOTIFY_REFRESH_MINUTES * 60) + minutes * 60;
         let authExpireTime = this.getAuthExpireTime(expiresSeconds);
-
         let scopes = data.scope.split(' ');
 
         return {
@@ -143,7 +146,7 @@ const SpotifyService = {
 
     /// Debug with more info any API errors
     handleApiError: function (error, apiPath) {
-        console.error(`Spotify API Error: '${apiPath}': '${error?.response?.data?.error?.message}'`);
+        console.error(`Spotify API Error: '${apiPath}': '${error?.response?.data?.error?.message ?? error}'`);
     },
 
     // Gets the date plus the amount of seconds added on
@@ -181,7 +184,6 @@ const SpotifyService = {
         }).then(result => {
             if(callback) {
                 callback(result.data);
-                //console.log(result.data);
             }
         }).catch(error => {
             this.handleApiError(error);

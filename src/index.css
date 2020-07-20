@@ -57,3 +57,9 @@ html, body, #root {
 .spotify-black {
     background-color: var(--spotify-black);
 }
+
+
+.no-child-margins p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
