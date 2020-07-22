@@ -2,7 +2,12 @@
     --navbar-height: 56px;
     --player-height: 90px;
 
-    --spotify-black: rgb(25, 20, 20);
+    --spotify-black: rgb();
+    --spotify-active-text: rgb(30, 215, 96);
+
+    --genify-light-background: rgb(40,40,40);
+    /* Currently Spotify black color */
+    --genify-dark-background: rgb(25, 20, 20);
 }
 
 body {
@@ -35,6 +40,7 @@ html, body, #root {
 
 .genify-player {
     height: var(--player-height);
+    background-color: var(--genify-light-background);
 }
 
 .lyrics-content {
@@ -54,12 +60,25 @@ html, body, #root {
     text-overflow: ellipsis;
 }
 
-.spotify-black {
-    background-color: var(--spotify-black);
+.genify-dark-background {
+    background-color: var(--genify-dark-background)!important;
 }
-
 
 .no-child-margins p {
     margin-top: 0px;
     margin-bottom: 0px;
+}
+
+.playback-device-item {
+    background: var(--genify-dark-background);
+    color: white;
+}
+
+.active-device {
+    color: var(--spotify-active-text)!important;
+}
+
+.playback-devices-title {
+    background: transparent;
+    border-color: var(--genify-light-background);
 }

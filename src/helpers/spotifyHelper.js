@@ -1,4 +1,9 @@
 import React from 'react';
+import { 
+    faQuestion,
+    faTv, 
+    faLaptop
+} from '@fortawesome/free-solid-svg-icons';
 
 // Gets a formatted string of all artists on one track, separated with a comma and correct hyperlinking
 // For example "Enter Shikari, TWICE, KSI"
@@ -43,4 +48,16 @@ export function urlEncodeData(data) {
 /// Checks if the current auth is invalid, null or expired
 export function hasAuthExpired(auth) {
     return auth === null || (auth != null && auth.expireDate < Date.now());
+}
+
+/// Returns a font awesome icon related to the type of playback device
+export function deviceTypeToIcon (deviceType) {
+    switch(deviceType.toLowerCase()) {
+        case "tv":
+            return faTv;
+        case "computer":
+            return faLaptop;
+        default:
+            return faQuestion;
+    }
 }

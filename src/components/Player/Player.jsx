@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
     Row,
     Col,
-    Button
+    Button,
 } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -19,6 +19,7 @@ import SpotifyService from '../../services/spotify';
 import {
     getFormattedArtists
 } from "../../helpers/spotifyHelper";
+import DevicesPopover from './DevicesPopover';
 
 // Formats total milliseconds to a displayable time format (like 00:00)
 function msToTime(millisec) {
@@ -76,6 +77,13 @@ class Player extends Component {
         this.onFinishVolumeChanged = this.onFinishVolumeChanged.bind(this);
         this.onProgressChanged = this.onProgressChanged.bind(this);
         this.onFinishProgressChanged = this.onFinishProgressChanged.bind(this);
+        this.updatePlaybackDevices = this.updatePlaybackDevices.bind(this);
+    }
+
+    componentDidMount() {
+        setInterval(() => {
+            this.updatePlaybackDevices();
+        }, 3000);
     }
 
     componentDidUpdate(prevProps) {
@@ -157,11 +165,25 @@ class Player extends Component {
         this.setState({ isChangingTrackProgress: false });
     }
 
+    updatePlaybackDevices() {
+        SpotifyService.getPlaybackDevices(this.state.auth?.authToken, (data) => {
+            /// Sort in alphabet order then move active device to top
+            let alphabet = data.devices.sort((x, y) => {
+                var xName = x.name.toUpperCase();
+                var yName = y.name.toUpperCase();
+                return (xName < yName) ? -1 : (xName > yName) ? 1 : 0;
+            });
+            let sortedDevices = alphabet.sort((x, y) => x.is_active ? -1 : y.is_active ? 1 : 0);
+            this.setState({
+                playbackDevices: sortedDevices,
+            });
+        });
+    }
+
     render() {
         return (
             <Row 
-                className="w-100 mx-0 genify-player"
-                style={{ backgroundColor: "rgb(40,40,40)" }}>
+                className="w-100 mx-0 genify-player" >
                 {/* Album Art & Song Info */}
                 <Col
                     xl={3}
@@ -233,26 +255,26 @@ class Player extends Component {
                         </div>
                     </div>
                     <div className="d-flex align-items-center my-1">
-                            <h6 className="my-auto mx-2">
-                                { this.state.playState && msToTime(this.state.isChangingTrackProgress ? this.state.trackProgressMs : this.state.playState.progress_ms) }    
-                                { !this.state.playState && "0:00" }
-                            </h6>
-                            <div 
-                                className="w-100"
-                                onMouseUp={this.onFinishProgressChanged}>
-                                <RangeSlider 
-                                    value={this.state.trackProgressMs}
-                                    min={0}
-                                    max={this.state.playState ? this.state.playState.item?.duration_ms : 100}
-                                    onChange={this.onProgressChanged}
-                                    tooltip="off"
-                                    />
-                            </div>
-                            <h6 className="my-auto mx-2">
-                                { this.state.playState && msToTime(this.state.playState.item?.duration_ms) }
-                                { !this.state.playState && "9:59" }
-                            </h6>
+                        <h6 className="my-auto mx-2">
+                            { this.state.playState && msToTime(this.state.isChangingTrackProgress ? this.state.trackProgressMs : this.state.playState.progress_ms) }    
+                            { !this.state.playState && "0:00" }
+                        </h6>
+                        <div 
+                            className="w-100"
+                            onMouseUp={this.onFinishProgressChanged}>
+                            <RangeSlider 
+                                value={this.state.trackProgressMs}
+                                min={0}
+                                max={this.state.playState ? this.state.playState.item?.duration_ms : 100}
+                                onChange={this.onProgressChanged}
+                                tooltip="off"
+                                />
                         </div>
+                        <h6 className="my-auto mx-2">
+                            { this.state.playState && msToTime(this.state.playState.item?.duration_ms) }
+                            { !this.state.playState && "9:59" }
+                        </h6>
+                    </div>
                 </Col>
                 {/* Volume, Devices */}
                 <Col 
@@ -261,6 +283,9 @@ class Player extends Component {
                     md={3} 
                     className="d-none d-md-block my-auto">
                     <div className="d-flex align-items-center">
+                        <DevicesPopover 
+                            devices={this.state.playbackDevices}
+                            auth={this.state.auth}/>
                         <Button 
                             className="mx-2"
                             variant="outline-light"

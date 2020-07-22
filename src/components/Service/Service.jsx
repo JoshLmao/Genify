@@ -156,7 +156,7 @@ class Service extends Component {
     render() {
         return (
             <div
-                className="genify-home spotify-black">
+                className="genify-home genify-dark-background">
                 <Row className="mx-0">
                     <Player 
                         playState={this.state.playState}

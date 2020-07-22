@@ -170,6 +170,23 @@ const SpotifyService = {
         });
     },
 
+    makeApiDataRequest: function (method, url, authToken, data, callback) {
+        axios({
+            method: method,
+            url: url,
+            headers: { 
+                'Authorization': 'Bearer ' + authToken,
+            },
+            data: data,
+            timeout: REQUEST_TIMEOUT_MS,
+        }).then(result => {
+            if(callback)
+                callback(result.data);
+        }).catch(error => {
+            this.handleApiError(error, url);
+        });
+    },
+
     /// Gets the current playback state of Spotify
     getCurrentPlaybackState: function (apiToken, callback) {
         var endpointUrl = "https://api.spotify.com/v1/me/player/";
@@ -226,8 +243,21 @@ const SpotifyService = {
         let url  = PROXY_URL + "https://api.spotify.com/v1/me/player/seek";
         url += "?position_ms=" + positionMs;
         this.makeApiRequest("PUT", url, authToken);
-    }
+    },
 
+    getPlaybackDevices: function (authToken, callback) {
+        let url = "https://api.spotify.com/v1/me/player/devices";
+        this.makeApiRequest("GET", url, authToken, callback)
+    },
+
+    setPlaybackDevice: function (authToken, targetDevice, play) {
+        let url = "https://api.spotify.com/v1/me/player";
+        let reqData = {
+            device_ids: [ targetDevice ],
+            play: play,
+        };
+        this.makeApiDataRequest("PUT", url, authToken, reqData);
+    }
 }
 
 export default SpotifyService;
