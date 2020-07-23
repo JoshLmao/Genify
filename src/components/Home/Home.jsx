@@ -20,13 +20,13 @@ function getAuthMessage(authStatus) {
     switch(authStatus)
     {
         case "invalid":
-            return "A problem has occured trying to get the user auth. Please try again";
+            return "A problem has occured trying to use a previous authorizatino. Please try again";
         case "expired":
             return "User's authorization has expired. Please sign in again";
         case "refresh_error":
-            return "An error occured when attempting to refresh the previous Spotify auth. Please sign in again";
+            return "An error occured when attempting to refresh the previous Spotify authorization. Please sign in again";
         default:
-            return "Unknown error";
+            return "Unknown error. Sorry, you shouldn't see this";
     }
 }
 

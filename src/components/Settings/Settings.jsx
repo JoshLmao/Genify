@@ -39,7 +39,7 @@ class Settings extends Component {
         // Fetch data from spotify
         if (this.state.auth) {
             SpotifyService.getCurrentUserProfile(this.state.auth.authToken, (profileData) => {
-                console.log(profileData);
+                //console.log(profileData);
                 this.setState({
                     userProfile: profileData,
                 });
@@ -60,7 +60,7 @@ class Settings extends Component {
 
         // Remove cookie by setting it to blank
         if(Cookies.get(EGenifyCookieNames.SPOTIFY_AUTH)) {
-            Cookies.set(EGenifyCookieNames.SPOTIFY_AUTH, "", { path: '' });
+            Cookies.set(EGenifyCookieNames.SPOTIFY_AUTH, "", { path: '', expires: 365 });
         }
 
         this.setState({

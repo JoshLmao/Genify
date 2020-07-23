@@ -25,12 +25,19 @@ class Service extends Component {
 
         // Retrieve saved auth in cookies
         let redirect = "";
-        let authStringified = Cookies.get(EGenifyCookieNames.SPOTIFY_AUTH);
-        let auth = JSON.parse(authStringified);
+        let auth = null;
         let isRefreshing = false;
+        let authStringified = Cookies.get(EGenifyCookieNames.SPOTIFY_AUTH);
+
+        try {
+            auth = JSON.parse(authStringified);
+        } catch(e) {
+            console.error("Unable to parse auth cookie");
+        }
+        
         if (auth === null) {
             redirect = "/?auth=invalid";
-            console.log("No or auth found in cookies, going home");
+            console.log("No auth in cookies or corrupted, going home");
         } else {
             auth.expireDate = new Date(auth.expireDate);
 
@@ -144,7 +151,7 @@ class Service extends Component {
             if(auth) {
                 console.log(`Successfully refreshed auth. Expires at '${auth.expireDate.toLocaleString()}'`);
                 let stringified = JSON.stringify(auth);
-                Cookies.set(EGenifyCookieNames.SPOTIFY_AUTH, stringified);
+                Cookies.set(EGenifyCookieNames.SPOTIFY_AUTH, stringified, { path: '', expires: 365 });
             } else {
                 // Unable to refresh the previous auth
                 console.error("Error when trying to refresh auth");

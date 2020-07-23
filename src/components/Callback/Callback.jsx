@@ -40,7 +40,7 @@ class Callback extends Component {
                 let auth = SpotifyService.parseAuth(authData);
                 if(auth) {
                     let stringified = JSON.stringify(auth);
-                    Cookies.set(EGenifyCookieNames.SPOTIFY_AUTH, stringified, { path: '' });
+                    Cookies.set(EGenifyCookieNames.SPOTIFY_AUTH, stringified, { path: '', expires: 365 });
                    
                     console.log("Successfully saved auth! Redirecting...");
                     setTimeout(() => {
