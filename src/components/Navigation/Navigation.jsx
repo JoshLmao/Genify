@@ -79,7 +79,8 @@ class Navigation extends Component {
                     <Modal
                         size="lg"
                         show={this.state.displayChangelog}
-                        onHide={() => this.toggleChangelog()}>
+                        onHide={() => this.toggleChangelog()}
+                        className="changelog-modal">
                         <Modal.Header 
                             closeButton
                             style={{ 
@@ -91,11 +92,7 @@ class Navigation extends Component {
                             </Modal.Title>
                         </Modal.Header>
                         <Modal.Body
-                            style={{ 
-                                backgroundColor: modalBgColor,
-                                borderColor: modalSeparatorColor,
-                                fontSize: "0.85rem",
-                            }}>
+                            className="changelog-body">
                             {   
                                 changelogs.logs.map((log) => {
                                     return (

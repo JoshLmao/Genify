@@ -1,11 +1,21 @@
 {
     "logs": [
         {
+            "version": "3.0.4",
+            "changes": [
+                "Added navigation bar below player for changing focused content",
+                "Added settings page with information on signed in user",
+                "Can sign out of app to remove authorization",
+                "Can change and set the current playback device of Spotify",
+                "Fixed issue [#10](https://github.com/JoshLmao/Genify/issues/10) to allow cookies to stay after browser is closed"
+            ]
+        },
+        {
             "version": "3.0.3",
             "changes": [
                 "Updated icon and added for mobile devices",
-                "Fixed [issue 7](https://github.com/JoshLmao/Genify/issues/7) where the white space from Genius was unexpected",
-                "Implemented a fix for [issue 8](https://github.com/JoshLmao/Genify/issues/8) causing app to crash and auth to not get updated"
+                "Fixed issue [#7](https://github.com/JoshLmao/Genify/issues/7) where the white space from Genius was unexpected",
+                "Implemented a fix for issue [#8](https://github.com/JoshLmao/Genify/issues/8) causing app to crash and auth to not get updated"
             ]
         },
         {

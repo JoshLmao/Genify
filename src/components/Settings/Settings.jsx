@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { Container, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpotify } from '@fortawesome/free-brands-svg-icons';
+import { faSpotify, faTwitter, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { EGenifyCookieNames } from '../../enums/cookies';
 import { Redirect } from 'react-router-dom';
 import Cookies from "js-cookie";
+import SpotifyService from '../../services/spotify';
 
 function SettingNameValue(props) {
     return (
-        <div class="d-flex" {...props}>
-            <div className="">
+        <div className="d-flex" {...props}>
+            <div>
                 {props.name}
             </div>
             <div className="ml-auto">
@@ -24,7 +25,11 @@ class Settings extends Component {
         super(props);
 
         this.state = {
+            auth: props.auth,
+
             redirect: "",
+
+            userProfile: null,
         };
 
         this.onSpotifySignOut = this.onSpotifySignOut.bind(this);
@@ -32,6 +37,22 @@ class Settings extends Component {
 
     componentDidMount() {
         // Fetch data from spotify
+        if (this.state.auth) {
+            SpotifyService.getCurrentUserProfile(this.state.auth.authToken, (profileData) => {
+                console.log(profileData);
+                this.setState({
+                    userProfile: profileData,
+                });
+            });
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.auth !== this.props.auth) {
+            this.setState({
+                auth: this.props.auth,
+            });
+        }
     }
 
     onSpotifySignOut() {
@@ -51,13 +72,34 @@ class Settings extends Component {
         return (
             <div className="w-100 h-100">
                 <Container className="py-2 px-5 scrollable-main-content">
-                    <h2>App Settings</h2>
+                    <h2 className="mb-4">App Settings</h2>
 
                     <h5>Spotify</h5>
-                    <SettingNameValue name="Account Name" value="John Smith" />
-                    <SettingNameValue name="Account Id" value="000000000" />
-                    <SettingNameValue name="Type" value="Free/Premium" />
-                    <SettingNameValue name="Cookies Expire" value="31st December, 2020" />
+                    {/* User Overview */}
+                    <div className="d-flex px-3 my-3">
+                        <img
+                            alt="Signed in user icon"
+                            src={this.state.userProfile?.images[0]?.url} 
+                            style={{ maxHeight: "50px", maxWidth: "50px" }} />
+                            <div className="px-3">
+                                <h6>{this.state.userProfile?.display_name}</h6>
+                                <h6
+                                    style={{ color: "rgb(200, 200, 200)", fontSize: "0.8rem" }}>
+                                    {"SPOTIFY " + this.state.userProfile?.product.toUpperCase()}
+                                </h6>
+                            </div>
+                            <a 
+                                href={this.state.userProfile?.external_urls?.spotify}
+                                target="noopener"
+                                className="ml-auto">
+                                <Button variant="outline-success">
+                                    Profile
+                                </Button>
+                            </a>
+                    </div>
+                    <SettingNameValue name="Account Id" value={this.state.userProfile?.id} />
+                    <SettingNameValue name="Followers" value={this.state.userProfile?.followers?.total} />
+                    <SettingNameValue name="Region" value={this.state.userProfile?.country} />
                     <SettingNameValue name="Enable Web Playback" value="Coming Soon..." />
                     <div className="w-100 text-right my-2">
                         <Button
@@ -73,36 +115,54 @@ class Settings extends Component {
                     <div className="horizontal-separator" />
 
                     <h5>Language</h5>
-                    <SettingNameValue name="Automatic Romanize" value="Yes/No" />
+                    <SettingNameValue name="Automatic Romanize" value="Coming Soon..." />
 
                     <div className="horizontal-separator" />
-
+            
                     <h4>Credits</h4>
+                    <div className="d-flex mb-2">
+                        <p className="my-0">Created By</p>
+                        <div className="ml-auto d-flex">
+                            <a href="https://joshlmao.com" className="mx-2">
+                                <p className="my-0">JoshLmao</p>
+                            </a>
+                            <a href="https://github.com/JoshLmao" target="noopener" className="mx-2">
+                                <FontAwesomeIcon icon={faGithub} />
+                            </a>
+                            <a href="https://twitter.com/JoshLmao" target="noopener" className="mx-2">
+                                <FontAwesomeIcon icon={faTwitter} />
+                            </a>
+                        </div>
+                    </div>
+
+                    <p>If you enjoy this app, please consider supporting me through one of the options below. If not, thank you for using and enjoying the app! <span role="img" aria-label="hug emoji">🤗</span></p>
                     <p className="text-center">
                         <a 
-                            href="https://github.com/sponsors/JoshLmao">
+                            href="https://github.com/sponsors/JoshLmao"
+                            className="m-2">
                             <img 
                                 alt="Github Sponsor Advert"
                                 src={process.env.PUBLIC_URL + '/img/github-sponsor.png'} 
-                                height="60px"/>
+                                className="my-2"
+                                height="50px"/>
                         </a>
-                    </p>
-                    <p 
-                        className="text-center">
                         <a 
                             href="https://brave.com/jos677" 
-                                className="mr-1">
+                                className="m-2">
                             <img 
                                 alt="Brave Browser advert"
                                 src={process.env.PUBLIC_URL + '/img/BraveBat.png'} 
-                                style={{ height: "50px" }} />
+                                className="my-2"
+                                style={{ height: "40px" }} />
                         </a>
                         <a 
-                            href="https://paypal.me/xjoshlmao">
+                            href="https://paypal.me/xjoshlmao"
+                            className="m-2">
                             <img 
                                 alt="Paypal Donation Advert"
                                 src="https://i.imgur.com/UfSd0gP.png" 
-                                style={{ height: "60px" }} />
+                                className="my-2"
+                                style={{ height: "50px" }} />
                         </a>
                     </p>
 

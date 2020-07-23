@@ -257,7 +257,12 @@ const SpotifyService = {
             play: play,
         };
         this.makeApiDataRequest("PUT", url, authToken, reqData);
-    }
+    },
+
+    getCurrentUserProfile: function (authToken, callback) {
+        let url = "https://api.spotify.com/v1/me";
+        this.makeApiRequest("GET", url, authToken, callback);
+    },
 }
 
 export default SpotifyService;

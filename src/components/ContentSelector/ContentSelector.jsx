@@ -36,7 +36,7 @@ class ContentSelector extends Component {
                             return (
                                 <div    
                                     onClick={this.onSelectContent}
-                                    className={`mx-2 ${this.state.selectedSelection === value && "active-selection"}`}
+                                    className={`content-selector-item mx-auto ${this.state.selectedSelection === value && "active-selection"}`}
                                     data-tag={value}
                                     key={value}>
                                     <h6 

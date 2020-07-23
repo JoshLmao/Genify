@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
     Row,
-    Col,
     Toast,
 } from "react-bootstrap";
 import {
@@ -164,7 +163,7 @@ class Service extends Component {
 
     onContentPanelSelected(panel) {
         if (panel !== this.state.mainContentPanel) {
-            console.log("changing to " + panel + " main panel");
+            //console.log(`Content changed to '${panel}'`);
             this.setState({
                 mainContentPanel: panel,
             });
@@ -192,7 +191,7 @@ class Service extends Component {
                             <Lyrics playState={this.state.playState} />
                         </div>
                         <div className={"w-100 h-100 " + (this.state.mainContentPanel === "settings" ? "d-block" : "d-none")}>
-                            <Settings />
+                            <Settings auth={this.state.auth} />
                         </div>
                     </Row>
                 </div>

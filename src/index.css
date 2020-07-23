@@ -119,6 +119,10 @@ html, body, #root {
     border-color: var(--genify-light-background);
 }
 
+.content-selector-item {
+    cursor: pointer;
+}
+
 .active-selection {
     color: var(--spotify-active-text);
 }
@@ -127,6 +131,25 @@ html, body, #root {
     background-color: rgb(32, 32, 32);
     height: 0.15rem;
     width: 100%;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-top: 1.75rem;
+    margin-bottom: 1.75rem;
+}
+
+.changelog-modal {
+    height: 95%;
+}
+
+.changelog-modal .modal-dialog {
+    height: 95%;
+}
+.changelog-modal .modal-content {
+    height: 95%;
+}
+
+.changelog-body {
+    background-color: rgb(17, 17, 17)!important;
+    border-color: #222;
+    font-size: 0.85rem;
+    max-height: 95%;
+    overflow-y: auto;
 }
