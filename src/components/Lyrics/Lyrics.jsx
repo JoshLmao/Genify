@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {
     Button, 
-    Form
+    Form,
+    Col
 } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -200,7 +201,7 @@ class Lyrics extends Component {
     
     render() {
         return (
-            <div className="w-100 lyrics-container py-2">
+            <div className="py-2 w-100 h-100">
                 <div className="text-center h-100">
                     {
                         !this.state.loaded && <FontAwesomeIcon className="fa-spin" size="3x" icon={faSpinner} />
@@ -209,38 +210,41 @@ class Lyrics extends Component {
                     {
                         this.state.romanizedLyrics && this.state.loaded &&
                         <div className="h-100">
-                             <div 
-                                    className="pr-5 mb-2 text-right d-none d-sm-block"
-                                    style={{ 
-                                        height: "35px", 
-                                        position: "absolute", 
-                                        right: 0,
-                                        fontSize: "0.8rem",
-                                        }}>
-                                        <h6 className="mb-1">Lyric Info</h6>
-                                        <a 
-                                            href={this.state.lyricsInfo.result.url}
-                                            className="py-1">
-                                            {this.state.lyricsInfo.result.full_title}
-                                        </a>
-                                        {
-                                            this.state.originalLyricLanguage !== ELanguages.ENG && 
-                                            <Form>
-                                                <Form.Check
-                                                    type="switch"
-                                                    id="custom-switch"
-                                                    label="Romanize"
-                                                    onChange={this.onToggleRomanize}>
-                                                </Form.Check>
-                                            </Form>
-                                            
-                                        }
-                                </div>
-                                <div className="lyrics-content" >
-                                    { this.state.romanizedLyrics }
-                                </div>
+                             <Col 
+                                md={3} 
+                                sm={3}
+                                className="pr-4 pl-0 mb-2 text-right d-none d-sm-block"
+                                style={{ 
+                                    height: "35px", 
+                                    position: "absolute", 
+                                    right: 0,
+                                    fontSize: "0.8rem",
+                                    }}>
+                                    <h6 className="mb-1">Lyric Info</h6>
+                                    <a 
+                                        href={this.state.lyricsInfo.result.url}
+                                        className="py-1">
+                                        {this.state.lyricsInfo.result.full_title}
+                                    </a>
+                                    {
+                                        this.state.originalLyricLanguage !== ELanguages.ENG && 
+                                        <Form>
+                                            <Form.Check
+                                                type="switch"
+                                                id="custom-switch"
+                                                label="Romanize"
+                                                onChange={this.onToggleRomanize}>
+                                            </Form.Check>
+                                        </Form>
+                                        
+                                    }
+                            </Col>
+                            <div className="lyrics-content" >
+                                { this.state.romanizedLyrics }
+                            </div>
                         </div>
                     }
+                    {/* No song/lyrics UI */}
                     {
                         !this.state.originalLyrics && this.state.loaded && 
                         <div className="d-flex flex-column">

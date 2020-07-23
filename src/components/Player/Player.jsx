@@ -100,7 +100,6 @@ class Player extends Component {
             this.setState({
                 auth: this.props.auth,
             });
-            console.log("Player Auth recieved update");
         }
     }
 
@@ -204,15 +203,15 @@ class Player extends Component {
                                     style={{ maxWidth: "75px", maxHeight: "75px" }}></img>
                             </a>
                         }
-                        <div className="w-100 ml-2">
+                        <div className="w-100 ml-2 song-info">
                             <a 
                                 href={ this.state.playState ? this.state.playState.item?.external_urls?.spotify : "#" }>
-                                <h6 className="song-info">
+                                <h6>
                                     { this.state.playState ? this.state.playState.item?.name : "" }
                                 </h6>
                             </a>
                             {/* Artists */}
-                            <h6 className="song-info">
+                            <h6>
                                 { this.state.playState ? getFormattedArtists(this.state.playState) : "" }
                             </h6>
                         </div>

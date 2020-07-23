@@ -44,8 +44,8 @@ class Navigation extends Component {
         return (
             <div className="genify-navbar">
                 <Navbar 
-                    expand="sm" 
-                    style={{ backgroundColor: "#111111" }}>
+                    className="genify-nav-bg"
+                    expand="sm">
                     <Container>
                         <Navbar.Brand href="/" className="text-white">Genify</Navbar.Brand>
                         <Nav.Link 

@@ -1,10 +1,15 @@
 :root {
+    /* Main top nav bar height*/
     --navbar-height: 56px;
+    /* Size of spotify player bar */
     --player-height: 90px;
+    /* Height of the small bar to control which content is main focused (Lyrics/Settings/Etc)*/
+    --focused-content-nav-height: 35px;
 
     --spotify-black: rgb();
     --spotify-active-text: rgb(30, 215, 96);
 
+    --genify-nav-bg: rgb(17, 17, 17);
     --genify-light-background: rgb(40,40,40);
     /* Currently Spotify black color */
     --genify-dark-background: rgb(25, 20, 20);
@@ -43,6 +48,7 @@ html, body, #root {
     background-color: var(--genify-light-background);
 }
 
+/* Div that contains lyrics */
 .lyrics-content {
     white-space: pre-wrap;
     overflow-y: auto;
@@ -50,8 +56,27 @@ html, body, #root {
     height: 100%;
 }
 
-.lyrics-container {
+.scrollable-main-content {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+}
+
+/* Total container that encompases content nav and content */
+.main-content-container {
     height: calc(100% - var(--player-height))!important;
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+/* Nav that selects which content is main focus */
+.content-nav {
+    height: var(--focused-content-nav-height)!important;
+}
+
+/* Current selected focused content */
+.focused-content-container {
+    height: calc(100% - var(--focused-content-nav-height))!important;
 }
 
 .song-info {
@@ -60,8 +85,19 @@ html, body, #root {
     text-overflow: ellipsis;
 }
 
+.song-info a {
+    color: rgb(200, 200, 200);
+}
+.song-info a:hover {
+    color: white;
+}
+
 .genify-dark-background {
     background-color: var(--genify-dark-background)!important;
+}
+
+.genify-nav-bg {
+    background-color: var(--genify-nav-bg)!important;
 }
 
 .no-child-margins p {
@@ -81,4 +117,16 @@ html, body, #root {
 .playback-devices-title {
     background: transparent;
     border-color: var(--genify-light-background);
+}
+
+.active-selection {
+    color: var(--spotify-active-text);
+}
+
+.horizontal-separator {
+    background-color: rgb(32, 32, 32);
+    height: 0.15rem;
+    width: 100%;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
 }

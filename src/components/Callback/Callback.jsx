@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import Cookies from "js-cookie";
 
-import Cookies, { EGenifyCookieNames } from "../../helpers/cookieHelper";
+import { EGenifyCookieNames } from "../../enums/cookies";
 import SpotifyService from "../../services/spotify";
 
 class Callback extends Component {
@@ -39,7 +40,7 @@ class Callback extends Component {
                 let auth = SpotifyService.parseAuth(authData);
                 if(auth) {
                     let stringified = JSON.stringify(auth);
-                    Cookies.setCookie(EGenifyCookieNames.SPOTIFY_AUTH, stringified);
+                    Cookies.set(EGenifyCookieNames.SPOTIFY_AUTH, stringified, { path: '' });
                    
                     console.log("Successfully saved auth! Redirecting...");
                     setTimeout(() => {

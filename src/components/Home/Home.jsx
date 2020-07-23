@@ -8,9 +8,10 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTwitter, faSpotify } from '@fortawesome/free-brands-svg-icons';
 import { Redirect } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import SpotifyService from "../../services/spotify";
-import Cookies, { EGenifyCookieNames } from "../../helpers/cookieHelper";
+import { EGenifyCookieNames } from "../../enums/cookies";
 
 import "./Home.css";
 
@@ -47,17 +48,28 @@ class Home extends Component {
     }
 
     onGetSpotifyAuth() {
-        let prevAuthStr = Cookies.getCookie(EGenifyCookieNames.SPOTIFY_AUTH);
-        let prevAuth = JSON.parse(prevAuthStr);
-        if (prevAuth !== null && prevAuth.refreshToken) {
-            this.setState({
-                redirect: "/app",
-            });
-        } else {
-            // No auth stored, ask for auth from the user
-            let url = SpotifyService.getPKCEAuthUri();
-            window.location = url;
+        let prevAuthStr = Cookies.get(EGenifyCookieNames.SPOTIFY_AUTH, { path: '' });
+        if(prevAuthStr)
+        {
+            try
+            {
+                let prevAuth = JSON.parse(prevAuthStr);
+                if (prevAuth !== null && prevAuth.refreshToken) {
+                    this.setState({
+                        redirect: "/app",
+                    });
+                    // Return once auth has been validated
+                    return;
+                }
+            }
+            catch(e)
+            {
+                console.error("Unable to parse current stored cookie");
+            }
         }
+        // No auth stored, ask for auth from the user
+        let url = SpotifyService.getPKCEAuthUri();
+        window.location = url;
     }
 
     render() {

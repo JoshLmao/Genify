@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
     Row,
+    Col,
     Toast,
 } from "react-bootstrap";
 import {
@@ -8,12 +9,16 @@ import {
     SPOTIFY_REFRESH_MINUTES
 } from "../../consts";
 import { Redirect } from 'react-router-dom';
+import Cookies from "js-cookie";
 
-import Player from "../Player";
 import SpotifyService from "../../services/spotify";
+import { EGenifyCookieNames } from "../../enums/cookies";
 import { hasAuthExpired } from "../../helpers/spotifyHelper";
-import Cookies, { EGenifyCookieNames } from "../../helpers/cookieHelper";
+
 import Lyrics from '../Lyrics/Lyrics';
+import ContentSelector from "../ContentSelector";
+import Settings from "../Settings";
+import Player from "../Player";
 
 class Service extends Component {
     constructor(props) {
@@ -21,7 +26,7 @@ class Service extends Component {
 
         // Retrieve saved auth in cookies
         let redirect = "";
-        let authStringified = Cookies.getCookie(EGenifyCookieNames.SPOTIFY_AUTH);
+        let authStringified = Cookies.get(EGenifyCookieNames.SPOTIFY_AUTH);
         let auth = JSON.parse(authStringified);
         let isRefreshing = false;
         if (auth === null) {
@@ -38,7 +43,7 @@ class Service extends Component {
                     isRefreshing = true;
                     this.refreshAuth(auth.refreshToken);
                 } else {
-                    Cookies.deleteCookie(EGenifyCookieNames.SPOTIFY_AUTH);
+                    Cookies.remove(EGenifyCookieNames.SPOTIFY_AUTH);
                     redirect = "/?auth=expired";
                     console.log("Auth found but has expired");
                 }
@@ -59,10 +64,14 @@ class Service extends Component {
             showInfoMessage: false,
 
             redirect: redirect,
+
+            mainContentPanel: "lyrics",
         };
 
         this.initService = this.initService.bind(this);
         this.refreshAuth = this.refreshAuth.bind(this);
+
+        this.onContentPanelSelected = this.onContentPanelSelected.bind(this);
     }
     
     componentDidMount() {
@@ -136,11 +145,11 @@ class Service extends Component {
             if(auth) {
                 console.log(`Successfully refreshed auth. Expires at '${auth.expireDate.toLocaleString()}'`);
                 let stringified = JSON.stringify(auth);
-                Cookies.setCookie(EGenifyCookieNames.SPOTIFY_AUTH, stringified);
+                Cookies.set(EGenifyCookieNames.SPOTIFY_AUTH, stringified);
             } else {
                 // Unable to refresh the previous auth
                 console.error("Error when trying to refresh auth");
-                Cookies.deleteCookie(EGenifyCookieNames.SPOTIFY_AUTH);
+                Cookies.remove(EGenifyCookieNames.SPOTIFY_AUTH);
                 this.setState({ redirect: "/?auth=refresh_error" })
             }
 
@@ -153,6 +162,15 @@ class Service extends Component {
         });
     }
 
+    onContentPanelSelected(panel) {
+        if (panel !== this.state.mainContentPanel) {
+            console.log("changing to " + panel + " main panel");
+            this.setState({
+                mainContentPanel: panel,
+            });
+        }
+    }
+
     render() {
         return (
             <div
@@ -162,8 +180,22 @@ class Service extends Component {
                         playState={this.state.playState}
                         auth={this.state.auth} />
                 </Row>
-                <Lyrics 
-                    playState={this.state.playState} />
+                {/* Main content selection nav */}
+                <div className="main-content-container">
+                    <Row
+                        className="content-nav mx-0">
+                        <ContentSelector 
+                            onContentSelected={this.onContentPanelSelected} />
+                    </Row>
+                    <Row className="focused-content-container mx-0">
+                        <div className={"w-100 h-100 " + (this.state.mainContentPanel === "lyrics" ? "d-block" : "d-none")} >
+                            <Lyrics playState={this.state.playState} />
+                        </div>
+                        <div className={"w-100 h-100 " + (this.state.mainContentPanel === "settings" ? "d-block" : "d-none")}>
+                            <Settings />
+                        </div>
+                    </Row>
+                </div>
                 {
                     this.state.infoMessage &&
                     <Toast 
