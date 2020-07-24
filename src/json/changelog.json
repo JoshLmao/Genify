@@ -1,6 +1,13 @@
 {
     "logs": [
         {
+            "version": "3.0.6",
+            "changes": [
+                "You can now set and save app options under the settings tab",
+                "Can enable automatic romanization of lyrics in settings to automatically romanize when new lyrics appear, if they aren't already"
+            ]
+        },
+        {
             "version": "3.0.5",
             "changes": [
                 "(Re)fixed issue [#10](https://github.com/JoshLmao/Genify/issues/10) to allow cookies to stay after browser is closed"

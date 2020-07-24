@@ -2,7 +2,12 @@ import React from 'react';
 import { 
     faQuestion,
     faTv, 
-    faLaptop
+    faLaptop,
+    faMobile,
+    faTablet,
+    faGamepad,
+    faCar,
+    faVolumeUp,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Gets a formatted string of all artists on one track, separated with a comma and correct hyperlinking
@@ -57,6 +62,18 @@ export function deviceTypeToIcon (deviceType) {
             return faTv;
         case "computer":
             return faLaptop;
+        case "smartphone":
+            return faMobile;
+        case "tablet":
+            return faTablet;
+        case "gameconsole":
+            return faGamepad;
+        case "speaker":
+            // faSpeaker isn't part of font awesome free ;( so use volume up instead
+            return faVolumeUp;
+        case "automobile":
+            // Yo, if you are actually casting to Spotify in a car, then you livin' in 2077
+            return faCar;
         default:
             return faQuestion;
     }

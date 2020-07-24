@@ -96,6 +96,10 @@ html, body, #root {
     background-color: var(--genify-dark-background)!important;
 }
 
+.genify-light-background {
+    background-color: var(--genify-light-background)!important;
+}
+
 .genify-nav-bg {
     background-color: var(--genify-nav-bg)!important;
 }
@@ -106,7 +110,7 @@ html, body, #root {
 }
 
 .playback-device-item {
-    background: var(--genify-dark-background);
+    background: transparent;
     color: white;
 }
 

@@ -107,9 +107,8 @@ class Lyrics extends Component {
                             }, () => {
                                 /// Once state is set, check if lyrics need to be auto-romanized
                                 let appSettings = getAppSettings()
-                                if(appSettings && appSettings.autoRomanize) {
+                                if(appSettings && appSettings.autoRomanize && this.state.originalLyricLanguage !== ELanguages.ENG) {
                                     this.onToggleRomanize();
-                                    console.log("AutoRomanize on. Romanizing lyrics...");
                                 }
                             });
                         });

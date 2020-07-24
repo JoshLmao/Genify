@@ -60,11 +60,11 @@ class DevicesPopover extends Component {
         return (
             <OverlayTrigger
                 placement="bottom"
-                trigger="click"
+                trigger="focus"
                 overlay={
                     <Popover 
                         id="devices-popover"
-                        className="genify-dark-background"
+                        className="genify-light-background"
                         {...this.props}>
                         <Popover.Title as="h3" className="playback-devices-title text-center">
                             Connect to a device

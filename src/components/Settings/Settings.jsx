@@ -14,6 +14,7 @@ import {
     tryParseJSON
 } from "../../helpers/general";
 import SpotifyService from '../../services/spotify';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 function SettingNameValue(props) {
     return (
@@ -161,24 +162,30 @@ class Settings extends Component {
                                 target="noopener"
                                 className="ml-auto">
                                 <Button variant="outline-success">
-                                    Profile
+                                    <FontAwesomeIcon icon={faUser} />
                                 </Button>
                             </a>
                     </div>
                     <SettingNameValue name="Account Id" value={this.state.userProfile?.id ?? "Unknown"} />
                     <SettingNameValue name="Followers" value={this.state.userProfile?.followers?.total ?? "Unknown"} />
                     <SettingNameValue name="Region" value={this.state.userProfile?.country ?? "Antarctica"} />
-                    <SettingNameValue name="Enable Web Playback" value="Coming Soon..." />
                     <div className="w-100 text-right my-2">
                         <Button
                             variant="success"
-                            onClick={this.onSpotifySignOut}>
+                            onClick={this.onSpotifySignOut}
+                            className="px-4">
                             <FontAwesomeIcon 
                                 className="mr-2"
                                 icon={faSpotify} />
                             Sign Out
                         </Button>
                     </div>
+
+                    {/* Spotify specific settings */}
+                    <div className="pt-3">
+                        <SettingNameValue name="Enable Web Playback" value="Coming soon..." />
+                    </div>
+
                     
                     <div className="horizontal-separator" />
 
@@ -206,8 +213,23 @@ class Settings extends Component {
                             </a>
                         </div>
                     </div>
-
+                    
                     <p>If you enjoy this app, please consider supporting me through one of the options below. If not, thank you for using and enjoying the app! <span role="img" aria-label="hug emoji">🤗</span></p>
+                    {/* Spotify Follow Button */}
+                    <div className="w-100 text-center">
+                        <iframe 
+                            className="mx-auto"
+                            title="spotify follow joshlmao"
+                            src="https://open.spotify.com/follow/1/?uri=spotify:user:1121645175&size=detail&theme=dark" 
+                            width="300"
+                            height="56"
+                            scrolling="no" 
+                            frameborder="0" 
+                            style={{ border:"none", overflow:"hidden" }} 
+                            allowtransparency="true">
+                        </iframe>
+                    </div>
+                    {/* Github Sponsor, Brave & Paypal adverts */}
                     <p className="text-center">
                         <a 
                             href="https://github.com/sponsors/JoshLmao"

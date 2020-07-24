@@ -30,7 +30,7 @@ class ContentSelector extends Component {
         return (
             <div className="genify-nav-bg w-100">
                 <Container 
-                    className="h-100 d-flex align-items-center genify-light-background">
+                    className="h-100 d-flex align-items-center">
                     {
                         this.state.selections && this.state.selections.map((value, index) => {
                             return (
