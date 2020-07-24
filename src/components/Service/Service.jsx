@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import SpotifyService from "../../services/spotify";
 import { EGenifyCookieNames } from "../../enums/cookies";
 import { hasAuthExpired } from "../../helpers/spotifyHelper";
+import { tryParseJSON } from "../../helpers/general";
 
 import Lyrics from '../Lyrics/Lyrics';
 import ContentSelector from "../ContentSelector";
@@ -28,13 +29,7 @@ class Service extends Component {
         let auth = null;
         let isRefreshing = false;
         let authStringified = Cookies.get(EGenifyCookieNames.SPOTIFY_AUTH);
-
-        try {
-            auth = JSON.parse(authStringified);
-        } catch(e) {
-            console.error("Unable to parse auth cookie");
-        }
-        
+        auth = tryParseJSON(authStringified);
         if (auth === null) {
             redirect = "/?auth=invalid";
             console.log("No auth in cookies or corrupted, going home");
@@ -45,7 +40,7 @@ class Service extends Component {
             if (auth.expireDate < Date.now()) {
                 // If auth has a refresh token, use it to refresh otherwise delete and redirect user to home
                 if(auth.refreshToken) {
-                    console.log(`Auth expired at '${auth.expireDate.toLocaleString()}'. Using refreshToken to get new auth'`);
+                    console.log(`Auth expired at '${auth.expireDate.toLocaleString()}'. Using refreshToken to get new auth`);
                     isRefreshing = true;
                     this.refreshAuth(auth.refreshToken);
                 } else {

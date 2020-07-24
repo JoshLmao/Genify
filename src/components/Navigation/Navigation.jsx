@@ -121,7 +121,7 @@ class Navigation extends Component {
                             }}>
                             <Button 
                                 variant="outline-light"
-                                className="ml-auto" onClick={() => { this.toggleChangelog(); console.log("updating"); }}>
+                                className="ml-auto" onClick={() => { this.toggleChangelog(); }}>
                                 Close
                             </Button>
                         </Modal.Footer>

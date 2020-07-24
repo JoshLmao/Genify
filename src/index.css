@@ -137,6 +137,7 @@ html, body, #root {
 
 .changelog-modal {
     height: 95%;
+    overflow-y: hidden!important;
 }
 
 .changelog-modal .modal-dialog {
@@ -152,4 +153,15 @@ html, body, #root {
     font-size: 0.85rem;
     max-height: 95%;
     overflow-y: auto;
+}
+
+/* Override default style for bootstrap active switch */
+.custom-control-input:checked~.custom-control-label::before {
+    border-color: var(--spotify-active-text);
+    background-color: var(--spotify-active-text);
+}
+/* Override default style for bootstrap deactive switch */
+.custom-switch .custom-control-label::before {
+    border-color: var(--genify-light-background);
+    background-color: var(--genify-light-background);
 }

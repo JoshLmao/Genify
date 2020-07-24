@@ -6,16 +6,18 @@ import {
 } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import {
-    determineLanguage,
-    ELanguages
-} from "../../helpers/languageHelper";
 
 import Kuroshiro from "kuroshiro";
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 import pinyin4js from 'pinyin4js';
 import Aromanize from "aromanize";
 import cyrillicToTranslit from "cyrillic-to-translit-js";
+
+import { ELanguages } from "../../enums/languages";
+import { 
+    getAppSettings
+} from '../../helpers/general';
+import { determineLanguage } from "../../helpers/languageHelper";
 
 import GeniusService from '../../services/genius';
 import "./Lyrics.css";
@@ -102,6 +104,13 @@ class Lyrics extends Component {
                                 lyricsInfo: info,
                                 loaded: true,
                                 lyricsSpotifyTrackName: this.state.playState.item,
+                            }, () => {
+                                /// Once state is set, check if lyrics need to be auto-romanized
+                                let appSettings = getAppSettings()
+                                if(appSettings && appSettings.autoRomanize) {
+                                    this.onToggleRomanize();
+                                    console.log("AutoRomanize on. Romanizing lyrics...");
+                                }
                             });
                         });
                     } else {
@@ -233,6 +242,7 @@ class Lyrics extends Component {
                                                 type="switch"
                                                 id="custom-switch"
                                                 label="Romanize"
+                                                checked={this.state.isRomanized}
                                                 onChange={this.onToggleRomanize}>
                                             </Form.Check>
                                         </Form>

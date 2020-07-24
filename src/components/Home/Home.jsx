@@ -14,6 +14,7 @@ import SpotifyService from "../../services/spotify";
 import { EGenifyCookieNames } from "../../enums/cookies";
 
 import "./Home.css";
+import { tryParseJSON } from '../../helpers/general';
 
 /// Handles converting an auth error code to an error message
 function getAuthMessage(authStatus) {
@@ -51,22 +52,16 @@ class Home extends Component {
         let prevAuthStr = Cookies.get(EGenifyCookieNames.SPOTIFY_AUTH, { path: '' });
         if(prevAuthStr)
         {
-            try
-            {
-                let prevAuth = JSON.parse(prevAuthStr);
-                if (prevAuth !== null && prevAuth.refreshToken) {
-                    this.setState({
-                        redirect: "/app",
-                    });
-                    // Return once auth has been validated
-                    return;
-                }
-            }
-            catch(e)
-            {
-                console.error("Unable to parse current stored cookie");
+            let prevAuth = tryParseJSON(prevAuthStr);
+            if (prevAuth !== null && prevAuth.refreshToken) {
+                this.setState({
+                    redirect: "/app",
+                });
+                // Return once auth has been validated
+                return;
             }
         }
+        
         // No auth stored, ask for auth from the user
         let url = SpotifyService.getPKCEAuthUri();
         window.location = url;

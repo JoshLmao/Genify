@@ -1,20 +1,47 @@
 import React, { Component } from 'react';
-import { Container, Button } from 'react-bootstrap';
+import { 
+    Container, 
+    Button, 
+    Form,
+} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpotify, faTwitter, faGithub } from '@fortawesome/free-brands-svg-icons';
-import { EGenifyCookieNames } from '../../enums/cookies';
 import { Redirect } from 'react-router-dom';
 import Cookies from "js-cookie";
+
+import { EGenifyCookieNames } from '../../enums/cookies';
+import {
+    tryParseJSON
+} from "../../helpers/general";
 import SpotifyService from '../../services/spotify';
 
 function SettingNameValue(props) {
     return (
-        <div className="d-flex" {...props}>
+        <div className="d-flex">
             <div>
                 {props.name}
             </div>
             <div className="ml-auto">
-                {props.value}
+                {/* Use check if 'check' prop is there */}
+                {
+                    props.check && 
+                    <Form>
+                        <Form.Check
+                            checked={props.value}
+                            type="switch"
+                            id="testingswitch"
+                            label=""
+                            aria-label={props.name}
+                            onChange={(event) => {
+                                if (props.onCheckToggled) {
+                                    props.onCheckToggled(event.target.checked);
+                                }
+                            }}>
+                        </Form.Check>
+                    </Form>
+                }
+                {/* Display normal value */}
+                { props.value }
             </div>
         </div>
     )
@@ -24,33 +51,63 @@ class Settings extends Component {
     constructor(props) {
         super(props);
 
+        // Default app settings
+        let appSettings = {
+            autoRomanize: false,
+        };
+
+        // Check if settings cookie exists and set
+        let settingsJsonStr = Cookies.get(EGenifyCookieNames.APP_SETTINGS, { path: '' });
+        if(settingsJsonStr) {
+            let parsedSettings = tryParseJSON(settingsJsonStr);
+            if(parsedSettings) {
+                appSettings = parsedSettings;
+            }
+        } else {
+            let stringified = JSON.stringify(appSettings);
+            Cookies.set(EGenifyCookieNames.APP_SETTINGS, stringified, { path: '', expires: 365 });
+        }
+
         this.state = {
             auth: props.auth,
 
             redirect: "",
 
             userProfile: null,
+
+            settings: appSettings,
         };
 
         this.onSpotifySignOut = this.onSpotifySignOut.bind(this);
+        this.getLatestUserProfile = this.getLatestUserProfile.bind(this);
+        this.onAutoRomanizeToggled = this.onAutoRomanizeToggled.bind(this);
+        this.onSettingChanged = this.onSettingChanged.bind(this);
     }
 
     componentDidMount() {
         // Fetch data from spotify
-        if (this.state.auth) {
-            SpotifyService.getCurrentUserProfile(this.state.auth.authToken, (profileData) => {
-                //console.log(profileData);
-                this.setState({
-                    userProfile: profileData,
-                });
-            });
-        }
+        this.getLatestUserProfile();
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.auth !== this.props.auth) {
             this.setState({
                 auth: this.props.auth,
+            }, () => this.getLatestUserProfile());
+        }
+    }
+    
+    onSettingChanged() {
+        let stringified = JSON.stringify(this.state.settings);
+        Cookies.set(EGenifyCookieNames.APP_SETTINGS, stringified, { path: '', expires: 365 });
+    }
+
+    getLatestUserProfile() {
+        if (this.state.auth) {
+            SpotifyService.getCurrentUserProfile(this.state.auth.authToken, (profileData) => {
+                this.setState({
+                    userProfile: profileData,
+                });
             });
         }
     }
@@ -68,6 +125,17 @@ class Settings extends Component {
         });
     }
 
+    onAutoRomanizeToggled(isChecked) {
+        this.setState({
+            settings: {
+                ...this.state.settings,
+                autoRomanize: isChecked,
+            },
+        }, () => {
+            this.onSettingChanged();
+        });
+    }
+
     render() {
         return (
             <div className="w-100 h-100">
@@ -79,13 +147,13 @@ class Settings extends Component {
                     <div className="d-flex px-3 my-3">
                         <img
                             alt="Signed in user icon"
-                            src={this.state.userProfile?.images[0]?.url} 
+                            src={this.state.userProfile?.images[0]?.url ?? "https://via.placeholder.com/50"} 
                             style={{ maxHeight: "50px", maxWidth: "50px" }} />
                             <div className="px-3">
-                                <h6>{this.state.userProfile?.display_name}</h6>
+                                <h6>{this.state.userProfile?.display_name ?? "No Display Name"}</h6>
                                 <h6
                                     style={{ color: "rgb(200, 200, 200)", fontSize: "0.8rem" }}>
-                                    {"SPOTIFY " + this.state.userProfile?.product.toUpperCase()}
+                                    { this.state.userProfile?.product ? "SPOTIFY " + this.state.userProfile?.product.toUpperCase() : "UNKNOWN"}
                                 </h6>
                             </div>
                             <a 
@@ -97,9 +165,9 @@ class Settings extends Component {
                                 </Button>
                             </a>
                     </div>
-                    <SettingNameValue name="Account Id" value={this.state.userProfile?.id} />
-                    <SettingNameValue name="Followers" value={this.state.userProfile?.followers?.total} />
-                    <SettingNameValue name="Region" value={this.state.userProfile?.country} />
+                    <SettingNameValue name="Account Id" value={this.state.userProfile?.id ?? "Unknown"} />
+                    <SettingNameValue name="Followers" value={this.state.userProfile?.followers?.total ?? "Unknown"} />
+                    <SettingNameValue name="Region" value={this.state.userProfile?.country ?? "Antarctica"} />
                     <SettingNameValue name="Enable Web Playback" value="Coming Soon..." />
                     <div className="w-100 text-right my-2">
                         <Button
@@ -115,7 +183,11 @@ class Settings extends Component {
                     <div className="horizontal-separator" />
 
                     <h5>Language</h5>
-                    <SettingNameValue name="Automatic Romanize" value="Coming Soon..." />
+                    <SettingNameValue 
+                        name="Automatically romanize Chinese/Japanese/Korean/Russian" 
+                        value={this.state.settings?.autoRomanize ?? false} 
+                        check 
+                        onCheckToggled={this.onAutoRomanizeToggled} />
 
                     <div className="horizontal-separator" />
             
