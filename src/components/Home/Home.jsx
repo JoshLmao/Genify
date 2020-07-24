@@ -26,6 +26,8 @@ function getAuthMessage(authStatus) {
             return "User's authorization has expired. Please sign in again";
         case "refresh_error":
             return "An error occured when attempting to refresh the previous Spotify authorization. Please sign in again";
+        case "state_error":
+            return "The recieved state doesn't match. If you are trying to manipulate the requests, please dont :)";
         default:
             return "Unknown error. Sorry, you shouldn't see this";
     }

@@ -36,7 +36,7 @@ const SpotifyService = {
         let codeChallengeMethod = challenge.method;
         let codeChallenge = challenge.challenge;
 
-        let appState = "jhkmsdgfiudf3243";
+        let appState = "genify-app";
         let params = [
             `response_type=${responseType}`,
             `client_id=${SPOTIFY_CLIENT_ID}`,
