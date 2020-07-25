@@ -48,22 +48,32 @@ class Callback extends Component {
                 }
             }
             
-            SpotifyService.exchangePKCECode(this.state.exchangeData.code, (authData) => {
-                let auth = SpotifyService.parseAuth(authData);
-                if(auth) {
-                    let stringified = JSON.stringify(auth);
-                    Cookies.set(EGenifyCookieNames.SPOTIFY_AUTH, stringified, { path: '', expires: 365 });
-                   
-                    console.log("Successfully saved auth! Redirecting...");
-                    setTimeout(() => {
-                        this.setState({
-                            redirect: "/app",
-                        });
-                    }, 100);
-                } else {
-                    console.error("Unable to parse and save auth");
-                }
-            });
+            // User has denied auth or error has occured
+            if (this.state.exchangeData.error) {
+                this.setState({
+                    redirect: "/?auth=" + this.state.exchangeData.error,
+                });
+            }
+
+            // If callback includes exchange code from Spotify, exchange
+            if(this.state.exchangeData.code) {
+                SpotifyService.exchangePKCECode(this.state.exchangeData.code, (authData) => {
+                    let auth = SpotifyService.parseAuth(authData);
+                    if(auth) {
+                        let stringified = JSON.stringify(auth);
+                        Cookies.set(EGenifyCookieNames.SPOTIFY_AUTH, stringified, { path: '', expires: 365 });
+
+                        console.log("Successfully saved auth! Redirecting...");
+                        setTimeout(() => {
+                            this.setState({
+                                redirect: "/app",
+                            });
+                        }, 100);
+                    } else {
+                        console.error("Unable to parse and save auth");
+                    }
+                });
+            }
         }
     }
 

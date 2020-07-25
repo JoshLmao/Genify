@@ -28,6 +28,8 @@ function getAuthMessage(authStatus) {
             return "An error occured when attempting to refresh the previous Spotify authorization. Please sign in again";
         case "state_error":
             return "The recieved state doesn't match. If you are trying to manipulate the requests, please dont :)";
+        case "access_denied":
+            return "You have denied access to your authorization. Genify needs your permission to continue. Click 'Sign In' to try again"
         default:
             return "Unknown error. Sorry, you shouldn't see this";
     }
