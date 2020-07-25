@@ -42,92 +42,90 @@ class Navigation extends Component {
         let modalBgColor = "#111";
         let modalSeparatorColor = "#222";
         return (
-            <div className="genify-navbar">
-                <Navbar 
-                    className="genify-nav-bg"
-                    expand="sm">
-                    <Container>
-                        <Navbar.Brand href="/" className="text-white">Genify</Navbar.Brand>
-                        <Nav.Link 
-                            className="p-0 align-bottom mt-1"
-                            style={{ fontSize: "0.85rem" }}
-                            href="" 
-                            onClick={this.toggleChangelog}>
-                                {
-                                    pkg ? "v" + pkg.version : "v0.0.0"
-                                }
-                            </Nav.Link>
-                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                        <Navbar.Collapse id="basic-navbar-nav">
-                            <Nav className="ml-auto">
-                                <Nav.Link className="py-0" href={GITHUB_LINK}>
-                                    <Button variant="outline-secondary">
-                                        <FontAwesomeIcon icon={faGithub} />
-                                    </Button>
-                                </Nav.Link>
-                                <Nav.Link className="py-0" href={TWITTER_LINK}>
-                                    <Button variant="outline-secondary">
-                                        <FontAwesomeIcon icon={faTwitter} />
-                                    </Button>
-                                </Nav.Link>
-                            </Nav>
-                        </Navbar.Collapse>
-                    </Container>
-                </Navbar>
-                {
-                    this.state.displayChangelog &&
-                    <Modal
-                        size="lg"
-                        show={this.state.displayChangelog}
-                        onHide={() => this.toggleChangelog()}
-                        className="changelog-modal">
-                        <Modal.Header 
-                            closeButton
-                            style={{ 
-                                backgroundColor: modalBgColor,
-                                borderColor: modalSeparatorColor,
-                            }}>
-                            <Modal.Title id="example-modal-sizes-title-lg">
-                                Changelog
-                            </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body
-                            className="changelog-body">
-                            {   
-                                changelogs.logs.map((log) => {
-                                    return (
-                                        <div>
-                                            <h3>{log.version}</h3>
-                                            <ul>
-                                                {
-                                                    log.changes.map((change) => {
-                                                        return (
-                                                            <li>
-                                                                <ReactMarkdown source={change} className="no-child-margins"/>
-                                                            </li>
-                                                        );
-                                                    })
-                                                }
-                                            </ul>
-                                        </div>
-                                    )
-                                })
+            <Navbar 
+                className="genify-nav-bg"
+                variant="dark">
+                <Container>
+                    <Navbar.Brand href="/" className="text-white">Genify</Navbar.Brand>
+                    <Nav.Link 
+                        className="p-0 align-bottom mt-1"
+                        style={{ fontSize: "0.85rem" }}
+                        href="" 
+                        onClick={this.toggleChangelog}>
+                            {
+                                pkg ? "v" + pkg.version : "v0.0.0"
                             }
-                        </Modal.Body>
-                        <Modal.Footer
-                            style={{ 
-                                backgroundColor: modalBgColor,
-                                borderColor: modalSeparatorColor,
-                            }}>
-                            <Button 
-                                variant="outline-light"
-                                className="ml-auto" onClick={() => { this.toggleChangelog(); }}>
-                                Close
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
-                }
-            </div>
+                        </Nav.Link>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" style={{}} />
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="ml-auto">
+                            <Nav.Link className="py-0" href={GITHUB_LINK}>
+                                <Button variant="outline-secondary">
+                                    <FontAwesomeIcon icon={faGithub} />
+                                </Button>
+                            </Nav.Link>
+                            <Nav.Link className="py-0" href={TWITTER_LINK}>
+                                <Button variant="outline-secondary">
+                                    <FontAwesomeIcon icon={faTwitter} />
+                                </Button>
+                            </Nav.Link>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Container>
+                {
+                this.state.displayChangelog &&
+                <Modal
+                    size="lg"
+                    show={this.state.displayChangelog}
+                    onHide={() => this.toggleChangelog()}
+                    className="changelog-modal">
+                    <Modal.Header 
+                        closeButton
+                        style={{ 
+                            backgroundColor: modalBgColor,
+                            borderColor: modalSeparatorColor,
+                        }}>
+                        <Modal.Title id="example-modal-sizes-title-lg">
+                            Changelog
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body
+                        className="changelog-body">
+                        {   
+                            changelogs.logs.map((log) => {
+                                return (
+                                    <div>
+                                        <h3>{log.version}</h3>
+                                        <ul>
+                                            {
+                                                log.changes.map((change) => {
+                                                    return (
+                                                        <li>
+                                                            <ReactMarkdown source={change} className="no-child-margins"/>
+                                                        </li>
+                                                    );
+                                                })
+                                            }
+                                        </ul>
+                                    </div>
+                                )
+                            })
+                        }
+                    </Modal.Body>
+                    <Modal.Footer
+                        style={{ 
+                            backgroundColor: modalBgColor,
+                            borderColor: modalSeparatorColor,
+                        }}>
+                        <Button 
+                            variant="outline-light"
+                            className="ml-auto" onClick={() => { this.toggleChangelog(); }}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            }
+            </Navbar>
         );
     }
 }

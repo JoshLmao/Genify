@@ -45,7 +45,7 @@ function msToTime(millisec) {
 function retrieveAlbumArt(playState) {
     // Default img if no album art found
     let url = "https://via.placeholder.com/75";
-    if (playState) {
+    if (playState && playState.item) {
         if (playState.item.album && playState.item.album.images.length > 0) {   
             // Get biggest (first) art
             let image = playState.item.album.images[0];
@@ -108,7 +108,7 @@ class Player extends Component {
             if (this.state.playState.is_playing) {
                 SpotifyService.pause(this.state.auth.authToken);
             } else {
-                SpotifyService.play(this.state.auth.authToken);
+                SpotifyService.resume(this.state.auth.authToken);
             }
         }
     }

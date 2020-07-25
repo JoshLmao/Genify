@@ -29,6 +29,7 @@ const SpotifyService = {
             'app-remote-control',
             'user-read-email',
             'user-read-private',
+            //'user-top-read', // for reading/suggesting songs to play
         ];
         let scopesEncoded = encodeURIComponent(scopes.join(' '));
         
@@ -200,7 +201,12 @@ const SpotifyService = {
             timeout: REQUEST_TIMEOUT_MS,
         }).then(result => {
             if(callback) {
-                callback(result.data);
+                if (result.status === 204) {
+                    // no track playing
+                    callback(null);
+                } else {
+                    callback(result.data);
+                }
             }
         }).catch(error => {
             this.handleApiError(error);
@@ -213,10 +219,21 @@ const SpotifyService = {
         this.makeApiRequest("PUT", endpointUrl, authToken);
     },
 
-    /// Plays the current track
-    play: function(authToken) {
+    /// Resumes the current track
+    resume: function(authToken) {
         let endpointUrl = PROXY_URL + "https://api.spotify.com/v1/me/player/play";
         this.makeApiRequest("PUT", endpointUrl, authToken);
+    },
+
+    /// Plays a specific track uri on the target device
+    playTrack: function (authToken, deviceId, trackUri) {
+        let url = PROXY_URL + "https://api.spotify.com/v1/me/player/play";
+        if(deviceId) {
+            url += `?device_id=${deviceId}`;
+        }
+        this.makeApiDataRequest("PUT", url, authToken, {
+            uris: [ trackUri ],
+        });
     },
 
     /// Changes current track to the previous 
@@ -246,12 +263,12 @@ const SpotifyService = {
     },
 
     getPlaybackDevices: function (authToken, callback) {
-        let url = "https://api.spotify.com/v1/me/player/devices";
+        let url = PROXY_URL + "https://api.spotify.com/v1/me/player/devices";
         this.makeApiRequest("GET", url, authToken, callback)
     },
 
     setPlaybackDevice: function (authToken, targetDevice, play) {
-        let url = "https://api.spotify.com/v1/me/player";
+        let url = PROXY_URL + "https://api.spotify.com/v1/me/player";
         let reqData = {
             device_ids: [ targetDevice ],
             play: play,
@@ -260,7 +277,33 @@ const SpotifyService = {
     },
 
     getCurrentUserProfile: function (authToken, callback) {
-        let url = "https://api.spotify.com/v1/me";
+        let url = PROXY_URL + "https://api.spotify.com/v1/me";
+        this.makeApiRequest("GET", url, authToken, callback);
+    },
+
+    /// Gets the users top tracks in the time frame. Time frame can be "long_term", "medium_term", "short_term"
+    getUsersTopTracks: function (authToken, limit, timeFrame, callback) {
+        let url = PROXY_URL + "https://api.spotify.com/v1/me/top/tracks?";
+        if(limit > 0) {
+            url += `limit=${limit}`;
+        }
+        if(timeFrame) {
+            //long_term (several years), medium_term (6 months), short_term (4 weeks)
+            url += `&time_range=${timeFrame}`;
+        }
+        this.makeApiRequest("GET", url, authToken, callback);
+    },
+
+    /// Gets the users top artists in the time frame. Time frame can be "long_term", "medium_term", "short_term"
+    getUsersTopArtists: function (authToken, limit, timeFrame, callback) {
+        let url = PROXY_URL + "https://api.spotify.com/v1/me/top/artists";
+        if(limit > 0) {
+            url += `limit=${limit}`;
+        }
+        if(timeFrame) {
+            //long_term (several years), medium_term (6 months), short_term (4 weeks)
+            url += `time_range=${timeFrame}`;
+        }
         this.makeApiRequest("GET", url, authToken, callback);
     },
 }

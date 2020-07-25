@@ -40,7 +40,7 @@ html, body, #root {
 }
 
 .genify-navbar {
-    height: var(--navbar-height);
+    height: var(--navbar-height)!important;
 }
 
 .genify-player {
