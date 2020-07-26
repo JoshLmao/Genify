@@ -7,7 +7,8 @@ import {
 import { 
     filterBrackets,
     filterStartEndSpaceChars,
-    processString
+    processString,
+    replaceHTMLAmpersand
 } from "../helpers/filterHelper";
 
 const GeniusService = {
@@ -72,6 +73,7 @@ const GeniusService = {
                     if (allLyrics) 
                     {
                         let filteredLyrics = filterStartEndSpaceChars(allLyrics);
+                        filteredLyrics = replaceHTMLAmpersand(filteredLyrics);
                         callback(filteredLyrics);
                     } else {
                         console.error(`Unable to parse lyrics correctly from page ${url}`);
@@ -82,6 +84,7 @@ const GeniusService = {
                     if (filtered.length > 0) 
                     {
                         let filteredLyrics = filterStartEndSpaceChars(filtered[0].textContent);
+                        filteredLyrics = filteredLyrics.replace('&amp;', '&');
                         callback(filteredLyrics);
                     }
                     else

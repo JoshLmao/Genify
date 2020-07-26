@@ -18,6 +18,11 @@ export function filterSpecialSpace(str) {
     return str.replace(/\s/g, ' ');
 }
 
+/// Replaces &amp; from HTML to a normal ampersand
+export function replaceHTMLAmpersand(str) {
+    return str.replace(/&amp;/g, "&");
+}
+
 /// Strips a string of common irrelevant chars and returns a lower case version
 export function processString (str) {
     // Replace any weird space chars 
