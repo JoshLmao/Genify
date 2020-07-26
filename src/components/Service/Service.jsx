@@ -14,11 +14,13 @@ import SpotifyService from "../../services/spotify";
 import { EGenifyCookieNames } from "../../enums/cookies";
 import { hasAuthExpired } from "../../helpers/spotifyHelper";
 import { tryParseJSON } from "../../helpers/general";
+import { getArtistsToDisplay } from "../../helpers/spotifyHelper";
 
 import Lyrics from '../Lyrics/Lyrics';
 import ContentSelector from "../ContentSelector";
 import Settings from "../Settings";
 import Player from "../Player";
+import SuggestedMedia from "../SuggestedMedia";
 
 class Service extends Component {
     constructor(props) {
@@ -55,6 +57,8 @@ class Service extends Component {
 
         this.state = {
             auth: auth,
+            playState: undefined,
+
             isRefreshingAuth: isRefreshing,
             /// Timeout handle for auto refreshing auth
             refreshAuthRoutine: null,
@@ -90,14 +94,14 @@ class Service extends Component {
     /// Initializes the service to perform the relevant actions on start
     initService () {
         // Get inital Spotify track status
-        SpotifyService.getCurrentPlaybackState(this.state.auth.authToken, (data) => {
-            // console.log("Initial State:");
-            // console.log(data);
-            this.setState({
-                playState: data,
-                loaded: true,
-            });
-        });
+        // SpotifyService.getCurrentPlaybackState(this.state.auth.authToken, (data) => {
+        //     // console.log("Initial State:");
+        //     // console.log(data);
+        //     this.setState({
+        //         playState: data,
+        //         loaded: true,
+        //     });
+        // });
 
         if(!this.state.spotifyUpdateRoutine) {
             // Start auto retrieval of Spotify track status
@@ -106,9 +110,13 @@ class Service extends Component {
                     return;
                 }
                 SpotifyService.getCurrentPlaybackState(this.state.auth.authToken, (data) => {
-                    // If track changed
-                    if (data.item?.name !== this.state.playState.item?.name) {
-                        console.log(`TRACK CHANGED | ${data.item.artists[0].name} - ${data.item?.name}`);
+                    /// If no data & no playState as set in constructor
+                    // or no data and valid previous playState
+                    if ((!data && this.state.playState === undefined)
+                        || (!data && this.state.playState)) {
+                        console.log(`SPOTIFY INACTIVE`);
+                    } else if (data?.item?.name !== this.state.playState?.item?.name) {
+                        console.log("SPOTIFY TRACK CHANGED | " + getArtistsToDisplay(data) + " - " + data.item.name);
                     }
                     this.setState({
                         playState: data,
@@ -190,7 +198,18 @@ class Service extends Component {
                     </Row>
                     <Row className="focused-content-container mx-0">
                         <div className={"w-100 h-100 " + (this.state.mainContentPanel === "lyrics" ? "d-block" : "d-none")} >
-                            <Lyrics playState={this.state.playState} />
+                            {
+                                this.state.playState && 
+                                    <Lyrics
+                                        playState={this.state.playState}
+                                        auth={this.state.auth} />
+                            }
+                            {
+                                !this.state.playState &&
+                                    <SuggestedMedia 
+                                        auth={this.state.auth}
+                                        suggestAmount={5} />
+                            }
                         </div>
                         <div className={"w-100 h-100 " + (this.state.mainContentPanel === "settings" ? "d-block" : "d-none")}>
                             <Settings auth={this.state.auth} />

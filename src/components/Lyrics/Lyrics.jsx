@@ -35,6 +35,7 @@ class Lyrics extends Component {
         this.state = {
             // Current playState of Spotify
             playState: props.playState,
+            auth: props.auth,
 
             originalLyrics: null,
             romanizedLyrics: null,
@@ -61,16 +62,23 @@ class Lyrics extends Component {
         this.onRetryLyricsBtn = this.onRetryLyricsBtn.bind(this);
     }
 
+    componentDidMount() {
+        this.updateLyrics();
+    }
+
     componentDidUpdate(prevProps) {
         if(prevProps.playState !== this.props.playState) {
             this.setState({
                 playState: this.props.playState,
             },() => {
                 // prevProps hasnt been set or song changed
-                if (prevProps.playState === null || prevProps.playState?.item?.name !== this.props.playState.item?.name) {
+                if (prevProps.playState === null || prevProps.playState?.item?.name !== this.props.playState?.item?.name) {
                     this.updateLyrics();
                 }
             });
+        }
+        if(prevProps.auth !== this.props.auth) {
+            this.setState({ auth: this.props.auth });
         }
     }
 
@@ -255,7 +263,7 @@ class Lyrics extends Component {
                     }
                     {/* No song/lyrics UI */}
                     {
-                        !this.state.originalLyrics && this.state.loaded && 
+                        this.state.playState && !this.state.originalLyrics && this.state.loaded && 
                         <div className="d-flex flex-column">
                             <a href="https://genius.com/new">
                                 <Button variant="outline-light" className="mt-2"> 

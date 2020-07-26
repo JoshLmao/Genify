@@ -194,20 +194,20 @@ class Player extends Component {
                         {
                             this.state.playState &&
                             <a 
-                                href={ this.state.playState ? this.state.playState.item?.album?.external_urls?.spotify : "#" } 
+                                href={ this.state.playState ? this.state.playState?.item?.album?.external_urls?.spotify : "#" } 
                                 className="ml-2 p-2">
                                 <img 
                                     className="album-art" 
-                                    alt={ this.state.playState ? this.state.playState.item?.artists[0].name + "Album Art" : "Unknown Album" }
+                                    alt={ this.state.playState ? this.state.playState?.item?.artists[0].name + "Album Art" : "Unknown Album" }
                                     src={ retrieveAlbumArt(this.state.playState) }
                                     style={{ maxWidth: "75px", maxHeight: "75px" }}></img>
                             </a>
                         }
                         <div className="w-100 ml-2 song-info">
                             <a 
-                                href={ this.state.playState ? this.state.playState.item?.external_urls?.spotify : "#" }>
+                                href={ this.state.playState ? this.state.playState?.item?.external_urls?.spotify : "#" }>
                                 <h6>
-                                    { this.state.playState ? this.state.playState.item?.name : "" }
+                                    { this.state.playState ? this.state.playState?.item?.name : "" }
                                 </h6>
                             </a>
                             {/* Artists */}
@@ -262,15 +262,15 @@ class Player extends Component {
                             className="w-100"
                             onMouseUp={this.onFinishProgressChanged}>
                             <RangeSlider 
-                                value={this.state.trackProgressMs}
+                                value={this.state.trackProgressMs ?? 0}
                                 min={0}
-                                max={this.state.playState ? this.state.playState.item?.duration_ms : 100}
+                                max={this.state.playState ? this.state.playState?.item?.duration_ms : 100}
                                 onChange={this.onProgressChanged}
                                 tooltip="off"
                                 />
                         </div>
                         <h6 className="my-auto mx-2">
-                            { this.state.playState && msToTime(this.state.playState.item?.duration_ms) }
+                            { this.state.playState && msToTime(this.state.playState?.item?.duration_ms) }
                             { !this.state.playState && "9:59" }
                         </h6>
                     </div>
@@ -295,7 +295,7 @@ class Player extends Component {
                             onMouseUp={this.onFinishVolumeChanged}
                             className="w-100">
                             <RangeSlider
-                                value={this.state.volumePercent}
+                                value={this.state.volumePercent ?? 0}
                                 onChange={this.onVolumeChanged}
                                 tooltip="auto"
                                 variant='primary' />

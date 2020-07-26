@@ -10,7 +10,7 @@ import {
     faVolumeUp,
 } from '@fortawesome/free-solid-svg-icons';
 
-// Gets a formatted string of all artists on one track, separated with a comma and correct hyperlinking
+// Gets a HTML formatted string of all artists on one track, separated with a comma and correct hyperlinking
 // For example "Enter Shikari, TWICE, KSI"
 export function getFormattedArtists (playState) {
     if (!playState) {
@@ -35,6 +35,21 @@ export function getFormattedArtists (playState) {
         );
     }
     return null;
+}
+
+/// Gets a formatted string of all the artists separated with a comma
+/// For example, "pewdiepie, Party in Backyard, KSI"
+export function getArtistsToDisplay (playState) {
+    if(!playState) {
+        return null;
+    }
+    let allArtists = playState.item?.artists;
+    if (allArtists) {
+        let str = allArtists.map((value) => {
+            return value.name;
+        }).join(', ');
+        return str;
+    }
 }
 
 /// Encodes the data into application/x-www-form-urlencoded for POST requests

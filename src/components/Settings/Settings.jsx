@@ -224,7 +224,6 @@ class Settings extends Component {
                             width="300"
                             height="56"
                             scrolling="no" 
-                            frameborder="0" 
                             style={{ border:"none", overflow:"hidden" }} 
                             allowtransparency="true">
                         </iframe>

@@ -11,8 +11,11 @@
 
     --genify-nav-bg: rgb(17, 17, 17);
     --genify-light-background: rgb(40,40,40);
+    --genify-light-background-hover: rgb(35, 35, 35);
     /* Currently Spotify black color */
     --genify-dark-background: rgb(25, 20, 20);
+
+    --default-text-color: rgb(255, 255, 255);
 }
 
 body {
@@ -32,7 +35,7 @@ code {
 /* Make everything match 100%, set font white */
 html, body, #root {
     height: 100%!important;
-    color: white;
+    color: var(--default-text-color);
 }
 
 .genify-home {
@@ -111,7 +114,7 @@ html, body, #root {
 
 .playback-device-item {
     background: transparent;
-    color: white;
+    color: var(--default-text-color);
 }
 
 .active-device {
@@ -168,4 +171,36 @@ html, body, #root {
 .custom-switch .custom-control-label::before {
     border-color: var(--genify-light-background);
     background-color: var(--genify-light-background);
+}
+
+/* Bootstrap: Styling for normal Genify modal */
+.genify-modal .modal-dialog .modal-content {
+    background-color: transparent;
+}
+.genify-modal .modal-dialog {
+    background-color: var(--genify-light-background)!important;
+}
+ 
+/* Bootstrap: Styling for normal Genify List Group*/
+.genify-list-group {
+    background-color: var(--genify-light-background)!important;
+}
+.genify-list-group .list-group-item {
+    background-color: transparent;
+    color: var(--default-text-color)!important;
+}
+.genify-list-group .list-group-item:hover {
+    background-color: var(--genify-light-background-hover);
+}
+
+/* Bootstrap: Custom styling for Select form control */
+.genify-select {
+    background-color: var(--genify-dark-background)!important;
+    border-color: var(--genify-light-background)!important;
+    color: var(--default-text-color)!important;
+}
+.genify-select option {
+    background-color: var(--genify-dark-background)!important;
+    border-color: var(--genify-light-background)!important;
+    color: var(--default-text-color)!important;
 }

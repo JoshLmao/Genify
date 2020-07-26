@@ -39,7 +39,7 @@ class Callback extends Component {
         if(this.state.exchangeData) {
             // validate returned state to one sent in initial request
             if(this.state.exchangeData.state) {
-                if (!this.state.exchangeData.state === "genify-app") {
+                if (this.state.exchangeData.state !== "genify-app") {
                     console.error("Spotify state doesn't match returned state");
                     this.setState({
                         redirect: "/?auth=state_error",

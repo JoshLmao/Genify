@@ -29,7 +29,8 @@ const SpotifyService = {
             'app-remote-control',
             'user-read-email',
             'user-read-private',
-            //'user-top-read', // for reading/suggesting songs to play
+            'user-top-read', // for reading/suggesting top tracks/artists
+            'user-read-recently-played', // read recent played to suggest
         ];
         let scopesEncoded = encodeURIComponent(scopes.join(' '));
         
@@ -209,7 +210,7 @@ const SpotifyService = {
                 }
             }
         }).catch(error => {
-            this.handleApiError(error);
+            this.handleApiError(error, endpointUrl);
         });
     },
 
@@ -233,6 +234,17 @@ const SpotifyService = {
         }
         this.makeApiDataRequest("PUT", url, authToken, {
             uris: [ trackUri ],
+        });
+    },
+
+    /// Plays a valid context on the target device id. Valid context uri's include albums, artists & playlists
+    playContext: function (authToken, deviceId, contextUri) {
+        let url = PROXY_URL + "https://api.spotify.com/v1/me/player/play";
+        if(deviceId) {
+            url += `?device_id=${deviceId}`;
+        }
+        this.makeApiDataRequest("PUT", url, authToken, {
+            content_uri: contextUri,
         });
     },
 
@@ -296,16 +308,24 @@ const SpotifyService = {
 
     /// Gets the users top artists in the time frame. Time frame can be "long_term", "medium_term", "short_term"
     getUsersTopArtists: function (authToken, limit, timeFrame, callback) {
-        let url = PROXY_URL + "https://api.spotify.com/v1/me/top/artists";
+        let url = PROXY_URL + "https://api.spotify.com/v1/me/top/artists?";
         if(limit > 0) {
             url += `limit=${limit}`;
         }
         if(timeFrame) {
             //long_term (several years), medium_term (6 months), short_term (4 weeks)
-            url += `time_range=${timeFrame}`;
+            url += `&time_range=${timeFrame}`;
         }
         this.makeApiRequest("GET", url, authToken, callback);
     },
+
+    getUsersRecentlyPlayed: function (authToken, limit, callback) {
+        let url = PROXY_URL + "https://api.spotify.com/v1/me/player/recently-played";
+        if(limit) {
+            url += `?limit=${limit}`;
+        }
+        this.makeApiRequest("GET", url, authToken, callback);
+    }
 }
 
 export default SpotifyService;
