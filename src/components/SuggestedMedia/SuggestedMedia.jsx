@@ -71,6 +71,8 @@ class SuggestedMedia extends Component {
         this.getTracks = this.getTracks.bind(this);
         this.getRecentPlayed = this.getRecentPlayed.bind(this);
         this.onSelectTrack = this.onSelectTrack.bind(this);
+        this.onSelectRecentTrack = this.onSelectRecentTrack.bind(this);
+
         this.toggleDeviceModal = this.toggleDeviceModal.bind(this);
         this.confirmDeviceChoice = this.confirmDeviceChoice.bind(this);
         this.onChangedSelectedDevice = this.onChangedSelectedDevice.bind(this);
@@ -169,7 +171,7 @@ class SuggestedMedia extends Component {
         if(this.state.selectedTopTrackIndex >= 0) {
             track = this.state.topTracks.items[this.state.selectedTopTrackIndex];
         } else if(this.state.selectedRecentTrackIndex >= 0) {
-            track = this.state.recentPlayed.items[this.state.selectedRecentTrackIndex];
+            track = this.state.recentPlayed.items[this.state.selectedRecentTrackIndex].track;
         }
 
         if(track) {

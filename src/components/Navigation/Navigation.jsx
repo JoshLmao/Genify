@@ -94,13 +94,13 @@ class Navigation extends Component {
                         {   
                             changelogs.logs.map((log) => {
                                 return (
-                                    <div>
+                                    <div key={log.version}>
                                         <h3>{log.version}</h3>
                                         <ul>
                                             {
-                                                log.changes.map((change) => {
+                                                log.changes.map((change, index) => {
                                                     return (
-                                                        <li>
+                                                        <li key={log.version + "-" + index}>
                                                             <ReactMarkdown source={change} className="no-child-margins"/>
                                                         </li>
                                                     );

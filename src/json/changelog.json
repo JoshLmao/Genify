@@ -1,6 +1,16 @@
 {
     "logs": [
         {
+            "version": "3.0.7",
+            "changes": [
+                "Top or recent user tracks get suggested if user isn't listening to a track",
+                "Improved support for if the user denies authorization during Spotify auth stage",
+                "Made some fancy controls in the style of Genify 😊",
+                "Fixed issue [#11](https://github.com/JoshLmao/Genify/issues/11) of verses in lyrics not being separated and having '&amp;' instead of '&'",
+                "Fixed issue [#12](https://github.com/JoshLmao/Genify/issues/12) where lyrics would never load"
+            ]
+        },
+        {
             "version": "3.0.6",
             "changes": [
                 "You can now set and save app options under the settings tab",
