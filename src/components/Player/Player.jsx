@@ -3,6 +3,7 @@ import {
     Row,
     Col,
     Button,
+    OverlayTrigger,
 } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -11,7 +12,8 @@ import {
     faPause,
     faPlay,
     faVolumeMute,
-    faVolumeUp, 
+    faVolumeUp,
+    faInfo, 
 } from "@fortawesome/free-solid-svg-icons";
 import RangeSlider from "react-bootstrap-range-slider";
 
@@ -280,8 +282,8 @@ class Player extends Component {
                     xl={3}
                     lg={3}
                     md={3} 
-                    className="d-none d-md-block my-auto">
-                    <div className="d-flex align-items-center">
+                    className="d-none d-md-block">
+                    <div className="d-flex align-items-center my-auto h-100">
                         <DevicesPopover 
                             devices={this.state.playbackDevices}
                             auth={this.state.auth}/>
@@ -301,6 +303,30 @@ class Player extends Component {
                                 variant='primary' />
                         </div>
                     </div>
+                    {
+                        this.state.playState &&
+                        <OverlayTrigger
+                            placement="left"
+                            delay={{ show: 0, hide: 500 }}
+                            overlay={
+                                <div 
+                                    className="genify-dark-background px-2 py-1 mr-1"
+                                    style={{ fontSize: "0.75rem" }}>
+                                        State changed at {new Date(this.state.playState?.timestamp).toLocaleTimeString()}
+                                </div> 
+                            }>
+                            <FontAwesomeIcon 
+                                className="m-2 mr-3"
+                                style={{
+                                    position: "absolute",
+                                    top: 0,
+                                    right: 0,
+                                    color: "rgb(80, 80, 80)"
+                                }}
+                                size="sm"
+                                icon={faInfo} />
+                        </OverlayTrigger>
+                    }
                 </Col>
             </Row>
         );

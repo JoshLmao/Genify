@@ -9,6 +9,8 @@ import {
 } from "../../consts";
 import { Redirect } from 'react-router-dom';
 import Cookies from "js-cookie";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import SpotifyService from "../../services/spotify";
 import { EGenifyCookieNames } from "../../enums/cookies";
@@ -59,6 +61,7 @@ class Service extends Component {
             auth: auth,
             playState: undefined,
 
+            /// Check if current auth is being refreshed or not
             isRefreshingAuth: isRefreshing,
             /// Timeout handle for auto refreshing auth
             refreshAuthRoutine: null,
@@ -78,6 +81,7 @@ class Service extends Component {
 
         this.initService = this.initService.bind(this);
         this.refreshAuth = this.refreshAuth.bind(this);
+        this.processUpdatedState = this.processUpdatedState.bind(this);
 
         this.onContentPanelSelected = this.onContentPanelSelected.bind(this);
     }
@@ -99,7 +103,7 @@ class Service extends Component {
         /// Check if the stored auth is compatiable with the latest version
         if(this.state.auth) {
             let reqScopes = SpotifyService.getRequiredScopes();
-            if(this.state.auth.scopes.length !== reqScopes.length) {
+            if(this.state.auth.scopes.length < reqScopes.length) {
                 this.setState({
                     toastInfo: {
                         title: "New authentification required",
@@ -109,6 +113,9 @@ class Service extends Component {
             }
         }
 
+        // Get inital Spotify track status
+        SpotifyService.getCurrentPlaybackState(this.state.auth.authToken, this.processUpdatedState);
+
         /// Start routine for getting latest Spotify state every X ms
         if(!this.state.spotifyUpdateRoutine) {
             // Start auto retrieval of Spotify track status
@@ -116,19 +123,7 @@ class Service extends Component {
                 if (hasAuthExpired(this.state.auth)) {
                     return;
                 }
-                SpotifyService.getCurrentPlaybackState(this.state.auth.authToken, (data) => {
-                    /// If no data & no playState as set in constructor
-                    // or no data and valid previous playState
-                    if ((!data && this.state.playState === undefined)
-                        || (!data && this.state.playState)) {
-                        console.log(`SPOTIFY INACTIVE`);
-                    } else if (data?.item?.name !== this.state.playState?.item?.name) {
-                        console.log("SPOTIFY TRACK CHANGED | " + getArtistsToDisplay(data) + " - " + data.item.name);
-                    }
-                    this.setState({
-                        playState: data,
-                    });
-                });
+                SpotifyService.getCurrentPlaybackState(this.state.auth.authToken, this.processUpdatedState);
             }, PLAYER_UPDATE_MS);
 
             this.setState({ updateRoutine: spotifyUpdateRoutine });
@@ -149,6 +144,19 @@ class Service extends Component {
                 refreshAuthRoutine: refreshAuthRoutine,
             });
         }
+    }
+
+    processUpdatedState(data) {
+        /// If no data & no playState as set in constructor
+        // or no data and valid previous playState
+        if ((!data && this.state.playState === undefined) || (!data && this.state.playState)) {
+            console.log(`SPOTIFY INACTIVE`);
+        } else if (data?.item?.name !== this.state.playState?.item?.name) {
+            console.log("SPOTIFY TRACK CHANGED | " + getArtistsToDisplay(data) + " - " + data.item.name);
+        }
+        this.setState({
+            playState: data,
+        });
     }
 
     /// Performes a refresh of the current Spotify auth
@@ -207,13 +215,22 @@ class Service extends Component {
                     <Row className="focused-content-container mx-0">
                         <div className={"w-100 h-100 " + (this.state.mainContentPanel === "lyrics" ? "d-block" : "d-none")} >
                             {
-                                this.state.playState && 
+                                this.state.isRefreshingAuth && 
+                                    <div className="text-center my-3">
+                                    <h6>Refreshing user authentification...</h6>
+                                    <FontAwesomeIcon className="fa-spin" size="3x" icon={faSpinner} />
+                                </div>
+                            }
+                            {
+                                // Show lyrics when not refreshing auth and playState isn't initially undefined and playState IS valid
+                                !this.state.isRefreshingAuth && this.state.playState !== undefined && this.state.playState !== null &&
                                     <Lyrics
                                         playState={this.state.playState}
                                         auth={this.state.auth} />
                             }
                             {
-                                !this.state.playState &&
+                                // Show Suggested if not refreshing auth and playState isn't initially undefined BUT is null (null set from spotifyUpdateRoutine)
+                                !this.state.isRefreshingAuth && this.state.playState !== undefined && this.state.playState === null &&
                                     <SuggestedMedia 
                                         auth={this.state.auth}
                                         suggestAmount={5} />
@@ -224,27 +241,6 @@ class Service extends Component {
                         </div>
                     </Row>
                 </div>
-                {
-                    this.state.infoMessage &&
-                    <Toast 
-                        show={this.state.showInfoMessage}
-                        onClose={() => this.setState({ showInfoMessage: false })}
-                        className="mr-2 mb-2 text-left"
-                        style={{
-                            position: 'absolute',
-                            bottom: 0,
-                            right: 0,
-                            color: "black",
-                        }}>
-                        <Toast.Header>
-                            <strong className="mr-auto">Info</strong>
-                            {/* <small>11 mins ago</small> */}
-                        </Toast.Header>
-                        <Toast.Body>
-                            { this.state.infoMessage }
-                        </Toast.Body>
-                    </Toast>
-                }
 
                 {
                     this.state.redirect && <Redirect to={this.state.redirect} />

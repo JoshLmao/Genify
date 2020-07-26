@@ -245,13 +245,18 @@ const SpotifyService = {
     },
 
     /// Plays a valid context on the target device id. Valid context uri's include albums, artists & playlists
-    playContext: function (authToken, deviceId, contextUri) {
+    /// trackPosition starts from 0 for first track
+    playContext: function (authToken, deviceId, contextUri, trackPosition = 0, positionMs = 0) {
         let url = PROXY_URL + "https://api.spotify.com/v1/me/player/play";
         if(deviceId) {
             url += `?device_id=${deviceId}`;
         }
         this.makeApiDataRequest("PUT", url, authToken, {
-            content_uri: contextUri,
+            context_uri: contextUri,
+            offset: {
+                position: trackPosition
+            },
+            position_ms: positionMs,
         });
     },
 

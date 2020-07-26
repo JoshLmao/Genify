@@ -67,6 +67,10 @@ const GeniusService = {
                             let brGone = innerHtml.replace(/<br>/g, '\n');
                             // Replace <div>...</div> content used for ads
                             let aGone = brGone.replace(/<[^>]*>?/gm, '');
+                            if(!aGone) {
+                                // current div is a lyric container which contains an advert
+                                aGone += '\n';
+                            }
                             allLyrics  += aGone;
                         }
                     }

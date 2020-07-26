@@ -19,6 +19,7 @@ function MediaListItem(props) {
         <ListGroupItem 
             action 
             data-uri={props.uri}
+            data-index={props.index}
             onClick={props.onSelectMedia}
             className="">
             <div className="d-flex" style={{ pointerEvents: "none" }}>
@@ -138,10 +139,20 @@ class SuggestedMedia extends Component {
     }
 
     onSelectTrack(event) {
-        let uri = event.target.dataset.uri;
-        if(event.target.dataset.uri) {
+        let topTrackIndex = parseInt(event.target.dataset.index);
+        if (topTrackIndex >= 0) {
             this.setState({
-                selectedTrackURI: uri,
+                selectedTopTrackIndex: topTrackIndex,
+                showDeviceModal: true,
+            });
+        }
+    }
+
+    onSelectRecentTrack(event) {
+        let recentTrackIndex = parseInt(event.target.dataset.index);
+        if (recentTrackIndex >= 0) {
+            this.setState({
+                selectedRecentTrackIndex: recentTrackIndex,
                 showDeviceModal: true,
             });
         }
@@ -153,13 +164,27 @@ class SuggestedMedia extends Component {
         });
     }
 
-    confirmDeviceChoice() {
-        if(this.state.selectedDeviceId && this.state.selectedTrackURI) {
-            console.log(`Selected to play '${this.state.selectedTrackURI}' on device '${this.state.selectedDeviceId}'`);
-            SpotifyService.playTrack(this.state.auth.authToken, this.state.selectedDeviceId, this.state.selectedTrackURI);
+    confirmDeviceChoice() {   
+        let track = null;     
+        if(this.state.selectedTopTrackIndex >= 0) {
+            track = this.state.topTracks.items[this.state.selectedTopTrackIndex];
+        } else if(this.state.selectedRecentTrackIndex >= 0) {
+            track = this.state.recentPlayed.items[this.state.selectedRecentTrackIndex];
         }
 
+        if(track) {
+            console.log(`Selected to play '${track.artists[0].name} - ${track.name}' in album '${track.album.uri}' on device '${this.state.selectedDeviceId}'`);
+            SpotifyService.playContext(this.state.auth.authToken, this.state.selectedDeviceId, track.album.uri, track.track_number - 1, 0);
+        } else {
+            console.error("Unable to choose a top or recent track to play");
+        }
+
+        // Hide modal and reset selected indexes
         this.toggleDeviceModal();
+        this.setState({
+            selectedTopTrackIndex: null,
+            selectedRecentTrackIndex: null,
+        });
     }
 
     onChangedSelectedDevice(event) {
@@ -198,6 +223,7 @@ class SuggestedMedia extends Component {
                                         return (
                                             <MediaListItem 
                                                 key={`top-${index}`}
+                                                index={index}
                                                 uri={value.uri}
                                                 onSelectMedia={this.onSelectTrack}
                                                 mediaArtUrl={value.album.images[2].url}
@@ -231,8 +257,9 @@ class SuggestedMedia extends Component {
                                             return (
                                                 <MediaListItem 
                                                     key={`played-${index}`}
+                                                    index={index}
                                                     uri={value.track.uri}
-                                                    onSelectMedia={this.onSelectTrack}
+                                                    onSelectMedia={this.onSelectRecentTrack}
                                                     mediaArtUrl={value.track.album.images[0].url}
                                                     mediaTitle={value.track.name}
                                                     mediaSubtitle={value.track.artists[0].name} 
