@@ -111,12 +111,11 @@ class Home extends Component {
                         <Toast 
                             show={this.state.showAuthError}
                             onClose={() => this.setState({ showAuthError: false })}
-                            className="mr-2 mb-2 text-left"
+                            className="genify-toast mr-2 mb-2 text-left"
                             style={{
                                 position: 'absolute',
                                 bottom: 0,
                                 right: 0,
-                                color: "black",
                             }}>
                             <Toast.Header>
                                 <strong className="mr-auto">A Problem Occured</strong>

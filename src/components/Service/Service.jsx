@@ -71,6 +71,9 @@ class Service extends Component {
             redirect: redirect,
 
             mainContentPanel: "lyrics",
+
+            /// Object containing info to display in toast
+            toastInfo: null,
         };
 
         this.initService = this.initService.bind(this);
@@ -93,16 +96,20 @@ class Service extends Component {
 
     /// Initializes the service to perform the relevant actions on start
     initService () {
-        // Get inital Spotify track status
-        // SpotifyService.getCurrentPlaybackState(this.state.auth.authToken, (data) => {
-        //     // console.log("Initial State:");
-        //     // console.log(data);
-        //     this.setState({
-        //         playState: data,
-        //         loaded: true,
-        //     });
-        // });
+        /// Check if the stored auth is compatiable with the latest version
+        if(this.state.auth) {
+            let reqScopes = SpotifyService.getRequiredScopes();
+            if(this.state.auth.scopes.length !== reqScopes.length) {
+                this.setState({
+                    toastInfo: {
+                        title: "New authentification required",
+                        message: "Genify has been updated recently with new features! Please Sign Out and Sign In again to enable them. You can 'Sign Out' under 'Settings'",
+                    },
+                });
+            }
+        }
 
+        /// Start routine for getting latest Spotify state every X ms
         if(!this.state.spotifyUpdateRoutine) {
             // Start auto retrieval of Spotify track status
             let spotifyUpdateRoutine = setInterval(() => {
@@ -127,6 +134,7 @@ class Service extends Component {
             this.setState({ updateRoutine: spotifyUpdateRoutine });
         }
 
+        /// Start routine for refreshing auth once near expiry
         if (!this.state.refreshAuthRoutine) {
             let expireMs = this.state.auth.expireDate - new Date(Date.now());
             let refreshAuthRoutine = setTimeout(() => {
@@ -240,6 +248,28 @@ class Service extends Component {
 
                 {
                     this.state.redirect && <Redirect to={this.state.redirect} />
+                }
+
+                {
+                    this.state.toastInfo && 
+                        <Toast
+                            className="genify-toast m-2 mr-4"
+                            show={this.state.toastInfo !== null}
+                            onClose={() => this.setState({ toastInfo: null })}
+                            style={{
+                                position: 'absolute',
+                                bottom: 0,
+                                right: 0,
+                            }}>
+                            <Toast.Header>
+                                <div className="mr-auto">
+                                    <strong>{this.state.toastInfo.title}</strong>
+                                </div>
+                            </Toast.Header>
+                            <Toast.Body>
+                                {this.state.toastInfo.message}
+                            </Toast.Body>
+                        </Toast>
                 }
             </div>
         );

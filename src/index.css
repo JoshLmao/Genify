@@ -204,3 +204,11 @@ html, body, #root {
     border-color: var(--genify-light-background)!important;
     color: var(--default-text-color)!important;
 }
+
+.genify-toast {
+    background-color: var(--genify-light-background);
+}
+.genify-toast .toast-header {
+    background-color: var(--genify-light-background-hover);
+    color: var(--default-text-color);
+}

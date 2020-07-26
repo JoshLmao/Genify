@@ -15,12 +15,9 @@ import Base64 from 'crypto-js/enc-base64';
 import { urlEncodeData } from "../helpers/spotifyHelper";
 
 const SpotifyService = {
-    /// Generates an Spotify auth uri for the PKCE auth flow
-    /// https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow-with-proof-key-for-code-exchange-pkce
-    getPKCEAuthUri: function () {
-        let responseType = "code";
-        let baseUrl = isDev() ? "http://localhost:3000" : HOMEPAGE;
-        let redirectUri = encodeURIComponent(baseUrl + "/callback");
+
+    // Gets all the required scopes in Spotify that are required to enable all functionality
+    getRequiredScopes: function () {
         let scopes = [
             'streaming',
             'user-read-currently-playing',
@@ -32,6 +29,16 @@ const SpotifyService = {
             'user-top-read', // for reading/suggesting top tracks/artists
             'user-read-recently-played', // read recent played to suggest
         ];
+        return scopes;
+    },
+
+    /// Generates an Spotify auth uri for the PKCE auth flow
+    /// https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow-with-proof-key-for-code-exchange-pkce
+    getPKCEAuthUri: function () {
+        let responseType = "code";
+        let baseUrl = isDev() ? "http://localhost:3000" : HOMEPAGE;
+        let redirectUri = encodeURIComponent(baseUrl + "/callback");
+        let scopes = this.getRequiredScopes();
         let scopesEncoded = encodeURIComponent(scopes.join(' '));
         
         let challenge = this.encodePKCEChallenge(SPOTIFY_CODE_VERIFIER);
