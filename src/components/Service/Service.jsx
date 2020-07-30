@@ -217,9 +217,9 @@ class Service extends Component {
                             {
                                 this.state.isRefreshingAuth && 
                                     <div className="text-center my-3">
-                                    <h6>Refreshing user authentification...</h6>
-                                    <FontAwesomeIcon className="fa-spin" size="3x" icon={faSpinner} />
-                                </div>
+                                        <h6>Refreshing user authentification...</h6>
+                                        <FontAwesomeIcon className="fa-spin" size="3x" icon={faSpinner} />
+                                    </div>
                             }
                             {
                                 // Show lyrics when not refreshing auth and playState isn't initially undefined and playState IS valid

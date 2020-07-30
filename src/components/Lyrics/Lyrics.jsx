@@ -220,7 +220,11 @@ class Lyrics extends Component {
             <div className="py-2 w-100 h-100">
                 <div className="text-center h-100">
                     {
-                        !this.state.loaded && <FontAwesomeIcon className="fa-spin" size="3x" icon={faSpinner} />
+                        !this.state.loaded && 
+                            <div className="text-center my-3">
+                                <h6>Finding lyrics...</h6>
+                                <FontAwesomeIcon className="fa-spin" size="3x" icon={faSpinner} />
+                            </div>
                     }
                     {/* Lyrics container */}
                     {
