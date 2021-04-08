@@ -95,7 +95,13 @@ class Navigation extends Component {
                             changelogs.logs.map((log) => {
                                 return (
                                     <div key={log.version}>
-                                        <h3>{log.version}</h3>
+                                        <div className="d-flex">
+                                            <h3>{log.version}</h3>
+                                            {
+                                                log.dateISO && <h6 className="ml-2 mb-0 align-self-center">{new Date(log.dateISO).toLocaleDateString()}</h6>
+                                            }
+                                        </div>
+                                        
                                         <ul>
                                             {
                                                 log.changes.map((change, index) => {

@@ -54,6 +54,8 @@ class Lyrics extends Component {
             kuroshiro: kuroshiro,
             // Should lyrics perform an update/search for (new) lyrics
             shouldUpdateLyrics: true,
+            // Date object: Time taken to determine last lyrics
+            lastSearchDuration: 0,
         };
 
         this.updateLyrics = this.updateLyrics.bind(this);
@@ -91,6 +93,7 @@ class Lyrics extends Component {
                 lyricsSpotifyTrackName: null,
             });
 
+            let searchStartTime = Date.now();
             GeniusService.search(this.state.playState, (result) => {
                 if(result.response.hits.length > 0) {
                     // Search hits for most relevant result
@@ -102,6 +105,9 @@ class Lyrics extends Component {
                             console.log(`Loaded and set lyrics from ${info.result.url}`);
                             let origLyricLang = determineLanguage(lyrics);
                             console.log(`Original lyrics language: '${origLyricLang}'`);
+
+                            let totalTime = new Date(Date.now() - searchStartTime);
+                            console.log(`Search took '${totalTime.getSeconds()}.${totalTime.getMilliseconds()}' seconds...`)
                             this.setState({
                                 originalLyrics: lyrics,
                                 romanizedLyrics: lyrics,
@@ -112,9 +118,10 @@ class Lyrics extends Component {
                                 lyricsInfo: info,
                                 loaded: true,
                                 lyricsSpotifyTrackName: this.state.playState.item,
+                                lastSearchDuration: totalTime,
                             }, () => {
                                 /// Once state is set, check if lyrics need to be auto-romanized
-                                let appSettings = getAppSettings()
+                                let appSettings = getAppSettings();
                                 if(appSettings && appSettings.autoRomanize && this.state.originalLyricLanguage !== ELanguages.ENG) {
                                     this.onToggleRomanize();
                                 }
@@ -247,6 +254,10 @@ class Lyrics extends Component {
                                         {this.state.lyricsInfo.result.full_title}
                                     </a>
                                     {
+                                        this.state.lastSearchDuration &&
+                                            <div>Found in {this.state.lastSearchDuration.getSeconds()}.{this.state.lastSearchDuration.getMilliseconds()}s</div>
+                                    }
+                                    {
                                         this.state.originalLyricLanguage !== ELanguages.ENG && 
                                         <Form>
                                             <Form.Check
@@ -257,10 +268,11 @@ class Lyrics extends Component {
                                                 onChange={this.onToggleRomanize}>
                                             </Form.Check>
                                         </Form>
-                                        
                                     }
                             </Col>
-                            <div className="lyrics-content" >
+                            <div className="lyrics-content" style={{ 
+                                fontSize: `${getAppSettings().lyricFontSize}rem`,
+                            }} >
                                 { this.state.romanizedLyrics }
                             </div>
                         </div>

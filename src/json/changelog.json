@@ -1,6 +1,14 @@
 {
     "logs": [
         {
+            "version": "3.0.8",
+            "dateISO": "2021-04-08T09:13:13.433Z",
+            "changes": [
+                "Added font size to settings. Able to change scale of lyrics text from x1 to x2",
+                "Improved Genius searching for song that contain 'remix'"
+            ]
+        },
+        {
             "version": "3.0.7",
             "changes": [
                 "Top or recent user tracks get suggested if user isn't listening to a track",

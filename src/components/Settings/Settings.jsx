@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpotify, faTwitter, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { Redirect } from 'react-router-dom';
 import Cookies from "js-cookie";
+import RangeSlider from "react-bootstrap-range-slider";
 
 import { EGenifyCookieNames } from '../../enums/cookies';
 import {
@@ -41,8 +42,25 @@ function SettingNameValue(props) {
                         </Form.Check>
                     </Form>
                 }
+                {
+                    props.slider &&
+                    <RangeSlider
+                        value={props.value ?? 0}
+                        min={props.sliderMin}
+                        max={props.sliderMax}
+                        onChange={(event) => {
+                            if (props.onSliderChanged) {
+                                props.onSliderChanged(parseFloat(event.target.value));
+                            }
+                        }}
+                        step={props.sliderStepSize}
+                        tooltip="auto"
+                        variant="primary" />
+                }
                 {/* Display normal value */}
-                { props.value }
+                { 
+                    !props.check && !props.slider && <div>{props.value}</div>
+                }
             </div>
         </div>
     )
@@ -55,6 +73,7 @@ class Settings extends Component {
         // Default app settings
         let appSettings = {
             autoRomanize: false,
+            lyricFontSize: 1.0,
         };
 
         // Check if settings cookie exists and set
@@ -83,6 +102,7 @@ class Settings extends Component {
         this.getLatestUserProfile = this.getLatestUserProfile.bind(this);
         this.onAutoRomanizeToggled = this.onAutoRomanizeToggled.bind(this);
         this.onSettingChanged = this.onSettingChanged.bind(this);
+        this.onLyricSizeChanged = this.onLyricSizeChanged.bind(this);
     }
 
     componentDidMount() {
@@ -131,6 +151,17 @@ class Settings extends Component {
             settings: {
                 ...this.state.settings,
                 autoRomanize: isChecked,
+            },
+        }, () => {
+            this.onSettingChanged();
+        });
+    }
+
+    onLyricSizeChanged(newSize) {        
+        this.setState({
+            settings: {
+                ...this.state.settings,
+                lyricFontSize: newSize
             },
         }, () => {
             this.onSettingChanged();
@@ -189,12 +220,21 @@ class Settings extends Component {
                     
                     <div className="horizontal-separator" />
 
-                    <h5>Language</h5>
+                    <h5>Lyrics</h5>
                     <SettingNameValue 
                         name="Automatically romanize Chinese/Japanese/Korean/Russian" 
                         value={this.state.settings?.autoRomanize ?? false} 
                         check 
                         onCheckToggled={this.onAutoRomanizeToggled} />
+
+                    <SettingNameValue
+                        name="Font size"
+                        value={this.state.settings?.lyricFontSize ?? 1.0}
+                        slider
+                        sliderMin={1}
+                        sliderMax={2}
+                        sliderStepSize={0.1}
+                        onSliderChanged={this.onLyricSizeChanged}/>
 
                     <div className="horizontal-separator" />
             
@@ -238,15 +278,6 @@ class Settings extends Component {
                                 src={process.env.PUBLIC_URL + '/img/github-sponsor.png'} 
                                 className="my-2"
                                 height="50px"/>
-                        </a>
-                        <a 
-                            href="https://brave.com/jos677" 
-                                className="m-2">
-                            <img 
-                                alt="Brave Browser advert"
-                                src={process.env.PUBLIC_URL + '/img/BraveBat.png'} 
-                                className="my-2"
-                                style={{ height: "40px" }} />
                         </a>
                         <a 
                             href="https://paypal.me/xjoshlmao"
