@@ -7,9 +7,62 @@ import {
 import { 
     filterBrackets,
     filterStartEndSpaceChars,
-    processString,
+    boilString,
     replaceHTMLAmpersand
 } from "../helpers/filterHelper";
+
+// Removes any dash separators and keeps relevant info
+// For example: "In The Air Tonight - 2015 Remastered"
+function removeDashSeparators(songName) {
+    let parts = songName.split(' - ');
+    if (parts.length > 0) {
+        let name = parts[0];
+        return name;
+    }
+    // doesnt contain any '-' separators.
+    return songName;
+}
+
+// Gets additional information about the song from the original song name
+function buildAdditionalData(songName) {    
+    songName = songName.toLowerCase();
+    let isRemix = songName.includes("remix");
+    let remixCreator;
+    if (isRemix) {
+        let includesLeftPa = songName.includes('(');
+        let includesRightPa = songName.includes(')');
+        let includesDash = songName.includes("-");
+        if (includesLeftPa && includesRightPa && includesDash) {
+            // Eg. "Same Soul (feat. Jaymes Young) - Marian Hill Remix"
+        } 
+        else if (includesLeftPa && includesRightPa) {
+            // Eg. Grind Me Down (Jawster Remix)
+            remixCreator = songName.match(/\(([^)]+)\)/)[1];
+        } else if (includesDash) {
+            // Eg. "Sssnakepit - Serial Killaz Remix"
+            let parts = songName.split(' - ');
+            let remixPartIndex = parts.findIndex(function(element) {
+                return element.includes("remix");
+            });
+            if (remixPartIndex >= 0) {
+                remixCreator = parts[remixPartIndex];
+            }
+        }
+    }
+    return {
+        isRemix: isRemix,
+        remixCreator: remixCreator,
+    };
+}
+
+// From additional data, builds a relevant search query
+function getFinalSearchName(songName, additionalData) {
+    let nameSearchTerm = songName;
+    if (additionalData.isRemix) {
+        nameSearchTerm += " " + additionalData.remixCreator;
+    }
+    return nameSearchTerm;
+}
 
 const GeniusService = {
 
@@ -18,8 +71,23 @@ const GeniusService = {
         if (!playData) 
             return null;
 
-        let filteredTitle = filterBrackets(playData.item.name);
-        let searchTerm = encodeURIComponent(`${filteredTitle} ${playData.item.artists[0].name}`);
+        // Get song name and strip information to only have base song name
+        let songName = playData.item.name;
+        // Get any info from song title
+        let additionalData = buildAdditionalData(songName);
+        // If includes dash separator(s)
+        if (songName.includes('-')) {
+            songName = removeDashSeparators(songName);
+        }
+        // if includes ( and ), filter it out
+        if (songName.includes('(') && songName.includes(")")) {
+            songName = filterBrackets(songName);
+        }
+        
+        // Build search string of "[song name] [artist name]"
+        let searchNameWithDetails = getFinalSearchName(songName, additionalData);
+        let searchTerm = encodeURIComponent(`${searchNameWithDetails} ${playData.item.artists[0].name}`);
+        // Build URL and request to Genius
         let geniusUrl = PROXY_URL + "https://api.genius.com/search?q=" + searchTerm;
         axios({
             method: 'GET',
@@ -37,7 +105,7 @@ const GeniusService = {
 
     /// Parses HTML from a url and returns the page's lyrics
     parseLyricsFromUrl(geniusUrl, callback) {
-        var url = PROXY_URL + geniusUrl + "?react=1";
+        let url = PROXY_URL + geniusUrl + "?react=1";
         axios({
             method: 'GET',
             url: url,
@@ -45,8 +113,8 @@ const GeniusService = {
             timeout: REQUEST_TIMEOUT_MS,
         }).then(result => {
             if(callback) {
-                var parseHTML = function(str) {
-                    var tmp = document.implementation.createHTMLDocument();
+                let parseHTML = function(str) {
+                    let tmp = document.implementation.createHTMLDocument();
                     tmp.body.innerHTML = str;
                     return tmp.body;
                 };
@@ -109,17 +177,29 @@ const GeniusService = {
         if (hits && hits.length > 0) {
             for(let hit of hits) {
                 // genius artist - track
-                var geniusArtist = processString(hit.result.primary_artist.name);
-                var geniusTrackName = processString(hit.result.title);
+                let geniusArtist = boilString(hit.result.primary_artist.name);
+                let geniusTrackName = boilString(hit.result.title);
                 // spotify artist - track
-                var spotifyTrackName = processString(trackInfo.name);
-                var spotifyFirstArtistName = processString(trackInfo.artists[0].name);
+                let spotifyTrackName = boilString(trackInfo.name);
+                let spotifyFirstArtistName = boilString(trackInfo.artists[0].name);
+                
+                // Iterate through all Spotify artists to see if one of them matches the "primary_artist" of Genius
+                let artistsMatch = false;
+                if (trackInfo.artists.length > 1) {
+                    for(let i = 0; i < trackInfo.artists.length; i++) {
+                        let currentArtistName = boilString(trackInfo.artists[i].name);
+                        if (geniusArtist.includes(currentArtistName)) {
+                            artistsMatch = true;
+                            break;  // Found match, stop looping
+                        }
+                    }
+                }
 
                 // Check if Genius track name/artist includes Spotify track name/artist or vice versa
                 let geniusIncludes = geniusArtist.includes(spotifyFirstArtistName) && geniusTrackName.includes(spotifyTrackName);
                 let spotifyIncludes = spotifyFirstArtistName.includes(geniusArtist) && spotifyTrackName.includes(geniusTrackName);
-
-                if (geniusIncludes || spotifyIncludes) {
+                
+                if (geniusIncludes || spotifyIncludes || artistsMatch) {
                     return hit;
                 }
             }

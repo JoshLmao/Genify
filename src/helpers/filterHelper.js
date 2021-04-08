@@ -18,18 +18,24 @@ export function filterSpecialSpace(str) {
     return str.replace(/\s/g, ' ');
 }
 
+// Removes any spaces in the string
+export function filterAnySpace (str) {
+    return str.replace(/\s/g, '');
+}
+
 /// Replaces &amp; from HTML to a normal ampersand
 export function replaceHTMLAmpersand(str) {
     return str.replace(/&amp;/g, "&");
 }
 
-/// Strips a string of common irrelevant chars and returns a lower case version
-export function processString (str) {
+/// Boils a string and removes elements to create a string to use for comparison.
+export function boilString (str) {
     // Replace any weird space chars 
     str = filterSpecialSpace(str);
     // Remove any special chars
     str = filterSpecialChars(str);
-
+    // remove any white spaces
+    str = filterAnySpace(str);
     // Return lower case'd version
     return str.toLowerCase();
 }
