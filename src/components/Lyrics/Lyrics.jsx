@@ -17,7 +17,10 @@ import { ELanguages } from "../../enums/languages";
 import { 
     getAppSettings
 } from '../../helpers/general';
-import { determineLanguage } from "../../helpers/languageHelper";
+import { 
+    determineLanguage,
+    isStringSimplifiedChinese,
+} from "../../helpers/languageHelper";
 
 import GeniusService from '../../services/genius';
 import "./Lyrics.css";
@@ -38,7 +41,7 @@ class Lyrics extends Component {
             auth: props.auth,
 
             originalLyrics: null,
-            romanizedLyrics: null,
+            modifiedLyrics: null,
 
             // Current lyrics that are loaded, the spotify track info
             lyricsSpotifyTrackName: null,
@@ -46,8 +49,10 @@ class Lyrics extends Component {
             lyricsInfo: null,
             // Are the lyrics loaded
             loaded: true,
-            /// Are the current romanizedLyrics romanized or not?
+            /// Are the current modifiedLyrics romanized or not?
             isRomanized: false,
+            /// Is the current modifiedLyrics all simplified or all traditional?
+            isSimplified: false,
             /// Current determined language of the original lyric language
             originalLyricLanguage: ELanguages.NONE,
             // Kuroshiro object for using Kuroshiro functions
@@ -62,6 +67,7 @@ class Lyrics extends Component {
         this.onToggleRomanize = this.onToggleRomanize.bind(this);
         this.resetLyricState = this.resetLyricState.bind(this);
         this.onRetryLyricsBtn = this.onRetryLyricsBtn.bind(this);
+        this.onToggleSimplification = this.onToggleSimplification.bind(this);
     }
 
     componentDidMount() {
@@ -110,20 +116,27 @@ class Lyrics extends Component {
                             console.log(`Search took '${totalTime.getSeconds()}.${totalTime.getMilliseconds()}' seconds...`)
                             this.setState({
                                 originalLyrics: lyrics,
-                                romanizedLyrics: lyrics,
+                                modifiedLyrics: lyrics,
                                 isRomanized: false,
 
                                 originalLyricLanguage: origLyricLang,
+                                isSimplified: origLyricLang === ELanguages.SZH,
 
                                 lyricsInfo: info,
                                 loaded: true,
                                 lyricsSpotifyTrackName: this.state.playState.item,
                                 lastSearchDuration: totalTime,
                             }, () => {
-                                /// Once state is set, check if lyrics need to be auto-romanized
                                 let appSettings = getAppSettings();
-                                if(appSettings && appSettings.autoRomanize && this.state.originalLyricLanguage !== ELanguages.ENG) {
-                                    this.onToggleRomanize();
+                                if (appSettings) {
+                                    // Check if lyrics need to be auto-romanized
+                                    if(appSettings.autoRomanize && this.state.originalLyricLanguage !== ELanguages.ENG) {
+                                        this.onToggleRomanize();
+                                    }
+                                    // Check settings and convert if autoSimplify is enabled
+                                    else if (appSettings.autoSimplifyChinese && !this.state.isSimplified) {
+                                        this.onToggleSimplification();
+                                    }
                                 }
                             });
                         });
@@ -150,7 +163,7 @@ class Lyrics extends Component {
     resetLyricState() {
         this.setState({
             originalLyrics: null,
-            romanizedLyrics: null,
+            modifiedLyrics: null,
             lyricsInfo: null,
             isRomanized: false,
             originalLyricLanguage: ELanguages.NONE,
@@ -158,22 +171,28 @@ class Lyrics extends Component {
     }
 
     onToggleRomanize() {
+        // If no original lyrics, unable to romanize
         if (!this.state.originalLyrics) {
             return;
         }
-
+        // If already romanized, display original
         if (this.state.isRomanized) {
             this.setState({
-                romanizedLyrics: this.state.originalLyrics,
+                modifiedLyrics: this.state.originalLyrics,
             });
         } else {
+            // Else convert original to romanized version
             let romanizedLyrics = "";
             switch(this.state.originalLyricLanguage)
             {
                 case ELanguages.JP:
                     {
-                        if (!this.state.kuroshiro) { break; }
-                        romanizedLyrics = "...";
+                        // From Japanese
+                        // Break if kuroshiro didn't init properly
+                        if (!this.state.kuroshiro) { 
+                            console.error("Unable to romanize Japanese - Error with Kuroshiro");
+                            break; 
+                        }
                         this.state.kuroshiro.convert(this.state.originalLyrics, { 
                             to: "romaji",
                             mode: "spaced",
@@ -181,7 +200,7 @@ class Lyrics extends Component {
                             // remove double space added inbetween other phrases
                             romajiLyrics = romajiLyrics.replace(/ +(?= )/g,'');
                             this.setState({
-                                romanizedLyrics: romajiLyrics,
+                                modifiedLyrics: romajiLyrics,
                             });
                         });
                         break;
@@ -189,24 +208,28 @@ class Lyrics extends Component {
                     case ELanguages.SZH:
                     case ELanguages.TZH:
                         {
+                            // Romanize from simplified or traditional chinese
                             romanizedLyrics = pinyin4js.convertToPinyinString(this.state.originalLyrics, ' ', pinyin4js.WITH_TONE_MARK)
                             break;
                         }
                     case ELanguages.KR:
                         {
+                            // Romanize from Korean
                             romanizedLyrics = Aromanize.romanize(this.state.originalLyrics);
                             break;
                         }
                     case ELanguages.RU:
                         {
+                            // Romanize from Russian crillic
                             romanizedLyrics = cyrillicToTranslit().transform(this.state.originalLyrics, " ");
                             break;
                         }
                 default:
                     break;
             }
+            // Set modified to romanized
             this.setState({
-                romanizedLyrics: romanizedLyrics,
+                modifiedLyrics: romanizedLyrics,
             });
         }
 
@@ -215,11 +238,29 @@ class Lyrics extends Component {
         });
     }
 
+    // On Clicked - Retry Lyrics btn
     onRetryLyricsBtn() {
         if (!this.state.shouldUpdateLyrics) {
             this.setState({ shouldUpdateLyrics: true }, () => this.updateLyrics() );
             console.log("Retrying lyrics at request of user");
         }
+    }
+
+    /// On Toggle Chinese To Simplified toggle
+    onToggleSimplification() {
+        // If simplified, covert to trad, else to simplified
+        let convertedLyrics = this.state.modifiedLyrics;
+        if (this.state.isSimplified) {
+            convertedLyrics = pinyin4js.convertToTraditionalChinese(convertedLyrics);
+        } else {
+            convertedLyrics = pinyin4js.convertToSimplifiedChinese(convertedLyrics);
+        }
+
+        // Set
+        this.setState({
+            modifiedLyrics: convertedLyrics,
+            isSimplified: !this.state.isSimplified,
+        });
     }
     
     render() {
@@ -235,7 +276,7 @@ class Lyrics extends Component {
                     }
                     {/* Lyrics container */}
                     {
-                        this.state.romanizedLyrics && this.state.loaded &&
+                        this.state.modifiedLyrics && this.state.loaded &&
                         <div className="h-100">
                              <Col 
                                 md={3} 
@@ -258,27 +299,43 @@ class Lyrics extends Component {
                                             <div>Found in {this.state.lastSearchDuration.getSeconds()}.{this.state.lastSearchDuration.getMilliseconds()}s</div>
                                     }
                                     {
+                                        // If original language is not english, display Romanize button
                                         this.state.originalLyricLanguage !== ELanguages.ENG && 
                                         <Form>
                                             <Form.Check
                                                 type="switch"
-                                                id="custom-switch"
+                                                id="romanize-switch"
                                                 label="Romanize"
                                                 checked={this.state.isRomanized}
                                                 onChange={this.onToggleRomanize}>
                                             </Form.Check>
                                         </Form>
                                     }
+                                    {
+                                        // If not romanized & original lyrics are Chinese, show switch to toggle between Traditional or Simplified
+                                        !this.state.isRomanized && (this.state.originalLyricLanguage === ELanguages.SZH || this.state.originalLyricLanguage === ELanguages.TZH) &&
+                                        <Form>
+                                            <Form.Check
+                                                type="switch"
+                                                id="convert-simplified-switch"
+                                                label="Convert To Simplified"
+                                                checked={this.state.isSimplified}
+                                                onChange={this.onToggleSimplification}>
+                                            </Form.Check>
+                                        </Form>
+
+
+                                    }
                             </Col>
                             <div className="lyrics-content" style={{ 
                                 fontSize: `${getAppSettings().lyricFontSize}rem`,
                             }} >
-                                { this.state.romanizedLyrics }
+                                { this.state.modifiedLyrics }
                             </div>
                         </div>
                     }
-                    {/* No song/lyrics UI */}
                     {
+                        // No song/lyrics UI
                         this.state.playState && !this.state.originalLyrics && this.state.loaded && 
                         <div className="d-flex flex-column">
                             <a href="https://genius.com/new">

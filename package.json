@@ -27,7 +27,7 @@
     "react-markdown": "^4.3.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
-    "traditional-or-simplified": "^1.0.3"
+    "traditional-or-simplified-modified": "^2.0.1"
   },
   "scripts": {
     "predeploy": "npm run build",

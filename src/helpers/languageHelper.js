@@ -1,4 +1,5 @@
 import { ELanguages } from "../enums/languages";
+import { isSimplified, isTraditional } from "traditional-or-simplified-modified"
 
 /// Determines the primary majority language from a string
 export function determineLanguage(str) {
@@ -33,15 +34,13 @@ export function determineLanguage(str) {
 
     // Detect if majority of chars are Simplified or Traditional
     if( lang === "chinese" ) {
-        // Using to detect
-        // https://github.com/nickdrewe/traditional-or-simplified
-        //var result = TradOrSimp.detect(str);
-        // if (result.detectedCharacters === 'simplified') {
-        //     lang = ELanguages.SZH;
-        // } else {
-        //     lang = ELanguages.TZH;
-        // }
-        lang = ELanguages.SZH;
+        // Using to detect if simplified or traditional
+        // https://github.com/pupipipu/traditional-or-simplified-modified#readme
+        if (isSimplified(str)) {
+            lang = ELanguages.SZH;
+        } else {
+            lang = ELanguages.TZH;
+        } 
     }
     
     // No other languages, set to English
@@ -69,4 +68,11 @@ export function getChineseChars(str) {
 
 export function getRussianChars(str) {
     return str.match(/^[аАбБвВгГдДеЕёЁжЖзЗиИйЙкКлЛмМнНоОпПрРсСтТуУфФхХцЦчЧшШщЩъЪыЫьЬэЭюЮяЯ]+$/);
+}
+
+export function isStringSimplifiedChinese(str) {
+    return isSimplified(str);
+}
+export function isStringTraditionalChinese(str) {
+    return isTraditional(str);
 }

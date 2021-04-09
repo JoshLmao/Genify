@@ -31,7 +31,7 @@ function SettingNameValue(props) {
                         <Form.Check
                             checked={props.value}
                             type="switch"
-                            id="testingswitch"
+                            id={props.checkId}
                             label=""
                             aria-label={props.name}
                             onChange={(event) => {
@@ -103,6 +103,7 @@ class Settings extends Component {
         this.onAutoRomanizeToggled = this.onAutoRomanizeToggled.bind(this);
         this.onSettingChanged = this.onSettingChanged.bind(this);
         this.onLyricSizeChanged = this.onLyricSizeChanged.bind(this);
+        this.onAutoSimplifyChineseToggled = this.onAutoSimplifyChineseToggled.bind(this);
     }
 
     componentDidMount() {
@@ -168,6 +169,17 @@ class Settings extends Component {
         });
     }
 
+    onAutoSimplifyChineseToggled(isChecked) {
+        this.setState({
+            settings: {
+                ...this.state.settings,
+                autoSimplifyChinese: isChecked,
+            },
+        }, () => {
+            this.onSettingChanged();
+        })
+    }
+
     render() {
         return (
             <div className="w-100 h-100">
@@ -225,6 +237,7 @@ class Settings extends Component {
                         name="Automatically romanize Chinese/Japanese/Korean/Russian" 
                         value={this.state.settings?.autoRomanize ?? false} 
                         check 
+                        checkId="auto-romanize-check"
                         onCheckToggled={this.onAutoRomanizeToggled} />
 
                     <SettingNameValue
@@ -235,6 +248,14 @@ class Settings extends Component {
                         sliderMax={2}
                         sliderStepSize={0.1}
                         onSliderChanged={this.onLyricSizeChanged}/>
+
+                    <SettingNameValue 
+                        name="Automatically convert Chinese lyrics to Simplified"
+                        value={this.state.settings?.autoSimplifyChinese}
+                        check
+                        checkId="auto-simplify-check"
+                        onCheckToggled={this.onAutoSimplifyChineseToggled}
+                        />
 
                     <div className="horizontal-separator" />
             
