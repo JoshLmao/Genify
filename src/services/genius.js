@@ -11,6 +11,30 @@ import {
     replaceHTMLAmpersand
 } from "../helpers/filterHelper";
 
+function extractPhraseFromName(songName, phrase) {
+    let includesLeftPa = songName.includes('(');
+    let includesRightPa = songName.includes(')');
+    let includesDash = songName.includes("-");
+    let extractedPhrase = "";
+    if (includesLeftPa && includesRightPa && includesDash) {
+        // Eg. "Same Soul (feat. Jaymes Young) - Marian Hill Remix"
+    } 
+    else if (includesLeftPa && includesRightPa) {
+        // Eg. Grind Me Down (Jawster Remix)
+        extractedPhrase = songName.match(/\(([^)]+)\)/)[1];
+    } else if (includesDash) {
+        // Eg. "Sssnakepit - Serial Killaz Remix"
+        let parts = songName.split(' - ');
+        let remixPartIndex = parts.findIndex(function(element) {
+            return element.includes(phrase);
+        });
+        if (remixPartIndex >= 0) {
+            extractedPhrase = parts[remixPartIndex];
+        }
+    }
+    return extractedPhrase;
+}
+
 // Removes any dash separators and keeps relevant info
 // For example: "In The Air Tonight - 2015 Remastered"
 function removeDashSeparators(songName) {
@@ -24,34 +48,36 @@ function removeDashSeparators(songName) {
 }
 
 // Gets additional information about the song from the original song name
-function buildAdditionalData(songName) {    
+function buildAdditionalData(playData, songName) {    
     songName = songName.toLowerCase();
+    // Determine by bool if contains properties
     let isRemix = songName.includes("remix");
-    let remixCreator;
+    let isLive = songName.includes("live");
+    let isRadioEdit = songName.includes("radio edit");
+    let isRemaster = songName.includes("remaster");
+    // Init vars to
+    let remixCreator = "";
+    let liveLocation = "";
+    let versionName = "";
+    // Get remix creator, live location from name
     if (isRemix) {
-        let includesLeftPa = songName.includes('(');
-        let includesRightPa = songName.includes(')');
-        let includesDash = songName.includes("-");
-        if (includesLeftPa && includesRightPa && includesDash) {
-            // Eg. "Same Soul (feat. Jaymes Young) - Marian Hill Remix"
-        } 
-        else if (includesLeftPa && includesRightPa) {
-            // Eg. Grind Me Down (Jawster Remix)
-            remixCreator = songName.match(/\(([^)]+)\)/)[1];
-        } else if (includesDash) {
-            // Eg. "Sssnakepit - Serial Killaz Remix"
-            let parts = songName.split(' - ');
-            let remixPartIndex = parts.findIndex(function(element) {
-                return element.includes("remix");
-            });
-            if (remixPartIndex >= 0) {
-                remixCreator = parts[remixPartIndex];
-            }
-        }
+        remixCreator = extractPhraseFromName(songName, "remix");
     }
+    if (isLive) {
+        liveLocation = extractPhraseFromName(songName, "live");
+    }
+    if (songName.includes(" ver") || songName.includes("version")) {
+        versionName = extractPhraseFromName(songName, "ver");
+    }
+    // Build and return object to hold data
     return {
         isRemix: isRemix,
+        isLive: isLive,
+        isRadioEdit: isRadioEdit,
+        isRemaster: isRemaster,
         remixCreator: remixCreator,
+        liveLocation: liveLocation,
+        versionName: versionName,
     };
 }
 
@@ -61,6 +87,15 @@ function getFinalSearchName(songName, additionalData) {
     if (additionalData.isRemix) {
         nameSearchTerm += " " + additionalData.remixCreator;
     }
+    if (additionalData.isLive) {
+        nameSearchTerm += ` ${additionalData.liveLocation}`;
+    }
+    if (additionalData.versionName) {
+        nameSearchTerm += ` ${additionalData.versionName}`;
+    }
+    // if(additionalData.isRadioEdit) {
+    //     nameSearchTerm += ` radio edit`;
+    // }
     return nameSearchTerm;
 }
 
@@ -74,7 +109,7 @@ const GeniusService = {
         // Get song name and strip information to only have base song name
         let songName = playData.item.name;
         // Get any info from song title
-        let additionalData = buildAdditionalData(songName);
+        let additionalData = buildAdditionalData(playData, songName);
         // If includes dash separator(s)
         if (songName.includes('-')) {
             songName = removeDashSeparators(songName);
