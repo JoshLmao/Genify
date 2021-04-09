@@ -1,11 +1,20 @@
 {
     "logs": [
         {
+            "version": "3.0.9",
+            "dateISO": "2021-04-09T16:46:32.511Z",
+            "changes": [
+                "Further improvements to searching Genius for songs with 'Live' or 'Radio Edit', related to [#14](https://github.com/JoshLmao/Genify/issues/14)",
+                "Able to convert between simplified and traditional chinese through switch",
+                "Option in settings to automatically convert between simplified and traditional"
+            ]
+        },
+        {
             "version": "3.0.8",
             "dateISO": "2021-04-08T09:13:13.433Z",
             "changes": [
                 "Added font size to settings. Able to change scale of lyrics text from x1 to x2",
-                "Improved Genius searching for song that contain 'remix'"
+                "Improved Genius searching for song that contain 'remix', related to [#14](https://github.com/JoshLmao/Genify/issues/14)"
             ]
         },
         {
