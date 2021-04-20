@@ -175,12 +175,31 @@ class Lyrics extends Component {
         if (!this.state.originalLyrics) {
             return;
         }
+        let newRomanizedState = !this.state.isRomanized;
         // If already romanized, display original
-        if (this.state.isRomanized) {
-            this.setState({
-                modifiedLyrics: this.state.originalLyrics,
-            });
-        } else {
+        if (!newRomanizedState) 
+        {
+            // If original language is any chinese
+            if (this.state.originalLyricLanguage === ELanguages.SZH || this.state.originalLyricLanguage ===  ELanguages.TZH) {
+                let convertedLyrics = this.state.originalLyrics;
+                // If target is simplified, set back to simplified. Else traditional
+                if (this.state.isSimplified) {
+                    convertedLyrics = pinyin4js.convertToSimplifiedChinese(convertedLyrics);
+                } else {
+                    convertedLyrics = pinyin4js.convertToTraditionalChinese(convertedLyrics);
+                }
+                this.setState({
+                    modifiedLyrics: convertedLyrics,
+                });
+            } else {
+                // Dont modify, display original
+                this.setState({
+                    modifiedLyrics: this.state.originalLyrics,
+                });
+            }
+        }
+        else 
+        {
             // Else convert original to romanized version
             let romanizedLyrics = "";
             switch(this.state.originalLyricLanguage)
