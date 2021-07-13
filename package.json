@@ -1,6 +1,6 @@
 {
   "name": "genify",
-  "version": "3.0.9",
+  "version": "3.0.10",
   "homepage": "https://genify.joshlmao.com",
   "private": true,
   "dependencies": {
@@ -24,6 +24,7 @@
     "react-bootstrap": "^1.1.1",
     "react-bootstrap-range-slider": "^1.0.0",
     "react-dom": "^16.13.1",
+    "react-hot-keys": "^2.6.2",
     "react-markdown": "^4.3.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",

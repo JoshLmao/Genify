@@ -163,7 +163,7 @@ const GeniusService = {
                     let allDivs = html.getElementsByTagName("div");
                     for(let div of allDivs) {
                         let lowercase = div.className.toLowerCase();
-                        if(lowercase.includes("lyric") && lowercase.includes("container")) {
+                        if (lowercase.includes("lyric") && lowercase.includes("container")) {
                             //Get initial html content
                             let innerHtml = div.innerHTML;
                             // Remove line breaks used as line endings
@@ -227,6 +227,14 @@ const GeniusService = {
                             artistsMatch = true;
                             break;  // Found match, stop looping
                         }
+                    }
+                }
+                // If not match, try next method
+                if (!artistsMatch) {
+                    let geniusArtistInc = geniusArtist.includes(spotifyFirstArtistName);
+                    let spotifyArtistInc = spotifyFirstArtistName.includes(geniusArtist);
+                    if (geniusArtistInc || spotifyArtistInc) {
+                        artistsMatch = true;
                     }
                 }
 
