@@ -161,6 +161,7 @@ const GeniusService = {
                 if (isNewGeniusLayout) {
                     // Using new Genius layout
                     let allDivs = html.getElementsByTagName("div");
+                    let index = 0;
                     for(let div of allDivs) {
                         let lowercase = div.className.toLowerCase();
                         if (lowercase.includes("lyric") && lowercase.includes("container")) {
@@ -175,6 +176,13 @@ const GeniusService = {
                                 aGone += '\n';
                             }
                             allLyrics  += aGone;
+
+                            // Add newline separator if more div's left
+                            if (index < allDivs.length) {
+                                allLyrics += "\n";
+                            }
+
+                            index++;
                         }
                     }
                     if (allLyrics) 

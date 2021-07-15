@@ -1,6 +1,14 @@
 {
     "logs": [
         {
+            "version": "3.0.10",
+            "dateISO": "2021-07-15T11:01:20.417Z",
+            "changes": [
+                "Implemented keyboard shortcuts for Spotify player, space to Play/Pause, left/right to rewind/fast-forward, credit to [#15](https://github.com/JoshLmao/Genify/issues/15)",
+                "Fixed lyric sections sometimes not being separated correctly, related to [#17](https://github.com/JoshLmao/Genify/issues/17)"
+            ]
+        },
+        {
             "version": "3.0.9",
             "dateISO": "2021-04-09T16:46:32.511Z",
             "changes": [
