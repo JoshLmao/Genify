@@ -164,7 +164,7 @@ const GeniusService = {
                     let index = 0;
                     for(let div of allDivs) {
                         let lowercase = div.className.toLowerCase();
-                        if (lowercase.includes("lyric") && lowercase.includes("container")) {
+                        if (lowercase.includes("lyric") && lowercase.includes("container") && !lowercase.includes("explainer")) {
                             //Get initial html content
                             let innerHtml = div.innerHTML;
                             // Remove line breaks used as line endings
