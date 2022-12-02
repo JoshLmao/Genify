@@ -26,6 +26,6 @@ export const PLAYER_UPDATE_MS = 2000;
 export const SPOTIFY_REFRESH_MINUTES = 3;
 
 /// Proxy URL to use to aviod CORS issue
-export const PROXY_URL = "https://genify-proxy.herokuapp.com/";
+export const PROXY_URL = "https://genify-proxy.fly.dev/";
 /// Mirror Homepage property in package.json. Used in services when can't access it
 export const HOMEPAGE = "https://genify.joshlmao.com";
