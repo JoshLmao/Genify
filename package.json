@@ -27,7 +27,7 @@
     "react-hot-keys": "^2.6.2",
     "react-markdown": "^4.3.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "5.0.1",
     "traditional-or-simplified-modified": "^2.0.1"
   },
   "scripts": {
